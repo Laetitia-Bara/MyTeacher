@@ -58,6 +58,37 @@ const dataPayment = [
   },
 ];
 
+const events = [
+  {
+    id: 1,
+    title: "SUPERTEST",
+    start: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
+    end: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
+  },
+
+  {
+    id: 2,
+    title: "TEST ENCORE",
+    start: new Date("Wed Mar 04 2026 12:00:00 GMT+0100"),
+    end: new Date("Wed Mar 04 2026 14:00:00 GMT+0100"),
+  },
+
+  {
+    id: 3,
+    title: "TEST OUI",
+    allDay: true,
+    start: new Date("Wed Mar 06 2026 00:00:00 GMT+0100"),
+    end: new Date("Wed Mar 06 2026 00:00:00 GMT+0100"),
+  },
+  {
+    id: 4,
+    title: "ET OUI",
+    start: new Date("Wed Mar 05 2026 10:00:00 GMT+0100"),
+    end: new Date("Wed Mar 05 2026 12:00:00 GMT+0100"),
+    desc: "Cours Lily",
+  },
+];
+
 function HomeProf() {
   const students = dataStudent.map((data, i) => (
     <StudentCard
@@ -111,10 +142,7 @@ function HomeProf() {
             <div className={styles.planningSection}>
               <div className={styles.planningDetails}>
                 <p className={styles.subtitle}>Planning</p>
-                <button className={styles.addEventBtn}>
-                  <span className={styles.addText}>+ Ajouter un évènement</span>
-                </button>
-                <CalendarProf />
+                <CalendarProf events={events} />
               </div>
             </div>
           </div>

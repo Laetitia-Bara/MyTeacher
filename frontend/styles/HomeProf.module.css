@@ -158,21 +158,3 @@
   position: relative;
   border-radius: 5px;
 }
-
-.addEventBtn {
-  background-color: #a6d9f7;
-  font-size: 15px;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  width: 45%;
-  position: absolute;
-  z-index: 2;
-  top: -20px;
-  left: 40%;
-}
-
-.addEventBtn:hover {
-  background-color: #84b7d4;
-  cursor: pointer;
-}
