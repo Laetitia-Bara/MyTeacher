@@ -9,7 +9,7 @@ const studentSchema = mongoose.Schema(
       unique: true,
     },
     teacher: {
-      type: mongoose.Schema.types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "teachers",
       required: true,
     },
