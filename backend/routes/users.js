@@ -186,4 +186,10 @@ router.get("/me", async (req, res) => {
   }
 });
 
+// POST /users/logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("access_token", { path: "/" });
+  return res.status(200).json({ result: true });
+});
+
 module.exports = router;
