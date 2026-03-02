@@ -1,0 +1,86 @@
+.content {
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  height: 8%;
+  font-family: "Roboto Regular";
+  background-color: #312f2f;
+}
+
+.logo {
+  /* border: 1px solid rgb(255, 242, 0); */
+  color: white;
+}
+
+.menu {
+  /* border: 1px solid greenyellow; */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+}
+
+.btnNavigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border: none;
+  border-right: 1px solid white;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  height: 70%;
+  background-color: transparent;
+}
+
+.btnNavigation:hover {
+  background-color: #4a4747;
+  cursor: pointer;
+}
+
+.menuText {
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btnParameters {
+  border-radius: 5px;
+  background-color: #a6d9f7;
+  color: white;
+  font-weight: 700;
+  padding: 5px;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  /* font-family: ; */
+}
+
+.btnParameters:hover {
+  background-color: #84b7d4;
+  cursor: pointer;
+}
+
+.btnLogout {
+  border-radius: 5px;
+  background-color: #a6d9f7;
+  color: white;
+  font-weight: 700;
+  padding: 5px;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  /* font-family: ; */
+}
+
+.btnLogout:hover {
+  background-color: #84b7d4;
+  cursor: pointer;
+}

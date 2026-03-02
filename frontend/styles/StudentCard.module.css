@@ -1,0 +1,60 @@
+.content {
+  /* border: 1px solid red; */
+  width: 100%;
+  height: 35px;
+  padding: 0px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Roboto-Regular";
+  border-bottom: 1px lightgrey solid;
+}
+
+.studentLink {
+  background-color: transparent;
+  border: none;
+}
+
+.studentLink:hover {
+  color: rgb(45, 45, 45);
+  cursor: pointer;
+}
+
+.name {
+  font-family: "Roboto Bold";
+  font-size: 15px;
+}
+
+.discipline,
+.status {
+  font-family: "Roboto Italic";
+  font-size: 15px;
+}
+
+.inviteBtn {
+  background-color: #a6d9f7;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.inviteBtn:hover {
+  background-color: #84b7d4;
+  cursor: pointer;
+}
+
+.inviteText {
+  font-family: "Roboto SemiBold";
+  font-size: 15px;
+  color: white;
+}
+
+.abonnement {
+  width: 75px;
+  padding: 5px;
+  border-radius: 5px;
+  font-family: "Roboto Italic";
+  font-size: 15px;
+  background-color: #84dccf;
+  text-align: center;
+}
