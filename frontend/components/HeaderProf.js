@@ -10,7 +10,7 @@ function HeaderProf() {
     <header className={styles.content}>
       <div className={styles.logo}>
         <Link href="/">
-          <p>LOGO</p>
+          <Image src="/LogoMT.ico" alt="Logo" width={65} height={50} />
         </Link>
       </div>
       <div className={styles.menu}>

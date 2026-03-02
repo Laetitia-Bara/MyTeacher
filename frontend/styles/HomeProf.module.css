@@ -4,7 +4,7 @@
 }
 
 .main {
-  border: 1px solid rgb(0, 255, 4);
+  /* border: 1px solid rgb(0, 255, 4); */
   font-family: "Roboto Regular";
   display: flex;
   flex-direction: column;
@@ -17,7 +17,7 @@
 }
 
 .titlePage {
-  border: 1px solid rgb(255, 200, 0);
+  /* border: 1px solid rgb(255, 200, 0); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +32,9 @@
 }
 
 .subtitle {
-  border: solid 1px rgb(232, 240, 0);
+  /* border: solid 1px rgb(232, 240, 0); */
   background-color: #312f2f;
+  font-size: 15px;
   color: white;
   position: absolute;
   z-index: 2;
@@ -43,8 +44,31 @@
   border-radius: 5px;
 }
 
+.addStudentBtn {
+  background-color: #a6d9f7;
+  font-size: 15px;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: 40%;
+  position: absolute;
+  z-index: 2;
+  top: -20px;
+  left: 50%;
+}
+
+.addStudentBtn:hover {
+  background-color: #84b7d4;
+  cursor: pointer;
+}
+
+.addText {
+  font-family: "Roboto Bold";
+  color: white;
+}
+
 .section {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -55,7 +79,7 @@
 }
 
 .leftSection {
-  border: 1px solid rgb(13, 0, 255);
+  /* border: 1px solid rgb(13, 0, 255); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -66,14 +90,14 @@
 }
 
 .studentSection {
-  border: 1px solid rgb(0, 179, 255);
+  /* border: 1px solid rgb(0, 179, 255); */
   width: 100%;
   height: 60%;
   padding: 1%;
 }
 
 .studentList {
-  border: 1px solid rgb(0, 255, 38);
+  /* border: 1px solid rgb(0, 255, 38); */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -83,17 +107,18 @@
   padding: 5% 1% 1% 1%;
   background-color: white;
   position: relative;
+  border-radius: 5px;
 }
 
 .paymentSection {
-  border: 1px solid rgb(0, 179, 255);
+  /* border: 1px solid rgb(0, 179, 255); */
   width: 100%;
   height: 40%;
   padding: 1%;
 }
 
 .paymentList {
-  border: 1px solid rgb(0, 255, 38);
+  /* border: 1px solid rgb(0, 255, 38); */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -103,24 +128,51 @@
   padding: 5% 1% 1% 1%;
   background-color: white;
   position: relative;
+  border-radius: 5px;
 }
 
 .rightSection {
-  border: 1px solid rgb(13, 0, 255);
+  /* border: 1px solid rgb(13, 0, 255); */
   width: 50%;
+  height: 100%;
+}
+
+.planningSection {
+  /* border: 1px solid rgb(0, 179, 255); */
+  width: 100%;
   height: 100%;
   padding: 1%;
 }
 
 .planningDetails {
-  border: 1px solid rgb(0, 255, 38);
+  /* border: 1px solid rgb(0, 255, 38); */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
+  min-height: 0;
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
   position: relative;
+  border-radius: 5px;
+}
+
+.addEventBtn {
+  background-color: #a6d9f7;
+  font-size: 15px;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: 45%;
+  position: absolute;
+  z-index: 2;
+  top: -20px;
+  left: 40%;
+}
+
+.addEventBtn:hover {
+  background-color: #84b7d4;
+  cursor: pointer;
 }
