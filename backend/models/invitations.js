@@ -1,22 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("./connection");
 
-const invitationSchema = mongoose.Schema({
-    teacherId: mongoose.Types.ObjectId, 
-    invitedEmail: String,
-    tokenHash:{
-        type: String,
-        required: true
+const invitationSchema = mongoose.Schema(
+  {
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "teachers",
+      required: true,
     },
+
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+
     status: {
-        type: String,
-        enum: ['sent', 'accepted', 'expired', 'revoked']
-    }, 
-    studentId: mongoose.Types.ObjectId, 
-    expiresAt: Date,
-    createdAt: Date,
-    acceptedAt: Date,
-});
+      type: String,
+      enum: ["sent", "accepted", "expired", "revoked"],
+    },
+    tokenHash: { type: String, required: true },
+    expiresAt: { type: Date, required: true },
+    acceptedAt: { type: Date },
+  },
+  { timestamps: true },
+);
 
-const Invitation = mongoose.model('invitations', invitationSchema);
-
-model.export = Invitation;
+module.exports = mongoose.model("invitations", invitationSchema);
