@@ -21,7 +21,7 @@ function setAuthCookie(res, token) {
 router.post("/signup/teacher", async (req, res) => {
   try {
     const { email, password, firstName, lastName } = req.body;
-    // 1) validation simple
+    // validation simple
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ result: false, error: "Missing fields" });
     }
@@ -30,7 +30,7 @@ router.post("/signup/teacher", async (req, res) => {
         .status(400)
         .json({ result: false, error: "Password too short" });
     }
-    // 2) vérifier si email déjà utilisé
+    // vérifier si email déjà utilisé
     const existingUser = await User.findOne({
       email: email.toLowerCase().trim(),
     });
@@ -39,9 +39,9 @@ router.post("/signup/teacher", async (req, res) => {
         .status(409)
         .json({ result: false, error: "Email already used" });
     }
-    // 3) hash password
+    // hash password
     const passwordHash = await bcrypt.hash(password, 10);
-    // 4) create user
+    // create user
     const newUser = await User.create({
       role: "teacher",
       email: email.toLowerCase().trim(),
@@ -49,21 +49,21 @@ router.post("/signup/teacher", async (req, res) => {
       firstName,
       lastName,
     });
-    // 5) create teacher profile
+    // create teacher profile
     const newTeacher = await Teacher.create({
       user: newUser._id,
       discipline: [],
       structures: [],
     });
-    // 6) JWT
+    // JWT
     const token = jwt.sign(
       { userId: newUser._id.toString(), role: newUser.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
     );
-    // 7) cookie
+    // cookie
     setAuthCookie(res, token);
-    // 8) response
+    // response
     return res.status(201).json({
       result: true,
       user: {
@@ -73,6 +73,62 @@ router.post("/signup/teacher", async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         teacherId: newTeacher._id,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
+// POST /users/login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ result: false, error: "Missing fields" });
+    }
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ result: false, error: "Invalid credentials" });
+    }
+    const isOk = await bcrypt.compare(password, user.passwordHash);
+    if (!isOk) {
+      return res
+        .status(401)
+        .json({ result: false, error: "Invalid credentials" });
+    }
+
+    // Récupérer teacherId/studentId pour renvoyer au front
+    let teacherId = null;
+    let studentId = null;
+
+    if (user.role === "teacher") {
+      const teacher = await Teacher.findOne({ user: user._id });
+      teacherId = teacher ? teacher._id : null;
+    } else if (user.role === "student") {
+      const Student = require("../models/students");
+      const student = await Student.findOne({ user: user._id });
+      studentId = student ? student._id : null;
+    }
+    const token = jwt.sign(
+      { userId: user._id.toString(), role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
+    setAuthCookie(res, token);
+    return res.status(200).json({
+      result: true,
+      user: {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        teacherId,
+        studentId,
       },
     });
   } catch (e) {
