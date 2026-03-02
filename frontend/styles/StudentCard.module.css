@@ -8,11 +8,13 @@
   align-items: center;
   font-family: "Roboto-Regular";
   border-bottom: 1px lightgrey solid;
+  gap: 5px;
 }
 
 .studentLink {
   background-color: transparent;
   border: none;
+  width: 20%;
 }
 
 .studentLink:hover {
@@ -29,6 +31,8 @@
 .status {
   font-family: "Roboto Italic";
   font-size: 15px;
+  width: 20%;
+  text-align: center;
 }
 
 .inviteBtn {
@@ -36,6 +40,7 @@
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
+  width: 20%;
 }
 
 .inviteBtn:hover {
@@ -57,4 +62,5 @@
   font-size: 15px;
   background-color: #84dccf;
   text-align: center;
+  width: 20%;
 }

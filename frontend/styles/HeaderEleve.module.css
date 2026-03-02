@@ -1,0 +1,38 @@
+.container {
+    background-color: #312f2f;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 2em;
+    align-items: center;
+}
+
+.link {
+    color: white;
+    border-right: 1px solid #575555;
+
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5em;
+
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+}
+
+.profil {
+    background-color: #a5d9f7;
+    color: white;
+    border: 1px solid #a5d9f7;
+
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5em;
+
+    padding-right: 3em;
+    padding-left: 3em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+}

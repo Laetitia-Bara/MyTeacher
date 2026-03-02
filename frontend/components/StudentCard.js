@@ -10,9 +10,11 @@ function StudentCard(props) {
         </Link>
       </button>
       <p className={styles.discipline}>{props.discipline}</p>
-      <button className={styles.inviteBtn}>
-        <span className={styles.inviteText}>Inviter</span>
-      </button>
+      {!props.invite && (
+        <button className={styles.inviteBtn}>
+          <span className={styles.inviteText}>Inviter</span>
+        </button>
+      )}
       <p className={styles.status}>{props.status}</p>
       <p className={styles.abonnement}>{props.abonnement}</p>
     </div>

@@ -1,0 +1,10 @@
+.container {
+    text-align: center;
+    font-size: 1.3em;
+    font-style: italic;
+
+    background-color: #312f2f;
+    color: white;
+
+    padding: 0.5em;
+}
