@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/users");
 const Teacher = require("../models/teachers");
+const Student = require("../models/students");
+const authMiddleware = require("../middlewares/auth");
 
 // helper JWT cookie
 function setAuthCookie(res, token) {
@@ -148,13 +150,10 @@ router.post("/login", async (req, res) => {
 });
 
 // GET /users/me
-router.get("/me", async (req, res) => {
+router.get("/me", authMiddleware, async (req, res) => {
   try {
-    const token = getTokenFromReq(req);
-    if (!token)
-      return res.status(401).json({ result: false, error: "Unauthorized" });
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(payload.userId);
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
     if (!user)
       return res.status(401).json({ result: false, error: "Unauthorized" });
 
@@ -165,7 +164,6 @@ router.get("/me", async (req, res) => {
       const teacher = await Teacher.findOne({ user: user._id });
       teacherId = teacher ? teacher._id : null;
     } else if (user.role === "student") {
-      const Student = require("../models/students");
       const student = await Student.findOne({ user: user._id });
       studentId = student ? student._id : null;
     }
