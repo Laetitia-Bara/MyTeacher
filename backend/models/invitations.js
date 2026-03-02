@@ -1,4 +1,4 @@
-const mongoose = require("./connection");
+const mongoose = require("mongoose");
 
 const invitationSchema = mongoose.Schema(
   {

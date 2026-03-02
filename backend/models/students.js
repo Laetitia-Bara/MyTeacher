@@ -1,4 +1,4 @@
-const mongoose = require("./connection");
+const mongoose = require("mongoose");
 
 const studentSchema = mongoose.Schema(
   {
@@ -9,7 +9,7 @@ const studentSchema = mongoose.Schema(
       unique: true,
     },
     teacher: {
-      type: mongoose.Schema.types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "teachers",
       required: true,
     },
