@@ -17,6 +17,16 @@ function setAuthCookie(res, token) {
   });
 }
 
+// helper lecture cookie
+function getTokenFromReq(req) {
+  // cookie first
+  if (req.cookies && req.cookies.access_token) return req.cookies.access_token;
+  // fallback tests / dev : Authorization header
+  const auth = req.headers.authorization;
+  if (auth && auth.startsWith("Bearer ")) return auth.slice(7);
+  return null;
+}
+
 // POST /users/signup/teacher
 router.post("/signup/teacher", async (req, res) => {
   try {
@@ -134,6 +144,45 @@ router.post("/login", async (req, res) => {
   } catch (e) {
     console.error(e);
     return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
+// GET /users/me
+router.get("/me", async (req, res) => {
+  try {
+    const token = getTokenFromReq(req);
+    if (!token)
+      return res.status(401).json({ result: false, error: "Unauthorized" });
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(payload.userId);
+    if (!user)
+      return res.status(401).json({ result: false, error: "Unauthorized" });
+
+    let teacherId = null;
+    let studentId = null;
+
+    if (user.role === "teacher") {
+      const teacher = await Teacher.findOne({ user: user._id });
+      teacherId = teacher ? teacher._id : null;
+    } else if (user.role === "student") {
+      const Student = require("../models/students");
+      const student = await Student.findOne({ user: user._id });
+      studentId = student ? student._id : null;
+    }
+    return res.status(200).json({
+      result: true,
+      user: {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        teacherId,
+        studentId,
+      },
+    });
+  } catch (e) {
+    return res.status(401).json({ result: false, error: "Unauthorized" });
   }
 });
 
