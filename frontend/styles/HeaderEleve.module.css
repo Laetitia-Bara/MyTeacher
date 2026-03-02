@@ -6,6 +6,12 @@
     justify-content: space-between;
     padding: 2em;
     align-items: center;
+    width: 100vw;
+}
+
+.right_side {
+  display: flex;
+  align-items: center;
 }
 
 .link {
@@ -22,10 +28,36 @@
     padding-bottom: 0.7em;
 }
 
+.link:hover {
+    background-color: #424141;
+    transition: 0.3s;
+}
+
+.mlink {
+    color: white;
+
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5em;
+
+    padding-right: 1em;
+    padding-left: 1em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+    margin-right: 1em;
+}
+
+.mlink:hover {
+    background-color: #424141;
+    transition: 0.3s;
+}
+
 .profil {
     background-color: #a5d9f7;
     color: white;
-    border: 1px solid #a5d9f7;
+
+    border: none;
+    border-radius: 15px;
 
     text-decoration: none;
     font-weight: bold;
@@ -35,4 +67,33 @@
     padding-left: 3em;
     padding-top: 0.7em;
     padding-bottom: 0.7em;
+}
+
+.profil:hover {
+    background-color: #7bb7db;
+    transition: 0.5s;
+}
+
+.exit {
+    background-color: #a5d9f7;
+
+    margin-left: 1em;
+    margin-right: 1em;
+    
+    padding-top: 0.84em;
+    padding-bottom: 0.84em;
+    padding-right: 3em;
+    padding-left: 3em;
+
+    font-size: 1.5em;
+
+    border: none;
+    border-radius: 15px;
+
+    cursor: pointer;
+}
+
+.exit:hover {
+    background-color: #7bb7db;
+    transition: 0.5s;
 }
