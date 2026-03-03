@@ -1,11 +1,11 @@
 import Image from "next/image";
 import FooterProf from "./FooterProf";
-import styles from "../styles/SigninProf.module.css";
+import styles from "../styles/Signin.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../lib/api";
 
-function SigninProf() {
+function Signin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,8 +20,12 @@ function SigninProf() {
 
     if (!ok) return setError(data?.error || "Login failed");
 
-    // redirection simple vers dashboard prof
-    router.push("/");
+    // redirection simple vers dashboard
+    if (data?.user?.role === "student") {
+      router.push("/dashboard_eleve");
+    } else {
+      router.push("/HomeProf");
+    }
   };
 
   return (
@@ -62,7 +66,7 @@ function SigninProf() {
 
       <button
         className={styles.boutonVert}
-        onClick={() => router.push("/signin_prof")}
+        onClick={() => router.push("/signup_prof")}
       >
         Pas encore de compte ? Par ici !
       </button>
@@ -79,4 +83,4 @@ function SigninProf() {
   );
 }
 
-export default SigninProf;
+export default Signin;

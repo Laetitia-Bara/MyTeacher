@@ -227,7 +227,6 @@ router.post("/login", async (req, res) => {
       const teacher = await Teacher.findOne({ user: user._id });
       teacherId = teacher ? teacher._id : null;
     } else if (user.role === "student") {
-      const Student = require("../models/students");
       const student = await Student.findOne({ user: user._id });
       studentId = student ? student._id : null;
     }
@@ -318,7 +317,7 @@ router.post("/forgot-password", async (req, res) => {
     await user.save();
 
     // On renvoie le lien au lieu d'envoyer un email
-    const resetLink = `${process.env.FRONT_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONT_URL}/reset_password?token=${resetToken}`;
     return res.status(200).json({
       ...genericResponse,
       resetLink, // à supprimer quand branchement vrai email
@@ -329,8 +328,8 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// POST /users/reset-password/:token
-router.post("/reset-password/:token", async (req, res) => {
+// POST /users/reset_password/:token
+router.post("/reset_password/:token", async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;

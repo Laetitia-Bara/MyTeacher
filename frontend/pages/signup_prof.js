@@ -1,7 +1,10 @@
-import SignupProf from "../components/SignupProf";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-function Signup() {
-  return <SignupProf />;
+export default function SigninProfAlias() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/signin");
+  }, [router]);
+  return null;
 }
-
-export default Signup;

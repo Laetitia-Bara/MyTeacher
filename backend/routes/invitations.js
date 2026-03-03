@@ -66,7 +66,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       expiresAt,
     });
 
-    const inviteLink = `${process.env.FRONT_URL}/signup-student?token=${token}`;
+    const inviteLink = `${process.env.FRONT_URL}/signup_student?token=${token}`;
     return res.status(201).json({
       result: true,
       inviteLink,
