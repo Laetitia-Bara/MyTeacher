@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addEventToStore } from "../reducers/planning";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "moment/locale/fr";
-import ModalPlanning from "./ModalPlanning";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import styles from "../styles/BigCalendar.module.css";
 
