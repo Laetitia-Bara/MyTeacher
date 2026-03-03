@@ -18,6 +18,19 @@ const studentSchema = mongoose.Schema(
     phone: { type: String },
     discipline: { type: String },
     structure: { type: String },
+    status: {
+      type: String,
+      enum: ['Inactif', 'Actif', 'Prospect'],
+      default: 'Prospect'
+    },
+    subscription: {
+      type: {
+        type: String,
+        enum: ['A l\'unité', 'Trimestre', 'Annuel'],
+      },
+      price: {type: Number},
+      modalite: {type: String}
+    }
   },
   { timestamps: true },
 );
