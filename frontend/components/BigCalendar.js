@@ -2,35 +2,38 @@ import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "moment/locale/fr";
+import ModalPlanning from "./ModalPlanning";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import styles from "../styles/CalendarProf.module.css";
+import styles from "../styles/BigCalendar.module.css";
 
 const now = new Date();
 
 const localizer = momentLocalizer(moment);
 
-export default function CalendarProf(props) {
+export default function BigCalendar(props) {
   const [eventsData, setEventsData] = useState(props.events);
 
   const handleSelectSlot = ({ start, end }) => {
-    const title = window.prompt("New Event name");
-    if (!title) {
-      return;
-    } else {
-      const desc = window.prompt("New Event desc");
-      setEventsData([
-        ...eventsData,
-        {
-          start,
-          end,
-          title,
-          desc,
-        },
-      ]);
-    }
+    props.onClick();
+    // const title = window.prompt("New Event name");
+    // if (!title) {
+    //   return;
+    // } else {
+    //   const desc = window.prompt("New Event desc");
+    //   setEventsData([
+    //     ...eventsData,
+    //     {
+    //       start,
+    //       end,
+    //       title,
+    //       desc,
+    //     },
+    //   ]);
+    // }
   };
 
   const handleSelectEvent = (event) => {
+    // modifier ou supprimer
     const ok = window.confirm(`Supprimer "${event.title}" ?`);
     if (!ok) return;
     setEventsData((prev) => prev.filter((e) => e.id !== event.id));
