@@ -53,7 +53,10 @@ router.get(
 );
 
 // ne plus accepter teacherId dans le body (sécurité)
-router.get("/subscription", function (req, res) {
+router.get("/subscription", 
+  authMiddleware,
+  requireRole("teacher"),
+  function (req, res) {
   if (!checkBody(req.body, ["teacherId"])) {
     res.json({ result: false, error: "Missing data" });
     return;
