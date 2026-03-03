@@ -10,8 +10,10 @@ const requireRole = require("../middlewares/requireRole");
 
 /* GET teachers students. */
 // ne plus accepter teacherId dans le body (sécurité)
-router.get(
-  "/getStudents",
+/* 
+  authMiddleware,
+  requireRole("teacher"), */
+router.get("/getStudents", 
   authMiddleware,
   requireRole("teacher"),
   function (req, res) {
@@ -25,13 +27,13 @@ router.get(
       .then((data) => {
         if (data != null) {
           let students = [];
-          for (let obj in data) {
+          for (let obj of data) {
             let invite = false;
             Invitation.findOne({
               teacher: req.body.teacherId,
               email: obj.user.email,
-            }).then((data) => {
-              if (data != null) {
+            }).then((inviteFound) => {
+              if (inviteFound != null) {
                 invite = true;
               }
               students.push({
@@ -42,6 +44,7 @@ router.get(
                 subscription: obj.subscription.type,
                 invite: invite,
               });
+              console.log(students)
             });
           }
           res.json({ result: true, students: students });

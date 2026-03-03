@@ -31,8 +31,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use('/teachers', studentsRouter);
-app.use('/students', teachersRouter);
+app.use('/teachers', teachersRouter);
+app.use('/students', studentsRouter);
 app.use('/lessons', lessonsRouter);
 app.use("/invitations", invitationsRouter);
 
