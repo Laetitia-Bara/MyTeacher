@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import FooterProf from './FooterProf';
-import styles from '../styles/SigninProf.module.css';
+import styles from '../styles/SignupProf.module.css';
 
-function SigninProf() {
+function SignupProf() {
     return(
         <div className={styles.body}>
             <div className={styles.header}>
@@ -14,15 +14,14 @@ function SigninProf() {
             <div className={styles.container}>
                 <input className={styles.input} type="text" placeholder='Email'/>
                 <input className={styles.input} type="password" placeholder='Mot de passe'/>
-                <input className={styles.input} type="password" placeholder='Confirmation de mot de passe'/>
-                <button className={styles.boutonBleu}>S'inscrire</button>
+                <button className={styles.boutonBleu}>Se connecter</button>
             </div>
 
-            <button className={styles.boutonVert}>Déjà un compte ? Se connecter !</button>
+            <button className={styles.boutonVert}>Pas encore de compte ? Par ici !</button>
 
             <FooterProf />
         </div>
     );
 }
 
-export default SigninProf;
+export default SignupProf;
