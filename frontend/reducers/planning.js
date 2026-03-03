@@ -9,10 +9,15 @@ export const planningSlice = createSlice({
   initialState,
   reducers: {
     addEventToStore: (state, action) => {
-      state.value.push(action.payload);
+      if (!state.value.some((e) => e.id === action.payload.id)) {
+        state.value.push(action.payload);
+      }
+    },
+    removeEventFromStore: (state, action) => {
+      state.value = state.value.filter((e) => e.id !== action.payload.id);
     },
   },
 });
 
-export const { addEventToStore } = planningSlice.actions;
+export const { addEventToStore, removeEventFromStore } = planningSlice.actions;
 export default planningSlice.reducer;
