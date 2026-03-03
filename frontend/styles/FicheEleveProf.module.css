@@ -25,15 +25,14 @@
     justify-content: space-between;
     flex-direction: column;
     width: 45vw;
-    height: 60vh;
+    height: 65vh;
 }
 
 .right {
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
     width: 45vw;
-    height: 60vh;
+    height: 65vh;
 
     border: 1px solid black;
     border-radius: 15px;
@@ -44,7 +43,7 @@
 
 .content {
     width: 39vw;
-    height: 29vh;
+    height: 32vh;
 
     border: 1px solid black;
     border-radius: 15px;
@@ -65,4 +64,105 @@
     padding-bottom: 0.3em;
 
     border-radius: 20px;
+}
+
+.field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
+}
+
+.label {
+    font-size: 18px;
+    width: 4em;
+}
+
+.input {
+    font-size: 18px;
+    width: 20em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 1em;
+
+    outline: none;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bouton {
+    color: white;
+    font-style: italic;
+    border: none;
+    background-color: #a5d9f7;
+    padding: 0.9em;
+    padding-left: 3em;
+    padding-right: 3em;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.bouton:hover {
+    transition: 0.4s;
+    background-color: #84aec6;
+}
+
+.bouton:active {
+    transition: 0.4s;
+    background-color: #618091;
+}
+
+.field_cours {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-bottom: 1px solid black;
+}
+
+.rouge {
+    background-color: #bf99a0;
+    width: 6em;
+    text-align: center;
+    font-style: italic;
+    font-weight: lighter;
+    padding: 0.5em;
+    border-radius: 12px;
+}
+
+.vert {
+    background-color: #85dccf;
+    width: 6em;
+    text-align: center;
+    font-style: italic;
+    font-weight: lighter;
+    padding: 0.5em;
+    border-radius: 12px;
+}
+
+.orange {
+    background-color: #f8d4af;
+    width: 6em;
+    text-align: center;
+    font-style: italic;
+    font-weight: lighter;
+    padding: 0.5em;
+    border-radius: 12px;
+}
+
+.field_paiement {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-bottom: 1px solid black;
 }
