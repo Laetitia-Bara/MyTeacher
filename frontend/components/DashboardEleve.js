@@ -15,7 +15,6 @@ function DashboardEleve() {
         <div className={styles.content}>
           <fieldset className={styles.leftside}>
             <legend className={styles.titre}>Planning</legend>
-            Contenu de la div
           </fieldset>
           <fieldset className={styles.rightside}>
             <legend className={styles.titre}>Alertes</legend>

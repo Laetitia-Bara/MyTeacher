@@ -1,40 +1,42 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import ModalAddEvent from "./ModalAddEvent";
+import ModalRemoveEvent from "./ModalRemoveEvent";
 import moment from "moment";
 import "moment/locale/fr";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import styles from "../styles/CalendarProf.module.css";
+import styles from "../styles/BigCalendar.module.css";
 
 const now = new Date();
 
 const localizer = momentLocalizer(moment);
 
-export default function CalendarProf(props) {
-  const [eventsData, setEventsData] = useState(props.events);
+export default function BigCalendar() {
+  const [modalAdd, setModalAdd] = useState(false);
+  const [modalRemove, setModalRemove] = useState(false);
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
+  const [eventSelected, setEventSelected] = useState(null);
+
+  const eventsData = useSelector((state) => state.planning.value);
 
   const handleSelectSlot = ({ start, end }) => {
-    const title = window.prompt("New Event name");
-    if (!title) {
-      return;
-    } else {
-      const desc = window.prompt("New Event desc");
-      setEventsData([
-        ...eventsData,
-        {
-          start,
-          end,
-          title,
-          desc,
-        },
-      ]);
-    }
+    setStart(start);
+    setEnd(end);
+    setModalAdd(true);
   };
 
   const handleSelectEvent = (event) => {
-    const ok = window.confirm(`Supprimer "${event.title}" ?`);
-    if (!ok) return;
-    setEventsData((prev) => prev.filter((e) => e.id !== event.id));
+    setEventSelected(event);
+    setModalRemove(true);
   };
+
+  const eventsCalendar = eventsData.map((e) => ({
+    ...e,
+    start: new Date(e.start),
+    end: new Date(e.end),
+  }));
 
   return (
     <div className={styles.planningCalendar}>
@@ -44,7 +46,7 @@ export default function CalendarProf(props) {
         selectable
         defaultDate={new Date()}
         defaultView="month"
-        events={eventsData}
+        events={eventsCalendar}
         startAccessor="start"
         endAccessor="end"
         culture="fr"
@@ -66,6 +68,19 @@ export default function CalendarProf(props) {
         onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
       />
+      {modalAdd && (
+        <ModalAddEvent
+          onClose={() => setModalAdd(false)}
+          start={start}
+          end={end}
+        />
+      )}
+      {modalRemove && (
+        <ModalRemoveEvent
+          onClose={() => setModalRemove(false)}
+          event={eventSelected}
+        />
+      )}
     </div>
   );
 }

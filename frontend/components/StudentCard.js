@@ -16,7 +16,7 @@ function StudentCard(props) {
         </button>
       )}
       <p className={styles.status}>{props.status}</p>
-      <p className={styles.abonnement}>{props.abonnement}</p>
+      <p className={styles.abonnement}>{props.subscription}</p>
     </div>
   );
 }

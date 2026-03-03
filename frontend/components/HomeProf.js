@@ -3,7 +3,11 @@ import HeaderProf from "./HeaderProf";
 import FooterProf from "./FooterProf";
 import StudentCard from "./StudentCard";
 import PaymentCard from "./PaymentCard";
-import CalendarProf from "./CalendarProf";
+import BigCalendar from "./BigCalendar";
+import ModalPlanning from "./ModalAddEvent";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addEventToStore } from "../reducers/planning";
 
 import styles from "../styles/HomeProf.module.css";
 
@@ -13,35 +17,35 @@ const dataStudent = [
     discipline: "Guitare",
     invite: true,
     status: "Actif",
-    abonnement: "Trimestre",
+    subscription: "Trimestre",
   },
   {
     name: "Jo",
     discipline: "Trompette",
     invite: true,
     status: "Actif",
-    abonnement: "Annuel",
+    subscription: "Annuel",
   },
   {
     name: "Stephanie",
     discipline: "Guitare",
     invite: false,
     status: "Prospect",
-    abonnement: "Annuel",
+    subscription: "Annuel",
   },
   {
     name: "Lily",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
-    abonnement: "A l'unité",
+    subscription: "A l'unité",
   },
   {
     name: "Lulu",
     discipline: "Trompette",
     invite: true,
     status: "Inactif",
-    abonnement: "Trimestre",
+    subscription: "Trimestre",
   },
 ];
 
@@ -90,6 +94,15 @@ const events = [
 ];
 
 function HomeProf() {
+  // const [modal, setModal] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    for (const event of events) {
+      dispatch(addEventToStore(event));
+    }
+  }, []);
+
   const students = dataStudent.map((data, i) => (
     <StudentCard
       key={i}
@@ -97,7 +110,7 @@ function HomeProf() {
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      abonnement={data.abonnement}
+      subscription={data.subscription}
     />
   ));
 
@@ -142,13 +155,14 @@ function HomeProf() {
             <div className={styles.planningSection}>
               <div className={styles.planningDetails}>
                 <p className={styles.subtitle}>Planning</p>
-                <CalendarProf events={events} />
+                <BigCalendar />
               </div>
             </div>
           </div>
         </div>
       </main>
       <FooterProf />
+      {/* {modal && <ModalPlanning onClose={() => setModal(false)} />} */}
     </div>
   );
 }

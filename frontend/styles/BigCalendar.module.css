@@ -2,9 +2,6 @@
   width: 100%;
   flex: 1;
   height: 100%;
-  /* font-family: "Roboto Regular"; */
-  /* font-size: 15px; */
-  /* color: black; */
 }
 
 .planningCalendar:global(.rbc-calendar) {

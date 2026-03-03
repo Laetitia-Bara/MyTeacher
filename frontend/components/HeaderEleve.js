@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from "next/link";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -12,12 +13,12 @@ function HeaderEleve() {
             <Image className={styles.logo} src="/LogoMT.ico" alt="Logo" width={65} height={50}/>
         </div>
         <div className={styles.right_side}>
-            <a className={styles.link} href="">Dashboard</a>
-            <a className={styles.link} href="">Mes ressources</a>
-            <a className={styles.link} href="">Paiement</a>
-            <a className={styles.link} href="">Planning</a>
-            <a className={styles.mlink} href="">Messagerie</a>
-            <a className={styles.profil} href="">Julien</a>
+            <Link href=""><span className={styles.link}>Dashboard</span></Link>
+            <Link href=""><span className={styles.link}>Mes ressources</span></Link>
+            <Link href=""><span className={styles.link}>Paiement</span></Link>
+            <Link href=""><span className={styles.link}>Planning</span></Link>
+            <Link href=""><span className={styles.mlink}>Messagerie</span></Link>
+            <Link href=""><span className={styles.profil}>Julien</span></Link>
             <FontAwesomeIcon className={styles.exit} icon={faArrowRightFromBracket} />
         </div>
     </div>
