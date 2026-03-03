@@ -6,4 +6,63 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    background-color: #f6f6f6;
+}
+
+.titre {
+  font-size: 30px;
+  color: #312f2f;
+  font-family: "Roboto Bold";
+  letter-spacing: 2px;
+}
+
+.container {
+    display: flex;
+}
+
+.left {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 45vw;
+    height: 60vh;
+}
+
+.right {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 45vw;
+    height: 60vh;
+
+    border: 1px solid black;
+    border-radius: 15px;
+
+    background-color: white;
+    overflow-y: scroll;
+}
+
+.content {
+    width: 39vw;
+    height: 29vh;
+
+    border: 1px solid black;
+    border-radius: 15px;
+
+    background-color: white;
+    overflow-y: scroll;
+}
+
+.title {
+    color: white;
+    background-color: #312f2f;
+
+    font-size: 20px;
+
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+
+    border-radius: 20px;
 }
