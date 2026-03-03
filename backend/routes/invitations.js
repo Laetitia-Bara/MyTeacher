@@ -41,6 +41,20 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
         .json({ result: false, error: "Email already used" });
     }
 
+    // Refuser si une invitation active existe déjà pour cet email (pour ce prof)
+    const existingActiveInvite = await Invitation.findOne({
+      teacher: teacher._id,
+      email: normalizedEmail,
+      usedAt: { $exists: false },
+      expiresAt: { $gt: new Date() },
+    });
+    if (existingActiveInvite) {
+      return res.status(409).json({
+        result: false,
+        error: "Active invitation already exists for this email",
+      });
+    }
+
     // Générer token brut + hash
     const token = crypto.randomBytes(32).toString("hex");
     const tokenHash = hashToken(token);
