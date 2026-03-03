@@ -4,8 +4,10 @@ import FooterProf from "./FooterProf";
 import StudentCard from "./StudentCard";
 import PaymentCard from "./PaymentCard";
 import BigCalendar from "./BigCalendar";
-import ModalPlanning from "./ModalPlanning";
+import ModalPlanning from "./ModalAddEvent";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addEventToStore } from "../reducers/planning";
 
 import styles from "../styles/HomeProf.module.css";
 
@@ -92,7 +94,14 @@ const events = [
 ];
 
 function HomeProf() {
-  const [modal, setModal] = useState(null);
+  // const [modal, setModal] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    for (const event of events) {
+      dispatch(addEventToStore(event));
+    }
+  }, []);
 
   const students = dataStudent.map((data, i) => (
     <StudentCard
@@ -146,19 +155,14 @@ function HomeProf() {
             <div className={styles.planningSection}>
               <div className={styles.planningDetails}>
                 <p className={styles.subtitle}>Planning</p>
-                <BigCalendar events={events} onClick={() => setModal(true)} />
+                <BigCalendar />
               </div>
             </div>
           </div>
         </div>
       </main>
       <FooterProf />
-      {modal && (
-        <ModalPlanning
-          title="Ajouter un événement"
-          onClose={() => setModal(false)}
-        />
-      )}
+      {/* {modal && <ModalPlanning onClose={() => setModal(false)} />} */}
     </div>
   );
 }
