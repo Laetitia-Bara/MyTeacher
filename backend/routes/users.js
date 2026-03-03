@@ -296,4 +296,75 @@ router.post("/logout", (req, res) => {
   return res.status(200).json({ result: true });
 });
 
+// POST /users/forgot-password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email)
+      return res.status(400).json({ result: false, error: "Missing fields" });
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Toujours répondre pareil (évite d’indiquer si l’email existe)
+    const genericResponse = { result: true };
+    if (!user) return res.status(200).json(genericResponse);
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenHash = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    user.resetPasswordTokenHash = resetTokenHash;
+    user.resetPasswordExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1h
+    await user.save();
+
+    // On renvoie le lien au lieu d'envoyer un email
+    const resetLink = `${process.env.FRONT_URL}/reset-password?token=${resetToken}`;
+    return res.status(200).json({
+      ...genericResponse,
+      resetLink, // à supprimer quand branchement vrai email
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
+// POST /users/reset-password/:token
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    if (!token || !password) {
+      return res.status(400).json({ result: false, error: "Missing fields" });
+    }
+    if (password.length < 8) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Password too short" });
+    }
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await User.findOne({
+      resetPasswordTokenHash: tokenHash,
+      resetPasswordExpiresAt: { $gt: new Date() },
+    });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Invalid or expired token" });
+    }
+    user.passwordHash = await bcrypt.hash(password, 10);
+    user.resetPasswordTokenHash = undefined;
+    user.resetPasswordExpiresAt = undefined;
+    await user.save();
+
+    // Déconnecter partout => on supprime le cookie
+    res.clearCookie("access_token", { path: "/" });
+
+    return res.status(200).json({ result: true });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
 module.exports = router;
