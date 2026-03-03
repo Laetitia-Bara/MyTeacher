@@ -10,7 +10,7 @@ function ForgotPassword() {
     setMsg("");
     setResetLink("");
 
-    const { ok, data } = await api("/users/forgot-password", {
+    const { ok, data } = await api("/users/forgot_password", {
       method: "POST",
       body: { email },
     });
