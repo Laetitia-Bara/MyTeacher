@@ -4,15 +4,17 @@ import FooterProf from "./FooterProf";
 import StudentCard from "./StudentCard";
 import PaymentCard from "./PaymentCard";
 import BigCalendar from "./BigCalendar";
-import ModalPlanning from "./ModalAddEvent";
+import ModalAddStudent from "./ModalAddStudent";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEventToStore } from "../reducers/planning";
+import { addStudentToStore } from "../reducers/students";
 
 import styles from "../styles/HomeProf.module.css";
 
 const dataStudent = [
   {
+    id: 1,
     name: "Bob",
     discipline: "Guitare",
     invite: true,
@@ -20,6 +22,7 @@ const dataStudent = [
     subscription: "Trimestre",
   },
   {
+    id: 2,
     name: "Jo",
     discipline: "Trompette",
     invite: true,
@@ -27,6 +30,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
+    id: 3,
     name: "Stephanie",
     discipline: "Guitare",
     invite: false,
@@ -34,6 +38,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
+    id: 4,
     name: "Lily",
     discipline: "Guitare",
     invite: true,
@@ -41,6 +46,7 @@ const dataStudent = [
     subscription: "A l'unité",
   },
   {
+    id: 5,
     name: "Lulu",
     discipline: "Trompette",
     invite: true,
@@ -94,16 +100,20 @@ const events = [
 ];
 
 function HomeProf() {
-  // const [modal, setModal] = useState(null);
+  const [modalAddStudent, setModalAddStudent] = useState(false);
+  const studentsData = useSelector((state) => state.students.value);
   const dispatch = useDispatch();
 
   useEffect(() => {
     for (const event of events) {
       dispatch(addEventToStore(event));
     }
+    for (const student of dataStudent) {
+      dispatch(addStudentToStore(student));
+    }
   }, []);
 
-  const students = dataStudent.map((data, i) => (
+  const students = studentsData.map((data, i) => (
     <StudentCard
       key={i}
       name={data.name}
@@ -138,7 +148,10 @@ function HomeProf() {
             <div className={styles.studentSection}>
               <div className={styles.studentList}>
                 <p className={styles.subtitle}>Mes élèves</p>
-                <button className={styles.addStudentBtn}>
+                <button
+                  className={styles.addStudentBtn}
+                  onClick={() => setModalAddStudent(true)}
+                >
                   <span className={styles.addText}>+ Ajouter un élève</span>
                 </button>
                 {students}
@@ -162,7 +175,9 @@ function HomeProf() {
         </div>
       </main>
       <FooterProf />
-      {/* {modal && <ModalPlanning onClose={() => setModal(false)} />} */}
+      {modalAddStudent && (
+        <ModalAddStudent onClose={() => setModalAddStudent(false)} />
+      )}
     </div>
   );
 }

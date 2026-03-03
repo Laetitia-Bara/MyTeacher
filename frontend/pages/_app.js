@@ -5,9 +5,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import planning from "../reducers/planning";
+import students from "../reducers/students";
 import { Provider } from "react-redux";
 
-const reducers = combineReducers({ planning });
+const reducers = combineReducers({ planning, students });
 
 const persistConfig = { key: "myTeacher", storage };
 
