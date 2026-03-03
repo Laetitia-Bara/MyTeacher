@@ -9,10 +9,14 @@ const Invitation = require("../models/invitations");
 const Teacher = require("../models/teachers");
 const User = require("../models/users");
 
+//-------------------------Helpers---------------------------------------------
+
 // Helper hash token
 function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
+
+//----------------------------Routes---------------------------------------
 
 // POST /invitations  (teacher only)
 router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
@@ -20,7 +24,6 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     const { email } = req.body;
     if (!email)
       return res.status(400).json({ result: false, error: "Missing fields" });
-
     const normalizedEmail = email.toLowerCase().trim();
 
     // Vérifier que le prof a bien un teacher profile
@@ -42,7 +45,6 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex");
     const tokenHash = hashToken(token);
     const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48h
-
     await Invitation.create({
       teacher: teacher._id,
       email: normalizedEmail,
@@ -51,7 +53,6 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     });
 
     const inviteLink = `${process.env.FRONT_URL}/signup-student?token=${token}`;
-
     return res.status(201).json({
       result: true,
       inviteLink,
