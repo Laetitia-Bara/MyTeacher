@@ -1,7 +1,7 @@
 import Image from "next/image";
-import FooterProf from "./FooterProf";
-import styles from "../styles/Signin.module.css";
-import { useState } from "react";
+import FooterTeacher from "./FooterTeacher";
+import styles from "../styles/AuthForm.module.css";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../lib/api";
 
@@ -10,26 +10,35 @@ function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+
+  const canSubmit = useMemo(() => {
+    return email.trim() && password.trim();
+  }, [email, password]);
 
   const onLogin = async () => {
     setError("");
+    if (loading) return;
+
+    setLoading(true);
     const { ok, data } = await api("/users/login", {
       method: "POST",
       body: { email, password },
     });
+    setLoading(false);
 
     if (!ok) return setError(data?.error || "Login failed");
 
-    // redirection simple vers dashboard
     if (data?.user?.role === "student") {
-      router.push("/dashboard_eleve");
+      router.push("/dashboard_student");
     } else {
-      router.push("/HomeProf");
+      router.push("/");
     }
   };
 
   return (
-    <div className={styles.body}>
+    <div className={styles.page}>
       <div className={styles.header}>
         <Image
           className={styles.logo}
@@ -40,45 +49,67 @@ function Signin() {
         />
       </div>
 
-      <h1 className={styles.titre}>Bienvenue sur MyTeacher</h1>
+      <main className={styles.main}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Bienvenue sur MyTeacher</h1>
 
-      <div className={styles.container}>
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className={styles.input}
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className={styles.boutonBleu} onClick={onLogin}>
-          Se connecter
-        </button>
+          <div className={styles.form}>
+            <input
+              className={styles.input}
+              type="email"
+              placeholder="Email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-        {error && <p style={{ color: "crimson" }}>{error}</p>}
-      </div>
+            <div className={styles.passwordWrap}>
+              <input
+                className={styles.input}
+                type={showPwd ? "text" : "password"}
+                placeholder="Mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className={styles.togglePwd}
+                onClick={() => setShowPwd((v) => !v)}
+              >
+                {showPwd ? "Masquer" : "Afficher"}
+              </button>
+            </div>
 
-      <button
-        className={styles.boutonVert}
-        onClick={() => router.push("/signup_prof")}
-      >
-        Pas encore de compte ? Par ici !
-      </button>
+            <button
+              className={styles.primaryBtn}
+              onClick={onLogin}
+              disabled={!canSubmit || loading}
+            >
+              {loading ? "Connexion..." : "Se connecter"}
+            </button>
 
-      <button
-        className={styles.boutonVert}
-        onClick={() => router.push("/forgot_password")}
-      >
-        Mot de passe oublié ?
-      </button>
+            {error && <div className={styles.errorBox}>{error}</div>}
 
-      <FooterProf />
+            <button
+              className={styles.secondaryBtn}
+              onClick={() => router.push("/signup_teacher")}
+              type="button"
+            >
+              Pas encore de compte ? Par ici !
+            </button>
+
+            <button
+              className={styles.linkBtn}
+              onClick={() => router.push("/forgot_password")}
+              type="button"
+            >
+              Mot de passe oublié ?
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <FooterTeacher />
     </div>
   );
 }

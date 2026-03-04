@@ -6,9 +6,10 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import planning from "../reducers/planning";
 import students from "../reducers/students";
+import payments from "../reducers/payments";
 import { Provider } from "react-redux";
 
-const reducers = combineReducers({ planning, students });
+const reducers = combineReducers({ planning, students, payments });
 
 const persistConfig = { key: "myTeacher", storage };
 
