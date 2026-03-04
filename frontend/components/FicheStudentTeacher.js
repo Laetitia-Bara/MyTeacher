@@ -1,8 +1,8 @@
 import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
-import styles from "../styles/FicheEleveTeacher.module.css";
+import styles from "../styles/FicheStudentTeacher.module.css";
 
-function FicheEleveTeacher() {
+function FicheStudentTeacher() {
   let prenom = "Patrick";
   let nom = "Pichard";
   let email = "pat.pich@gmail.com";
@@ -119,4 +119,4 @@ function FicheEleveTeacher() {
   );
 }
 
-export default FicheEleveTeacher;
+export default FicheStudentTeacher;
