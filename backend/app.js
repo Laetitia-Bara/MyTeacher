@@ -17,9 +17,20 @@ var invoicesRouter = require("./routes/invoices");
 var app = express();
 
 const cors = require("cors");
+const allowedOrigins = [
+  "http://localhost:3001",
+  "https://myteacher-inky.vercel.app",
+];
 app.use(
   cors({
-    origin: process.env.FRONT_URL,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
