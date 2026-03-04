@@ -13,7 +13,7 @@ const requireRole = require("../middlewares/requireRole");
 /* 
   authMiddleware,
   requireRole("teacher"), */
-router.get("/getStudents", 
+router.get("/getStudents",
   authMiddleware,
   requireRole("teacher"),
   function (req, res) {
@@ -21,68 +21,33 @@ router.get("/getStudents",
       res.json({ result: false, error: "Missing data" });
       return;
     }
-
+    let students = [];
     Student.find({ teacher: req.body.teacherId })
       .populate("user")
       .then((data) => {
-        if (data != null) {
-          let students = [];
-          for (let obj of data) {
-            let invite = false;
-            Invitation.findOne({
-              teacher: req.body.teacherId,
-              email: obj.user.email,
-            }).then((inviteFound) => {
-              if (inviteFound != null) {
-                invite = true;
-              }
+        if (data.length > 0) {
+          Invitation.find({ teacher: req.body.teacherId})
+          .then((invitation) => {
+            for (let obj of data) {
+              let invite = invitation.find((element) => element.email === obj.user.email) != undefined ? false : true
               students.push({
+                id : obj._id,
                 firstName: obj.user.firstName,
                 lastName: obj.user.lastName,
+                email: obj.user.email,
+                phone: obj.phone,
                 discipline: obj.discipline,
                 status: obj.status,
-                subscription: obj.subscription.type,
-                invite: invite,
+                structure: obj.structure,
+                subscription: obj.subscription,
+                invite: invite
               });
-              console.log(students)
-            });
-          }
-          res.json({ result: true, students: students });
-        } else {
-          res.json({ result: false });
+            }
+          }).then(() => {if(students.length > 0){res.json({ result: true, students: students });}else{res.json({ result: false });}});
         }
-      });
+      })
   },
 );
-
-// ne plus accepter teacherId dans le body (sécurité)
-router.get("/subscription", 
-  authMiddleware,
-  requireRole("teacher"),
-  function (req, res) {
-  if (!checkBody(req.body, ["teacherId"])) {
-    res.json({ result: false, error: "Missing data" });
-    return;
-  }
-
-  Student.find({ teacher: req.body.teacherId })
-    .populate("user")
-    .then((data) => {
-      if (data != null) {
-        let subscriptions = [];
-        for (let obj in data) {
-          subscriptions.push({
-            firstName: obj.user.firstName,
-            lastName: obj.user.lastName,
-            subscription: obj.subscription,
-          });
-        }
-        res.json({ result: true, subscription: subscriptions });
-      } else {
-        res.json({ result: false });
-      }
-    });
-});
 
 router.post("/addStudent", function (req, res) {
   //Standby

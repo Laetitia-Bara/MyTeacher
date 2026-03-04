@@ -18,7 +18,7 @@ router.get('/getLessons', function(req, res) {
     {
       res.json({result:true, lessons:data})
     }else{
-      res.json({result:false})    }
+      res.json({result:false})}
   })
 
   res.send('respond with a resource');
