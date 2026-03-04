@@ -1,4 +1,8 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "");
+
+if (!API_URL) throw new Error("NEXT_PUBLIC_BACKEND_URL is missing");
 
 export async function api(path, { method = "GET", body } = {}) {
   const res = await fetch(`${API_URL}${path}`, {
