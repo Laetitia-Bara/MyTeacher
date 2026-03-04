@@ -1,5 +1,5 @@
 import Image from "next/image";
-import FooterProf from "./FooterProf";
+import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/Signin.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -22,9 +22,9 @@ function Signin() {
 
     // redirection simple vers dashboard
     if (data?.user?.role === "student") {
-      router.push("/dashboard_eleve");
+      router.push("/dashboard_student");
     } else {
-      router.push("/HomeProf");
+      router.push("/");
     }
   };
 
@@ -66,7 +66,7 @@ function Signin() {
 
       <button
         className={styles.boutonVert}
-        onClick={() => router.push("/signup_prof")}
+        onClick={() => router.push("/signup_teacher")}
       >
         Pas encore de compte ? Par ici !
       </button>
@@ -78,7 +78,7 @@ function Signin() {
         Mot de passe oublié ?
       </button>
 
-      <FooterProf />
+      <FooterTeacher />
     </div>
   );
 }
