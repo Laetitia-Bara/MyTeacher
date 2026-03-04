@@ -15,4 +15,4 @@ const ressourceSchema = mongoose.Schema({
 
 const Ressource = mongoose.model('ressources', ressourceSchema);
 
-model.export = Ressource;
+module.exports = Ressource;
