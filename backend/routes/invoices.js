@@ -35,8 +35,9 @@ router.get('/getInvoices',
                     createdAt : obj.createdAt
                 })
             }
+            res.json({result: true, invoices: invoices})
         }else{res.json({result: false, error : "No invoices found"})}
-    }).then(() => {res.json({result: true, invoices: invoices})})
+    })
 })
 
 module.exports = router;
