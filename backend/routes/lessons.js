@@ -3,12 +3,16 @@ var router = express.Router();
 
 require('../models/connection');
 const Lesson = require('../models/lessons');
-const { checkBody } = require('../modules/checkBody');
+const authMiddleware = require("../middlewares/auth");
+const requireRole = require("../middlewares/requireRole");
 
 /* GET teachers students. */
-router.get('/getLessons', function(req, res) {
+router.get('/getLessons',
+  authMiddleware,
+  requireRole("teacher"),
+  function(req, res) {
 
-  Lesson.find({teacher: req.body.teacherId})
+  Lesson.find({teacher: req.user.userId})
   .then(data => {
     if(data != null)
     {
