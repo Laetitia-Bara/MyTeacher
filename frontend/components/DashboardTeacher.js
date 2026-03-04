@@ -1,6 +1,6 @@
 import Head from "next/head";
-import HeaderProf from "./HeaderProf";
-import FooterProf from "./FooterProf";
+import HeaderTeacher from "./HeaderTeacher";
+import FooterTeacher from "./FooterTeacher";
 import StudentCard from "./StudentCard";
 import PaymentCard from "./PaymentCard";
 import BigCalendar from "./BigCalendar";
@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents, addEventToStore } from "../reducers/planning";
 import { getStudents, addStudentToStore } from "../reducers/students";
 
-import styles from "../styles/HomeProf.module.css";
+import styles from "../styles/DashboardTeacher.module.css";
 
 const dataStudent = [
   {
@@ -99,7 +99,7 @@ const events = [
   },
 ];
 
-function HomeProf() {
+function DashboardTeacher() {
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
   const dispatch = useDispatch();
@@ -135,7 +135,7 @@ function HomeProf() {
       <Head>
         <title>MyTeacher - Dashboard </title>
       </Head>
-      <HeaderProf />
+      <HeaderTeacher />
       <main className={styles.main}>
         <div className={styles.titlePage}>
           <p className={styles.title}>MON DASHBOARD</p>
@@ -171,7 +171,7 @@ function HomeProf() {
           </div>
         </div>
       </main>
-      <FooterProf />
+      <FooterTeacher />
       {modalAddStudent && (
         <ModalAddStudent onClose={() => setModalAddStudent(false)} />
       )}
@@ -179,4 +179,4 @@ function HomeProf() {
   );
 }
 
-export default HomeProf;
+export default DashboardTeacher;

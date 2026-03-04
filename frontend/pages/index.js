@@ -1,7 +1,7 @@
-import HomeProf from "../components/HomeProf";
+import DashboardTeacher from "../components/DashboardTeacher";
 
 function Index() {
-  return <HomeProf />;
+  return <DashboardTeacher />;
 }
 
 export default Index;

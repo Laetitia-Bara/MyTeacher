@@ -1,6 +1,6 @@
-import styles from "../styles/FooterProf.module.css";
+import styles from "../styles/FooterTeacher.module.css";
 
-function FooterProf() {
+function FooterTeacher() {
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
@@ -10,4 +10,4 @@ function FooterProf() {
   );
 }
 
-export default FooterProf;
+export default FooterTeacher;

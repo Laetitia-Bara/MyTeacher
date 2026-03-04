@@ -3,9 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import styles from "../styles/HeaderProf.module.css";
+import styles from "../styles/HeaderTeacher.module.css";
 
-function HeaderProf() {
+function HeaderTeacher() {
   return (
     <header className={styles.content}>
       <div className={styles.logo}>
@@ -50,4 +50,4 @@ function HeaderProf() {
   );
 }
 
-export default HeaderProf;
+export default HeaderTeacher;
