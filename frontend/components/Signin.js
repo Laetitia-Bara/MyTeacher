@@ -95,8 +95,13 @@ function Signin() {
               onClick={() => router.push("/signup_teacher")}
               type="button"
             >
-              Pas encore de compte ? Par ici !
+              Je suis professeur : créer un compte
             </button>
+
+            <p style={{ marginTop: 10, fontSize: "0.95rem" }}>
+              Élève ? Ton compte se crée uniquement via un lien d’invitation
+              envoyé par ton professeur.
+            </p>
 
             <button
               className={styles.linkBtn}

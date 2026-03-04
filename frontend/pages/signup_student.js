@@ -1,10 +1,5 @@
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import SignupStudent from "../components/SignupStudent";
 
-export default function SigninStudentAlias() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace("/signin");
-  }, [router]);
-  return null;
+export default function SignupStudentPage() {
+  return <SignupStudent />;
 }
