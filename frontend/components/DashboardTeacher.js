@@ -9,13 +9,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents, addEventToStore } from "../reducers/planning";
 import { getStudents, addStudentToStore } from "../reducers/students";
+import { getPayments } from "../reducers/payments";
 
 import styles from "../styles/DashboardTeacher.module.css";
 
 const dataStudent = [
   {
     id: 1,
-    name: "Bob",
+    firstname: "Bob",
+    lastname: "Smith",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -23,7 +25,8 @@ const dataStudent = [
   },
   {
     id: 2,
-    name: "Jo",
+    firstname: "Jo",
+    lastname: "Doe",
     discipline: "Trompette",
     invite: true,
     status: "Actif",
@@ -31,7 +34,8 @@ const dataStudent = [
   },
   {
     id: 3,
-    name: "Stephanie",
+    firstname: "Stephanie",
+    lastname: "Johnson",
     discipline: "Guitare",
     invite: false,
     status: "Prospect",
@@ -39,7 +43,8 @@ const dataStudent = [
   },
   {
     id: 4,
-    name: "Lily",
+    firstname: "Lily",
+    lastname: "Doe",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -47,7 +52,8 @@ const dataStudent = [
   },
   {
     id: 5,
-    name: "Lulu",
+    firstname: "Lulu",
+    lastname: "Smith",
     discipline: "Trompette",
     invite: true,
     status: "Inactif",
@@ -57,12 +63,16 @@ const dataStudent = [
 
 const dataPayment = [
   {
-    name: "Bob",
+    id: 1,
+    firstname: "Bob",
+    lastname: "Smith",
     paymentTerm: "Paiement 3x",
     status: "A suivre",
   },
   {
-    name: "Lily",
+    id: 2,
+    firstname: "Lily",
+    lastname: "Doe",
     paymentTerm: "Paiement 1x",
     status: "Retard",
   },
@@ -86,9 +96,8 @@ const events = [
   {
     id: 3,
     title: "TEST OUI",
-    allDay: true,
     start: new Date("Wed Mar 06 2026 00:00:00 GMT+0100"),
-    end: new Date("Wed Mar 06 2026 00:00:00 GMT+0100"),
+    end: new Date("Thu Mar 06 2026 00:00:00 GMT+0100"),
   },
   {
     id: 4,
@@ -102,18 +111,21 @@ const events = [
 function DashboardTeacher() {
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
+  const paymentsData = useSelector((state) => state.payments.value);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getEvents(events));
-
     dispatch(getStudents(dataStudent));
+    dispatch(getPayments(dataPayment));
+    dispatch(getEvents(events));
   }, []);
 
   const students = studentsData.map((data, i) => (
     <StudentCard
       key={i}
-      name={data.name}
+      id={data.id}
+      firstname={data.firstname}
+      lastname={data.lastname}
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
@@ -121,10 +133,12 @@ function DashboardTeacher() {
     />
   ));
 
-  const payments = dataPayment.map((data, i) => (
+  const payments = paymentsData.map((data, i) => (
     <PaymentCard
       key={i}
-      name={data.name}
+      id={data.id}
+      firstname={data.firstname}
+      lastname={data.lastname}
       paymentTerm={data.paymentTerm}
       status={data.status}
     />

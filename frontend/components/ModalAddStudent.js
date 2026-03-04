@@ -10,6 +10,7 @@ export default function ModalAddStudent({ onClose }) {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [discipline, setDiscipline] = useState("");
+  const [structure, setStructure] = useState("");
   const [status, setStatus] = useState("");
   const [subscription, setSubscription] = useState("");
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export default function ModalAddStudent({ onClose }) {
       firstName !== "" &&
       lastName !== "" &&
       email !== "" &&
+      structure !== "" &&
       discipline !== "" &&
       status !== "" &&
       subscription !== ""
@@ -30,6 +32,7 @@ export default function ModalAddStudent({ onClose }) {
           lastName,
           email,
           discipline,
+          structure,
           status,
           subscription,
         }),
@@ -120,6 +123,14 @@ export default function ModalAddStudent({ onClose }) {
             maxLength="15"
             value={discipline}
             onChange={(e) => setDiscipline(e.target.value)}
+          />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Structure"
+            maxLength="15"
+            value={structure}
+            onChange={(e) => setStructure(e.target.value)}
           />
           <select
             className={styles.selectList}

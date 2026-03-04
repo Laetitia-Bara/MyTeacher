@@ -1,6 +1,6 @@
 import styles from "../styles/ModalAddEvent.module.css";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addEventToStore } from "../reducers/planning";
 
 import moment from "moment";
@@ -8,7 +8,11 @@ import moment from "moment";
 export default function ModalAddEvent({ onClose, start, end }) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [structure, setStructure] = useState("");
+  const [location, setLocation] = useState("");
+  const [student, setStudent] = useState("");
   const dispatch = useDispatch();
+  const studentsData = useSelector((state) => state.students.value);
 
   const handleAdd = () => {
     if (title !== "") {
@@ -24,6 +28,16 @@ export default function ModalAddEvent({ onClose, start, end }) {
     }
     onClose();
   };
+
+  const studentsChoice = studentsData.map((data, i) => {
+    return (
+      <>
+        <option key={i} value={data.name}>
+          {data.name}
+        </option>
+      </>
+    );
+  });
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -48,6 +62,40 @@ export default function ModalAddEvent({ onClose, start, end }) {
             maxLength="25"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+          />
+          <select
+            className={styles.selectList}
+            type="text"
+            value={student}
+            onChange={(e) => setStudent(e.target.value)}
+          >
+            <option value="">Choisir un élève</option>
+            {studentsChoice}
+          </select>
+
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Elève"
+            maxLength="40"
+            value={student}
+            onChange={(e) => setStudent(e.target.value)}
+          />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Structure"
+            maxLength="40"
+            value={structure}
+            onChange={(e) => setStructure(e.target.value)}
+          />
+          <input
+            className={styles.input}
+            type="text"
+            placeholder="Lieu"
+            maxLength="40"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
           />
           <input
             className={styles.input}
