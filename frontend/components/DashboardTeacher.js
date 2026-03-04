@@ -159,24 +159,24 @@ function DashboardTeacher() {
         console.error("Error fetching data:", error);
       }
 
-      // //fetch events
-      // try {
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
-      //     {
-      //       method: "GET",
-      //       credentials: "include",
-      //     },
-      //   );
-      //   if (!response.ok) {
-      //     console.error("backend error", await response.text());
-      //     return;
-      //   }
-      //   const data = await response.json();
-      //   console.log("Data lessonsfetched:", data);
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
+       //fetch events
+       try {
+         const response = await fetch(
+           `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
+           {
+             method: "GET",
+             credentials: "include",
+           },
+         );
+         if (!response.ok) {
+           console.error("backend error", await response.text());
+           return;
+         }
+         const data = await response.json();
+         console.log("Data lessonsfetched:", data);
+       } catch (error) {
+         console.error("Error fetching data:", error);
+       }
     })();
 
     // En attendant données backend, dispatch de données statiques
@@ -195,7 +195,7 @@ function DashboardTeacher() {
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      subscription={data.subscription}
+      subscription={data.subscription.type}
     />
   ));
 
