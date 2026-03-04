@@ -44,23 +44,29 @@ export default function ModalAddStudent({ onClose }) {
   // Temporaire, logique d'inviation ici à déplacer ensuite
   const handleInvite = async () => {
     if (email !== "") {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/invitations`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invitations`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              email: email.toLocaleLowerCase().trim(),
+            }),
           },
-          body: JSON.stringify({
-            email: email.toLocaleLowerCase().trim(),
-          }),
-        },
-      );
+        );
 
-      const data = await response.json();
-      console.log(data);
+        const data = await response.json();
+        data.result === true
+          ? alert("Invitation envoyée !")
+          : alert(`Erreur : ${data.error}`);
+      } catch (error) {
+        console.error("Error inviting student:", error);
+      }
     }
     onClose();
   };

@@ -33,7 +33,7 @@ export default function ModalAddEvent({ onClose, start, end }) {
     return (
       <>
         <option key={i} value={data.name}>
-          {data.name}
+          {data.firstname} {data.lastname}
         </option>
       </>
     );
@@ -72,15 +72,6 @@ export default function ModalAddEvent({ onClose, start, end }) {
             <option value="">Choisir un élève</option>
             {studentsChoice}
           </select>
-
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="Elève"
-            maxLength="40"
-            value={student}
-            onChange={(e) => setStudent(e.target.value)}
-          />
           <input
             className={styles.input}
             type="text"
