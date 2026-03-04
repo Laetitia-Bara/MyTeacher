@@ -13,12 +13,13 @@ const authMiddleware = require("../middlewares/auth");
 //---------------------------Helpers--------------------------------------
 
 // Helper JWT cookie
+const isProd = process.env.NODE_ENV === "production";
 function setAuthCookie(res, token) {
   res.cookie("access_token", token, {
     httpOnly: true,
-    sameSite: "lax", // protection anti-CSRF des cookies
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 24 * 60 * 60 * 1000, // 1 jour
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd, // true en prod (https)
+    maxAge: 24 * 60 * 60 * 1000,
     path: "/",
   });
 }
