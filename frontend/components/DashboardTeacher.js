@@ -116,7 +116,6 @@ function DashboardTeacher() {
 
   useEffect(() => {
     (async () => {
-      /*
       // Fetch students
       try {
         const response = await fetch(
@@ -139,7 +138,7 @@ function DashboardTeacher() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      */
+
       // Fetch payments
       try {
         const response = await fetch(
@@ -174,6 +173,8 @@ function DashboardTeacher() {
       //   }
       //   const data = await response.json();
       //   console.log("Data lessonsfetched:", data);
+      // Version dès que backend ok
+      // data.result ? dispatch(getEvents(data.lessons)) : console.log(data.error);
       // } catch (error) {
       //   console.error("Error fetching data:", error);
       // }
@@ -195,14 +196,14 @@ function DashboardTeacher() {
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      subscription={data.subscription}
+      subscription={data.subscription.type}
     />
   ));
 
   const payments = paymentsData.map((data, i) => (
     <PaymentCard
       key={i}
-      id={data.id}
+      // id={data.id}
       firstname={data.firstname}
       lastname={data.lastname}
       paymentTerm={data.paymentTerm}

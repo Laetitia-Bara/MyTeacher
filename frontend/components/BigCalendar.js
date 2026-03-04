@@ -28,15 +28,21 @@ export default function BigCalendar() {
   };
 
   const handleSelectEvent = (event) => {
+    console.log("Event selected:", event);
     setEventSelected(event);
     setModalRemove(true);
   };
 
-  const eventsCalendar = eventsData.map((e) => ({
-    ...e,
-    start: new Date(e.start),
-    end: new Date(e.end),
-  }));
+  const eventsCalendar = eventsData.map((e) => {
+    const description = `${e.student ? e.student : ""} - ${e.structure ? e.structure : ""} - ${e.location ? e.location : ""} - ${e.desc ? e.desc : ""}`;
+    return {
+      id: e.id,
+      title: e.title,
+      start: new Date(e.start),
+      end: new Date(e.end),
+      desc: description,
+    };
+  });
 
   return (
     <div className={styles.planningCalendar}>
