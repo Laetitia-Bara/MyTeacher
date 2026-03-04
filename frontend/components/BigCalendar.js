@@ -28,6 +28,7 @@ export default function BigCalendar() {
   };
 
   const handleSelectEvent = (event) => {
+    console.log("Event selected:", event);
     setEventSelected(event);
     setModalRemove(true);
   };
