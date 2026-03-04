@@ -1,5 +1,5 @@
 import Image from "next/image";
-import FooterProf from "./FooterProf";
+import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/SignupTeacher.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -97,7 +97,7 @@ function SignupTeacher() {
         Déjà un compte ? Se connecter !
       </button>
 
-      <FooterProf />
+      <FooterTeacher />
     </div>
   );
 }
