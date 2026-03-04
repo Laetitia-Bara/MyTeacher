@@ -21,19 +21,22 @@ router.get('/getInvoices',
          populate: 'user'
     }))
     .then(data => {
-        for(let obj of data)
+        if(data.length > 0)
         {
-            invoices.push({
-                firstName: obj.student.user.firstName,
-                lastName: obj.student.user.lastName,
-                period: obj.period,
-                label: obj.label,
-                amount: obj.amount,
-                status: obj.status,
-                createdAt : obj.createdAt
-            })
-        }
-    }).then(() => {if(invoices.length > 0){res.json({result: true, invoices: invoices})}else{res.json({result: false})}})
+            for(let obj of data)
+            {
+                invoices.push({
+                    firstName: obj.student.user.firstName,
+                    lastName: obj.student.user.lastName,
+                    period: obj.period,
+                    label: obj.label,
+                    amount: obj.amount,
+                    status: obj.status,
+                    createdAt : obj.createdAt
+                })
+            }
+        }else{res.json({result: false, error : "No invoices found"})}
+    }).then(() => {res.json({result: true, invoices: invoices})})
 })
 
 module.exports = router;
