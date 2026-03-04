@@ -1,11 +1,11 @@
 import Image from "next/image";
 import FooterProf from "./FooterProf";
-import styles from "../styles/SignupProf.module.css";
+import styles from "../styles/SignupTeacher.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { api } from "../lib/api";
 
-function SignupProf() {
+function SignupTeacher() {
   const router = useRouter();
 
   const [firstName, setFirstName] = useState("");
@@ -92,7 +92,7 @@ function SignupProf() {
 
       <button
         className={styles.boutonVert}
-        onClick={() => router.push("/signup_prof")}
+        onClick={() => router.push("/signup_teacher")}
       >
         Déjà un compte ? Se connecter !
       </button>
@@ -102,4 +102,4 @@ function SignupProf() {
   );
 }
 
-export default SignupProf;
+export default SignupTeacher;
