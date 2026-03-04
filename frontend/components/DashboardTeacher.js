@@ -116,6 +116,7 @@ function DashboardTeacher() {
 
   useEffect(() => {
     (async () => {
+      /*
       // Fetch students
       try {
         const response = await fetch(
@@ -138,25 +139,25 @@ function DashboardTeacher() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-
+      */
       // Fetch payments
-      // try {
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
-      //     {
-      //       method: "GET",
-      //       credentials: "include",
-      //     },
-      //   );
-      //   if (!response.ok) {
-      //     console.error("backend error", await response.text());
-      //     return;
-      //   }
-      //   const data = await response.json();
-      //   console.log("Data invoices fetched:", data);
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        if (!response.ok) {
+          console.error("backend error", await response.text());
+          return;
+        }
+        const data = await response.json();
+        console.log("Data invoices fetched:", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
 
       // //fetch events
       // try {
