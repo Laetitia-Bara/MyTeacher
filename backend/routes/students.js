@@ -13,7 +13,8 @@ const requireRole = require("../middlewares/requireRole");
 /* 
   authMiddleware,
   requireRole("teacher"), */
-router.get("/getStudents",
+router.get(
+  "/getStudents",
   authMiddleware,
   requireRole("teacher"),
   function (req, res) {
@@ -22,26 +23,38 @@ router.get("/getStudents",
       .populate("user")
       .then((data) => {
         if (data.length > 0) {
-          Invitation.find({ teacher: req.user.userId})
-          .then((invitation) => {
-            for (let obj of data) {
-              let invite = invitation.find((element) => element.email === obj.user.email) != undefined ? false : true
-              students.push({
-                id : obj._id,
-                firstName: obj.user.firstName,
-                lastName: obj.user.lastName,
-                email: obj.user.email,
-                phone: obj.phone,
-                discipline: obj.discipline,
-                status: obj.status,
-                structure: obj.structure,
-                subscription: obj.subscription,
-                invite: invite
-              });
-            }
-          }).then(() => {if(students.length > 0){res.json({ result: true, students: students });}else{res.json({ result: false });}});
+          Invitation.find({ teacher: req.user.userId })
+            .then((invitation) => {
+              for (let obj of data) {
+                let invite =
+                  invitation.find(
+                    (element) => element.email === obj.user.email,
+                  ) != undefined
+                    ? false
+                    : true;
+                students.push({
+                  id: obj._id,
+                  firstName: obj.user.firstName,
+                  lastName: obj.user.lastName,
+                  email: obj.user.email,
+                  phone: obj.phone,
+                  discipline: obj.discipline,
+                  status: obj.status,
+                  structure: obj.structure,
+                  subscription: obj.subscription,
+                  invite: invite,
+                });
+              }
+            })
+            .then(() => {
+              if (students.length > 0) {
+                res.json({ result: true, students: students });
+              } else {
+                res.json({ result: false });
+              }
+            });
         }
-      })
+      });
   },
 );
 
