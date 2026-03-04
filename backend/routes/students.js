@@ -39,7 +39,9 @@ router.get("/getStudents",
                 invite: invite
               });
             }
-          }).then(() => {if(students.length > 0){res.json({ result: true, students: students });}else{res.json({ result: false });}});
+          }).then(() => {res.json({ result: true, students: students });});
+        }else {
+          res.json({ result: false, error: "No student found"})
         }
       })
   },
