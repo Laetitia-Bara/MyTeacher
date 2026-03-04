@@ -1,5 +1,5 @@
 import Image from "next/image";
-import FooterProf from "./FooterTeacher";
+import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/Signin.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
