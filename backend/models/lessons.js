@@ -4,7 +4,6 @@ const lessonSchema = mongoose.Schema({
   teacherId: mongoose.Types.ObjectId, 
   studentId: [mongoose.Types.ObjectId],
   structure: String,
-  canBookmark:{ type: Boolean, default:true},
   title: String,
   startAt: Date,
   endAt: Date,
