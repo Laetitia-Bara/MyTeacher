@@ -156,6 +156,10 @@ function DashboardTeacher() {
         }
         const data = await response.json();
         console.log("Data invoices fetched:", data);
+        // Version dès que backend ok
+        data.result
+          ? dispatch(getPayments(data.invoices))
+          : console.log(data.error);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
