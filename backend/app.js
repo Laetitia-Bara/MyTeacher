@@ -12,6 +12,7 @@ var invitationsRouter = require("./routes/invitations");
 var teachersRouter = require("./routes/teachers");
 var studentsRouter = require("./routes/students");
 var lessonsRouter = require("./routes/lessons");
+var invoicesRouter = require("./routes/invoices");
 
 var app = express();
 
@@ -35,5 +36,6 @@ app.use("/teachers", teachersRouter);
 app.use("/students", studentsRouter);
 app.use("/lessons", lessonsRouter);
 app.use("/invitations", invitationsRouter);
+app.use("/invoices", invoicesRouter);
 
 module.exports = app;
