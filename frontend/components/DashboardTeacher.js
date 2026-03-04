@@ -135,7 +135,7 @@ function DashboardTeacher() {
         // Version dès que backend ok
         data.result
           ? dispatch(getStudents(data.students))
-          : console.log("No students found");
+          : console.log(data.error);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
