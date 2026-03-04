@@ -140,45 +140,44 @@ function DashboardTeacher() {
       }
 
       // Fetch payments
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
-          {
-            method: "GET",
-            credentials: "include",
-          },
-        );
-        if (!response.ok) {
-          console.error("backend error", await response.text());
-          return;
-        }
-        const data = await response.json();
-        console.log("Data invoices fetched:", data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      // try {
+      //   const response = await fetch(
+      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+      //     {
+      //       method: "GET",
+      //       credentials: "include",
+      //     },
+      //   );
+      //   if (!response.ok) {
+      //     console.error("backend error", await response.text());
+      //     return;
+      //   }
+      //   const data = await response.json();
+      //   console.log("Data invoices fetched:", data);
+      // } catch (error) {
+      //   console.error("Error fetching data:", error);
+      // }
 
-      //fetch events
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
-          {
-            method: "GET",
-            credentials: "include",
-          },
-        );
-        if (!response.ok) {
-          console.error("backend error", await response.text());
-          return;
-        }
-        const data = await response.json();
-        console.log("Data lessonsfetched:", data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      // //fetch events
+      // try {
+      //   const response = await fetch(
+      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
+      //     {
+      //       method: "GET",
+      //       credentials: "include",
+      //     },
+      //   );
+      //   if (!response.ok) {
+      //     console.error("backend error", await response.text());
+      //     return;
+      //   }
+      //   const data = await response.json();
+      //   console.log("Data lessonsfetched:", data);
+      // } catch (error) {
+      //   console.error("Error fetching data:", error);
+      // }
     })();
 
-    // Dispatch for use
     // En attendant données backend, dispatch de données statiques
     dispatch(getStudents(dataStudent));
 
