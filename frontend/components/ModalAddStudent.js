@@ -1,4 +1,4 @@
-import styles from "../styles/ModalAddStudent.module.css";
+/* import styles from "../styles/ModalAddStudent.module.css";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addStudentToStore } from "../reducers/students";
@@ -13,6 +13,7 @@ export default function ModalAddStudent({ onClose }) {
   const [structure, setStructure] = useState("");
   const [status, setStatus] = useState("");
   const [subscription, setSubscription] = useState("");
+
   const dispatch = useDispatch();
 
   const handleAdd = () => {
@@ -80,7 +81,7 @@ export default function ModalAddStudent({ onClose }) {
             ×
           </button>
         </div>
-        {/* Temporaire, logique d'inviation ici à déplacer ensuite */}
+        
         <div className={styles.content}>
           <input
             className={styles.input}
@@ -96,7 +97,6 @@ export default function ModalAddStudent({ onClose }) {
           </button>
         </div>
 
-        {/* Reactiver quand logique d'ajout claire */}
         {/* <div className={styles.content}>
           <input
             className={styles.input}
@@ -162,8 +162,108 @@ export default function ModalAddStudent({ onClose }) {
           </select>
           <button className={styles.btnAddEvent} onClick={() => handleAdd()}>
             Ajouter
-          </button> */}
-        {/* </div> */}
+          </button>
+      </div>
+    </div>
+  );
+}*/
+
+import { useMemo, useState } from "react";
+import styles from "../styles/ModalAddStudent.module.css";
+import { api } from "../lib/api";
+
+export default function ModalAddStudent({ onClose, onInvited }) {
+  const [email, setEmail] = useState("");
+  const [inviteLink, setInviteLink] = useState("");
+  const [statusMsg, setStatusMsg] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const canSubmit = useMemo(() => email.trim().length > 3, [email]);
+
+  const onInvite = async () => {
+    setError("");
+    setStatusMsg("");
+    setInviteLink("");
+
+    const normalized = email.trim().toLowerCase();
+    if (!normalized) return setError("Email manquant");
+    if (loading) return;
+
+    setLoading(true);
+    const { ok, data } = await api("/invitations", {
+      method: "POST",
+      body: { email: normalized },
+    });
+    setLoading(false);
+
+    if (!ok) return setError(data?.error || "Invite failed");
+
+    setStatusMsg("Invitation envoyée ✅");
+    if (data?.inviteLink) setInviteLink(data.inviteLink);
+
+    // optionnel: prévenir le parent pour refresh la liste
+    if (typeof onInvited === "function") onInvited(data);
+  };
+
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setStatusMsg("Lien copié ✅");
+    } catch {
+      setError("Impossible de copier le lien");
+    }
+  };
+
+  return (
+    <div className={styles.backdrop} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Inviter un élève</h2>
+          <button className={styles.close} onClick={onClose} type="button">
+            ✕
+          </button>
+        </div>
+
+        <p className={styles.helper}>
+          L’élève recevra un lien pour créer son compte (valable 48h).
+        </p>
+
+        <input
+          className={styles.input}
+          type="email"
+          placeholder="Email de l'élève"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+        />
+
+        <div className={styles.actions}>
+          <button className={styles.secondary} onClick={onClose} type="button">
+            Annuler
+          </button>
+          <button
+            className={styles.primary}
+            onClick={onInvite}
+            type="button"
+            disabled={!canSubmit || loading}
+          >
+            {loading ? "Envoi..." : "Envoyer"}
+          </button>
+        </div>
+
+        {error && <div className={styles.errorBox}>{error}</div>}
+        {statusMsg && <div className={styles.successBox}>{statusMsg}</div>}
+
+        {inviteLink && (
+          <div className={styles.linkBox}>
+            <div className={styles.linkText}>{inviteLink}</div>
+            <button className={styles.copyBtn} onClick={onCopy} type="button">
+              Copier
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
