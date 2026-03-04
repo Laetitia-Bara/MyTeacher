@@ -283,7 +283,10 @@ function DashboardTeacher() {
       </main>
       <FooterTeacher />
       {modalAddStudent && (
-        <ModalAddStudent onClose={() => setModalAddStudent(false)} />
+        <ModalAddStudent
+          onClose={() => setModalAddStudent(false)}
+          onInvited={() => setModalAddStudent(false)}
+        />
       )}
     </div>
   );
