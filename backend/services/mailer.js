@@ -8,6 +8,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
+  tls: {
+    // DEV ONLY: autoriser le certificat “self-signed”
+    rejectUnauthorized: process.env.NODE_ENV === "production",
+  },
 });
 
 async function sendInviteEmail({ to, inviteLink, teacherLabel }) {
