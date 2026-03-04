@@ -9,6 +9,8 @@ const Invitation = require("../models/invitations");
 const Teacher = require("../models/teachers");
 const User = require("../models/users");
 
+const { sendInviteEmail } = require("../services/mailer");
+
 //-------------------------Helpers---------------------------------------------
 
 // Helper hash token
@@ -67,9 +69,27 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     });
 
     const inviteLink = `${process.env.FRONT_URL}/signup_student?token=${token}`;
+
+    // Envoi email
+    try {
+      await sendInviteEmail({ to: normalizedEmail, inviteLink });
+    } catch (mailErr) {
+      console.error("MAIL ERROR:", mailErr);
+
+      return res.status(500).json({
+        result: false,
+        error: "Email could not be sent",
+        // utile pour debug en dev
+        inviteLink:
+          process.env.NODE_ENV === "production" ? undefined : inviteLink,
+      });
+    }
+
+    // Réponse
     return res.status(201).json({
       result: true,
-      inviteLink,
+      inviteLink:
+        process.env.NODE_ENV === "production" ? undefined : inviteLink,
       expiresAt,
     });
   } catch (e) {
