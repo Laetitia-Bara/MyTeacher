@@ -92,7 +92,7 @@ function SignupTeacher() {
 
       <button
         className={styles.boutonVert}
-        onClick={() => router.push("/signup_teacher")}
+        onClick={() => router.push("/signin")}
       >
         Déjà un compte ? Se connecter !
       </button>
