@@ -1,7 +1,7 @@
-import FicheEleveProf from "../components/FicheEleveProf";
+import FicheEleveTeacher from "../components/FicheEleveTeacher";
 
-function FicheEleveProfPage() {
-  return <FicheEleveProf />;
+function FicheEleveTeacherPage() {
+  return <FicheEleveTeacher />;
 }
 
-export default FicheEleveProfPage;
+export default FicheEleveTeacherPage;
