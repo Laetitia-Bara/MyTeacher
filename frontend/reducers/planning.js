@@ -8,6 +8,9 @@ export const planningSlice = createSlice({
   name: "planning",
   initialState,
   reducers: {
+    getEvents: (state, action) => {
+      state.value = action.payload;
+    },
     addEventToStore: (state, action) => {
       if (!state.value.some((e) => e.id === action.payload.id)) {
         state.value.push(action.payload);
@@ -19,5 +22,6 @@ export const planningSlice = createSlice({
   },
 });
 
-export const { addEventToStore, removeEventFromStore } = planningSlice.actions;
+export const { getEvents, addEventToStore, removeEventFromStore } =
+  planningSlice.actions;
 export default planningSlice.reducer;

@@ -7,8 +7,8 @@ import BigCalendar from "./BigCalendar";
 import ModalAddStudent from "./ModalAddStudent";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addEventToStore } from "../reducers/planning";
-import { addStudentToStore } from "../reducers/students";
+import { getEvents, addEventToStore } from "../reducers/planning";
+import { getStudents, addStudentToStore } from "../reducers/students";
 
 import styles from "../styles/HomeProf.module.css";
 
@@ -105,12 +105,9 @@ function HomeProf() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    for (const event of events) {
-      dispatch(addEventToStore(event));
-    }
-    for (const student of dataStudent) {
-      dispatch(addStudentToStore(student));
-    }
+    dispatch(getEvents(events));
+
+    dispatch(getStudents(dataStudent));
   }, []);
 
   const students = studentsData.map((data, i) => (
