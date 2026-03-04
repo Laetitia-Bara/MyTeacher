@@ -47,12 +47,10 @@ router.get(
               }
             })
             .then(() => {
-              if (students.length > 0) {
-                res.json({ result: true, students: students });
-              } else {
-                res.json({ result: false });
-              }
+              res.json({ result: true, students: students });
             });
+        } else {
+          res.json({ result: false, error: "No student found" });
         }
       });
   },
