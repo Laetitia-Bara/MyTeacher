@@ -17,16 +17,12 @@ router.get("/getStudents",
   authMiddleware,
   requireRole("teacher"),
   function (req, res) {
-    if (!checkBody(req.body, ["teacherId"])) {
-      res.json({ result: false, error: "Missing data" });
-      return;
-    }
     let students = [];
-    Student.find({ teacher: req.body.teacherId })
+    Student.find({ teacher: req.user.userId })
       .populate("user")
       .then((data) => {
         if (data.length > 0) {
-          Invitation.find({ teacher: req.body.teacherId})
+          Invitation.find({ teacher: req.user.userId})
           .then((invitation) => {
             for (let obj of data) {
               let invite = invitation.find((element) => element.email === obj.user.email) != undefined ? false : true

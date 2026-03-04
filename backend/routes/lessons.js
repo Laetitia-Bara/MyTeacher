@@ -7,12 +7,8 @@ const { checkBody } = require('../modules/checkBody');
 
 /* GET teachers students. */
 router.get('/getLessons', function(req, res) {
-  if (!checkBody(req.body, ['teacherId'])) {
-    res.json({ result: false, error: 'Missing data' });
-    return;
-  }
 
-  Student.find({teacher: req.body.teacherId})
+  Lesson.find({teacher: req.body.teacherId})
   .then(data => {
     if(data != null)
     {

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const invoiceSchema = mongoose.Schema({
-    teacherId: mongoose.Types.ObjectId, 
-    studentId: mongoose.Types.ObjectId,
+    teacher: mongoose.Types.ObjectId, 
+    student: mongoose.Types.ObjectId,
     period: String,
     label: String,
     amount: Number,

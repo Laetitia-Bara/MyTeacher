@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const lessonSchema = mongoose.Schema({
-  teacherId: mongoose.Types.ObjectId, 
-  studentId: [mongoose.Types.ObjectId],
+  teacher: mongoose.Types.ObjectId, 
+  student: [mongoose.Types.ObjectId],
   structure: String,
   title: String,
   startAt: Date,
