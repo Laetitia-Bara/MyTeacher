@@ -115,6 +115,26 @@ function DashboardTeacher() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/students/getStudents`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        if (!response.ok) {
+          console.error("backend error", await response.text());
+          return;
+        }
+        const data = await response.json();
+        console.log("Data fetched:", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    })();
+
     dispatch(getStudents(dataStudent));
     dispatch(getPayments(dataPayment));
     dispatch(getEvents(events));
