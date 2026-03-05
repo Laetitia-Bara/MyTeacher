@@ -17,23 +17,30 @@ var invoicesRouter = require("./routes/invoices");
 var app = express();
 
 const cors = require("cors");
+
 const allowedOrigins = [
+  "http://localhost:3000",
   "http://localhost:3001",
   "https://myteacher-inky.vercel.app",
 ];
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  }),
-);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // autorise Postman/curl (origin undefined)
+    if (!origin) return callback(null, true);
+    // autorise l'origin exact
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // autoriser toutes les previews Vercel
+    if (origin.endsWith(".vercel.app")) return callback(null, true);
+    return callback(new Error("Not allowed by CORS: " + origin));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const { verifyMailer } = require("./services/mailer");
 verifyMailer().catch((e) => console.error("[MAIL] verify failed:", e));
