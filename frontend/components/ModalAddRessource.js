@@ -5,14 +5,14 @@ import { faXmark, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function ModalAddRessource({ onClose, addRessourceFct }) {
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("");
+  const [tag, setTag] = useState("");
   const [url, setUrl] = useState("");
 
   const handleAdd = () => {
-    if (!title && !type && !url) {
+    if (!title && !tag && !url) {
       console.log("Data missing in form");
     } else {
-      addRessourceFct({ title, type, url });
+      addRessourceFct({ title, tag, url });
       onClose();
     }
   };
@@ -47,10 +47,10 @@ export default function ModalAddRessource({ onClose, addRessourceFct }) {
           <input
             className={styles.input}
             type="text"
-            placeholder="Type de la ressource"
+            placeholder="Tag de la ressource"
             maxLength="20"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
           />
           <div className={styles.fileImport}>
             <button

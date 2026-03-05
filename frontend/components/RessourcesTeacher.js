@@ -55,9 +55,6 @@ function RessourcesTeacher() {
         console.error("Error fetching data:", error);
       }
     })();
-
-    // En attendant données backend, maj état avec données statiques
-    setRessourcesData(dataRessources);
   }, [addFlag]);
 
   const addToSharingList = (comingProps) => {
@@ -70,11 +67,11 @@ function RessourcesTeacher() {
   };
 
   const deleteRessource = async (comingProps) => {
-    console.log("Supprimer ressource", comingProps.id);
+    console.log("Supprimer ressource", comingProps._id);
     // Fetch delete ressource
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/deleteRessource/${comingProps.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/deleteRessource/${comingProps._id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -86,15 +83,12 @@ function RessourcesTeacher() {
       // Version dès que backend ok
       data.result
         ? setRessourcesData((ress) =>
-            ress.filter((r) => r.id !== comingProps.id),
+            ress.filter((r) => r._id !== comingProps._id),
           )
         : console.log(data.error);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-
-    // En attendant données backend, maj état en supprimant la ressource
-    setRessourcesData((ress) => ress.filter((r) => r.id !== comingProps.id));
   };
 
   const downloadRessource = (comingProps) => {
@@ -145,9 +139,10 @@ function RessourcesTeacher() {
   };
 
   const handleAddRessource = async (newRessource) => {
+    console.log("Ajouter ressource", newRessource);
     if (
       newRessource.title !== "" &&
-      newRessource.type !== "" &&
+      newRessource.tag !== "" &&
       newRessource.url !== ""
     ) {
       try {
@@ -162,7 +157,7 @@ function RessourcesTeacher() {
             },
             body: JSON.stringify({
               title: newRessource.title,
-              type: newRessource.type,
+              tag: newRessource.tag,
               url: newRessource.url,
             }),
           },
@@ -188,9 +183,9 @@ function RessourcesTeacher() {
   const ressources = ressourcesData?.map((data, i) => (
     <RessourceCard
       key={i}
-      id={data.id}
+      id={data._id}
       title={data.title}
-      type={data.type}
+      tag={data.tags[0]}
       addToSharingFct={addToSharingList}
       deleteFct={deleteRessource}
       downloadFct={downloadRessource}
@@ -202,7 +197,7 @@ function RessourcesTeacher() {
   const ressourcesToShare = sharingRessources?.map((data, i) => (
     <RessourceCard
       key={i}
-      id={data.id}
+      id={data._id}
       title={data.title}
       type={data.type}
       onClick={addToSharingList}
@@ -216,7 +211,7 @@ function RessourcesTeacher() {
   const studentsChoice = studentsData.map((data, i) => {
     return (
       <option key={i} value={data.id}>
-        {data.firstname} {data.lastname}
+        {data.firstName} {data.lastName}
       </option>
     );
   });
