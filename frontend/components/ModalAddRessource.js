@@ -1,7 +1,7 @@
 import styles from "../styles/ModalAddRessource.module.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function ModalAddRessource({ onClose, addRessourceFct }) {
   const [title, setTitle] = useState("");
@@ -19,6 +19,9 @@ export default function ModalAddRessource({ onClose, addRessourceFct }) {
 
   const handleUploadRessource = () => {
     // Logique manquante pour uploader la ressource puis l'envoyer sur cloudinary via backend et récupérer url
+    setUrl(
+      "https://res.cloudinary.com/dzj8q3n9o/image/upload/v1700000000/ressource_example.jpg",
+    );
   };
 
   return (
@@ -49,13 +52,21 @@ export default function ModalAddRessource({ onClose, addRessourceFct }) {
             value={type}
             onChange={(e) => setType(e.target.value)}
           />
-
-          <button
-            className={styles.btnImport}
-            onClick={() => handleUploadRessource()}
-          >
-            Importer une ressource
-          </button>
+          <div className={styles.fileImport}>
+            <button
+              className={`${styles.btnImport} ${url ? styles.btnImportWithIcon : styles.btnImportWithoutIcon}`}
+              onClick={() => handleUploadRessource()}
+            >
+              Importer une ressource
+            </button>
+            {url && (
+              <FontAwesomeIcon
+                className={styles.icon}
+                icon={faFileCircleCheck}
+                onClick={() => setUrl("")}
+              />
+            )}
+          </div>
 
           <button className={styles.btn} onClick={() => handleAdd()}>
             Ajouter

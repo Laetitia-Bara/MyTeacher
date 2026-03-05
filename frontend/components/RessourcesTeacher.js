@@ -105,6 +105,45 @@ function RessourcesTeacher() {
     setSharingRessources((ress) => ress.filter((r) => r.id !== comingProps.id));
   };
 
+  const shareRessources = async () => {
+    // Fetch vers backend pour partager les ressources
+    if (students.length > 0 && sharingRessources.length > 0) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/share`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ressources: sharingRessources,
+              students,
+            }),
+          },
+        );
+        const data = await response.json();
+        console.log("Data ressources fetched:", data);
+        // Version dès que backend ok
+        data.result ? setSharingRessources([]) : console.log(data.error);
+      } catch (error) {
+        console.error("Error adding event:", error);
+      }
+
+      // En attendant que le backend soit ok
+      setSharingRessources([]);
+      setStudents([]);
+      alert("Partage effectué !");
+      console.log(
+        "Partager ressources",
+        sharingRessources,
+        "à l'élève",
+        students[0],
+      );
+    }
+  };
+
   const handleAddRessource = async (newRessource) => {
     if (
       newRessource.title !== "" &&
@@ -130,6 +169,7 @@ function RessourcesTeacher() {
         );
 
         const data = await response.json();
+        console.log("Data ressources fetched:", data);
 
         if (data.result) {
           alert("Ressource ajoutée !");
@@ -180,45 +220,6 @@ function RessourcesTeacher() {
       </option>
     );
   });
-
-  const shareRessources = async () => {
-    // Fetch vers backend pour partager les ressources
-    if (students.length > 0 && sharingRessources.length > 0) {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/share`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ressources: sharingRessources,
-              students,
-            }),
-          },
-        );
-        const data = await response.json();
-        console.log("Data ressources fetched:", data);
-        // Version dès que backend ok
-        data.result ? setSharingRessources([]) : console.log(data.error);
-      } catch (error) {
-        console.error("Error adding event:", error);
-      }
-
-      // En attendant que le backend soit ok
-      setSharingRessources([]);
-      setStudents([]);
-      alert("Partage effectué !");
-      console.log(
-        "Partager ressources",
-        sharingRessources,
-        "à l'élève",
-        students[0],
-      );
-    }
-  };
 
   return (
     <div className={styles.content}>

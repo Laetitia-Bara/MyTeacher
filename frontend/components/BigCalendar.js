@@ -20,6 +20,7 @@ export default function BigCalendar() {
   const [eventSelected, setEventSelected] = useState(null);
 
   const eventsData = useSelector((state) => state.planning.value);
+  console.log("Events data in calendar:", eventsData);
 
   const handleSelectSlot = ({ start, end }) => {
     setStart(start);
@@ -33,7 +34,7 @@ export default function BigCalendar() {
   };
 
   const eventsCalendar = eventsData.map((e) => {
-    const description = `${e.student ? e.student : ""} - ${e.structure ? e.structure : ""} - ${e.location ? e.location : ""} - ${e.desc ? e.desc : ""}`;
+    const description = `${e.student[0] ? e.student[0] : ""} - ${e.structure ? e.structure : ""} - ${e.location ? e.location : ""} - ${e.desc ? e.desc : ""}`;
     return {
       id: e.id,
       title: e.title,
