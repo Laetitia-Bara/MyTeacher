@@ -179,7 +179,7 @@ export default function ModalAddStudent({ onClose, onInvited }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const canSubmit = useMemo(() => email.trim().length > 3, [email]);
+  const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
   const onInvite = async () => {
     setError("");
@@ -199,8 +199,16 @@ export default function ModalAddStudent({ onClose, onInvited }) {
 
     if (!ok) return setError(data?.error || "Invite failed");
 
-    setStatusMsg("Invitation envoyée ✅");
-    if (data?.inviteLink) setInviteLink(data.inviteLink);
+    if (data?.emailSent === true) {
+      setStatusMsg("✅ Email envoyé !");
+    } else if (data?.emailSent === false) {
+      setStatusMsg(
+        "⚠️ Email non envoyé. Copie le lien ci-dessous et envoie-le manuellement.",
+      );
+    } else {
+      setStatusMsg("✅ Invitation créée. Copie le lien ci-dessous.");
+    }
+    if (data?.inviteLink) setInviteLink(data?.inviteLink || "");
 
     // optionnel: prévenir le parent pour refresh la liste
     if (typeof onInvited === "function") onInvited(data);
