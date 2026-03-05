@@ -8,7 +8,30 @@ import moment from "moment";
 export default function ModalRemoveEvent({ onClose, event }) {
   const dispatch = useDispatch();
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/removeEvent/${event.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        console.error("backend error", await response.text());
+        return;
+      }
+      console.log("Response from backend:", data);
+      // Version dès que backend ok
+      data.result
+        ? dispatch(removeEventFromStore(event))
+        : console.log(data.error);
+    } catch (error) {
+      console.error("Error removing event:", error);
+    }
+
+    // En attendant que le backend soit ok, on supprime l'évènement directement dans le store
     dispatch(removeEventFromStore(event));
     onClose();
   };

@@ -116,7 +116,6 @@ function DashboardTeacher() {
 
   useEffect(() => {
     (async () => {
-      /*
       // Fetch students
       try {
         const response = await fetch(
@@ -139,9 +138,8 @@ function DashboardTeacher() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      */
+
       // Fetch payments
-<<<<<<< HEAD
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
@@ -163,29 +161,6 @@ function DashboardTeacher() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-=======
-      // try {
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
-      //     {
-      //       method: "GET",
-      //       credentials: "include",
-      //     },
-      //   );
-      //   if (!response.ok) {
-      //     console.error("backend error", await response.text());
-      //     return;
-      //   }
-      //   const data = await response.json();
-      //   console.log("Data invoices fetched:", data);
-      // Version dès que backend ok
-      // data.result
-      //   ? dispatch(getPayments(data.invoices))
-      //   : console.log(data.error);
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
->>>>>>> 77430a0 (Fetch preparation waiting for routes ready OK)
 
       // //fetch events
       // try {
