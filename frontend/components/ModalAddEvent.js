@@ -50,7 +50,7 @@ export default function ModalAddEvent({ onClose, start, end }) {
       console.error("Error adding event:", error);
     }
     // En attendant que le backend soit ok, on ajoute l'évènement directement dans le store
-    if (title !== "") {
+    /*if (title !== "") {
       dispatch(
         addEventToStore({
           id: Date.now(),
@@ -63,15 +63,15 @@ export default function ModalAddEvent({ onClose, start, end }) {
           student,
         }),
       );
-    }
+    }*/
     onClose();
   };
 
   const studentsChoice = studentsData.map((data, i) => {
     return (
       <>
-        <option key={i} value={data.name}>
-          {data.firstname} {data.lastname}
+        <option key={i} value={data.id}>
+          {data.firstName} {data.lastName}
         </option>
       </>
     );

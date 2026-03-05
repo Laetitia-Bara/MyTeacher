@@ -162,26 +162,26 @@ function DashboardTeacher() {
         console.error("Error fetching data:", error);
       }
 
-      // //fetch events
-      // try {
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
-      //     {
-      //       method: "GET",
-      //       credentials: "include",
-      //     },
-      //   );
-      //   if (!response.ok) {
-      //     console.error("backend error", await response.text());
-      //     return;
-      //   }
-      //   const data = await response.json();
-      //   console.log("Data lessonsfetched:", data);
-      // Version dès que backend ok
-      // data.result ? dispatch(getEvents(data.lessons)) : console.log(data.error);
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
+      //fetch events
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        if (!response.ok) {
+          console.error("backend error", await response.text());
+          return;
+        }
+        const data = await response.json();
+        console.log("Data lessonsfetched:", data);
+      //Version dès que backend ok
+      data.result ? dispatch(getEvents(data.lessons)) : console.log(data.error);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     })();
 
     // En attendant données backend, dispatch de données statiques
@@ -195,8 +195,8 @@ function DashboardTeacher() {
     <StudentCard
       key={i}
       id={data.id}
-      firstname={data.firstname}
-      lastname={data.lastname}
+      firstname={data.firstName}
+      lastname={data.lastName}
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
@@ -208,9 +208,9 @@ function DashboardTeacher() {
     <PaymentCard
       key={i}
       // id={data.id}
-      firstname={data.firstname}
-      lastname={data.lastname}
-      paymentTerm={data.paymentTerm}
+      firstname={data.firstName}
+      lastname={data.lastName}
+      paymentTerm={data.modalite}
       status={data.status}
     />
   ));
