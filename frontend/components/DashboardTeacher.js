@@ -16,8 +16,8 @@ import styles from "../styles/DashboardTeacher.module.css";
 const dataStudent = [
   {
     id: 1,
-    firstname: "Bob",
-    lastname: "Smith",
+    firstName: "Bob",
+    lastName: "Smith",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
