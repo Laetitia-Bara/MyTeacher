@@ -43,8 +43,9 @@ router.get('/getLessons',
   authMiddleware,
   requireRole("teacher"),*/
 router.post('/postLesson',
+  authMiddleware,
+  requireRole("teacher"),
   function(req, res) {
-    
     let arrayId = []
     if(Array.isArray(req.body.studentId))
     {
