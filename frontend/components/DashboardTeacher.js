@@ -141,6 +141,7 @@ function DashboardTeacher() {
       }
       */
       // Fetch payments
+<<<<<<< HEAD
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
@@ -158,6 +159,29 @@ function DashboardTeacher() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+=======
+      // try {
+      //   const response = await fetch(
+      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+      //     {
+      //       method: "GET",
+      //       credentials: "include",
+      //     },
+      //   );
+      //   if (!response.ok) {
+      //     console.error("backend error", await response.text());
+      //     return;
+      //   }
+      //   const data = await response.json();
+      //   console.log("Data invoices fetched:", data);
+      // Version dès que backend ok
+      // data.result
+      //   ? dispatch(getPayments(data.invoices))
+      //   : console.log(data.error);
+      // } catch (error) {
+      //   console.error("Error fetching data:", error);
+      // }
+>>>>>>> 77430a0 (Fetch preparation waiting for routes ready OK)
 
       // //fetch events
       // try {
@@ -174,6 +198,8 @@ function DashboardTeacher() {
       //   }
       //   const data = await response.json();
       //   console.log("Data lessonsfetched:", data);
+      // Version dès que backend ok
+      // data.result ? dispatch(getEvents(data.lessons)) : console.log(data.error);
       // } catch (error) {
       //   console.error("Error fetching data:", error);
       // }
@@ -195,14 +221,14 @@ function DashboardTeacher() {
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      subscription={data.subscription}
+      subscription={data.subscription.type}
     />
   ));
 
   const payments = paymentsData.map((data, i) => (
     <PaymentCard
       key={i}
-      id={data.id}
+      // id={data.id}
       firstname={data.firstname}
       lastname={data.lastname}
       paymentTerm={data.paymentTerm}

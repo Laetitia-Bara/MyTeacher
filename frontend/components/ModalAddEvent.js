@@ -14,7 +14,42 @@ export default function ModalAddEvent({ onClose, start, end }) {
   const dispatch = useDispatch();
   const studentsData = useSelector((state) => state.students.value);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
+    // POST vers backend
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/addEvent`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            desc,
+            start,
+            end,
+            structure,
+            location,
+            student,
+          }),
+        },
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        console.error("backend error", await response.text());
+        return;
+      }
+      console.log("Data events fetched:", data);
+      // Version dès que backend ok
+      data.result
+        ? dispatch(addEventToStore(data.lesson))
+        : console.log(data.error);
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
+    // En attendant que le backend soit ok, on ajoute l'évènement directement dans le store
     if (title !== "") {
       dispatch(
         addEventToStore({
@@ -23,6 +58,9 @@ export default function ModalAddEvent({ onClose, start, end }) {
           desc,
           start,
           end,
+          structure,
+          location,
+          student,
         }),
       );
     }
