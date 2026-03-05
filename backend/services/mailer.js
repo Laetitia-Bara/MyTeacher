@@ -5,15 +5,18 @@ const dns = require("dns").promises;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function makeTransporter() {
-  const host = process.env.MAIL_HOST;
+  const host = process.env.MAIL_HOST; // smtp.gmail.com
   const port = Number(process.env.MAIL_PORT || 587);
-
-  // 465 => secure true, sinon false
   const secure = port === 465;
 
+  // Force IPv4 (évite que Render prenne l’IPv6 de Gmail)
+  const { address: ipv4 } = await dns.lookup(host, { family: 4 });
+
   console.log(
-    "[MAIL] using SMTP host:",
+    "[MAIL] SMTP host:",
     host,
+    "-> ipv4:",
+    ipv4,
     "port:",
     port,
     "secure:",
@@ -21,14 +24,24 @@ async function makeTransporter() {
   );
 
   return nodemailer.createTransport({
-    host,
+    host: ipv4, // connexion en IPv4
     port,
     secure,
     auth: {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
-    requireTLS: port === 587,
+
+    // TLS correct même si on se connecte à l’IP
+    tls: {
+      servername: host,
+      rejectUnauthorized: true,
+    },
+
+    // stop le “moulinage 2 minutes”
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 10_000,
   });
 }
 

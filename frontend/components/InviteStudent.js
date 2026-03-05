@@ -7,32 +7,67 @@ import { api } from "../lib/api";
 export default function InviteStudent() {
   const [email, setEmail] = useState("");
   const [inviteLink, setInviteLink] = useState("");
+  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const canSubmit = useMemo(() => email.trim().length > 0, [email]);
+  const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
   const onInvite = async () => {
     setError("");
+    setStatus("");
     setInviteLink("");
+    setCopied(false);
     if (loading) return;
 
     setLoading(true);
-    const { ok, data } = await api("/invitations", {
-      method: "POST",
-      body: { email },
-    });
-    setLoading(false);
 
-    if (!ok) return setError(data?.error || "Invite failed");
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 15000); // 15s max
 
-    setInviteLink(data.inviteLink);
+    try {
+      const { ok, data } = await api("/invitations", {
+        method: "POST",
+        body: { email },
+        signal: controller.signal,
+      });
+
+      if (!ok) {
+        setError(data?.error || "Invite failed");
+        return;
+      }
+
+      // lien toujours utile
+      setInviteLink(data?.inviteLink || "");
+
+      // message selon emailSent
+      if (data?.emailSent) {
+        setStatus("✅ Email envoyé !");
+      } else {
+        setStatus(
+          `⚠️ Email non envoyé. Copie le lien et envoie-le manuellement.${
+            data?.emailError ? ` (${data.emailError})` : ""
+          }`,
+        );
+      }
+    } catch (e) {
+      setError("Le serveur met trop longtemps à répondre.");
+    } finally {
+      clearTimeout(t);
+      setLoading(false);
+    }
   };
 
   const copyToClipboard = async () => {
+    if (!inviteLink) return;
     try {
       await navigator.clipboard.writeText(inviteLink);
-    } catch {}
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setError("Impossible de copier le lien automatiquement.");
+    }
   };
 
   return (
@@ -65,12 +100,16 @@ export default function InviteStudent() {
               className={styles.primaryBtn}
               onClick={onInvite}
               disabled={!canSubmit || loading}
+              type="button"
             >
-              {loading ? "Création..." : "Créer le lien"}
+              {loading ? "Création..." : "Créer l’invitation"}
             </button>
 
+            {/* messages */}
+            {status && <div className={styles.infoBox}>{status}</div>}
             {error && <div className={styles.errorBox}>{error}</div>}
 
+            {/* lien + bouton copier */}
             {inviteLink && (
               <>
                 <code className={styles.codeBox}>{inviteLink}</code>
@@ -80,7 +119,7 @@ export default function InviteStudent() {
                   onClick={copyToClipboard}
                   type="button"
                 >
-                  Copier le lien
+                  {copied ? "✅ Copié !" : "Copier le lien"}
                 </button>
               </>
             )}
