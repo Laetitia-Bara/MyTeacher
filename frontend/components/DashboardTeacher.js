@@ -16,8 +16,8 @@ import styles from "../styles/DashboardTeacher.module.css";
 const dataStudent = [
   {
     id: 1,
-    firstname: "Bob",
-    lastname: "Smith",
+    firstName: "Bob",
+    lastName: "Smith",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -187,8 +187,8 @@ function DashboardTeacher() {
     <StudentCard
       key={i}
       id={data.id}
-      firstname={data.firstname}
-      lastname={data.lastname}
+      firstname={data.firstName}
+      lastname={data.lastName}
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
@@ -200,9 +200,9 @@ function DashboardTeacher() {
     <PaymentCard
       key={i}
       // id={data.id}
-      firstname={data.firstname}
-      lastname={data.lastname}
-      paymentTerm={data.paymentTerm}
+      firstname={data.firstName}
+      lastname={data.lastName}
+      paymentTerm={data.modalite}
       status={data.status}
     />
   ));

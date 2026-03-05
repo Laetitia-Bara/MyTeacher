@@ -1,37 +1,34 @@
 const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const dns = require("dns").promises;
 
-async function resolveIPv4(host) {
-  // Prend la première IPv4
-  const res = await dns.lookup(host, { family: 4 });
-  return res.address;
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function makeTransporter() {
-  const port = Number(process.env.MAIL_PORT || 587);
-  const secure = String(process.env.MAIL_SECURE) === "true"; // false pour 587
-
   const host = process.env.MAIL_HOST;
-  const ipv4 = await resolveIPv4(host);
+  const port = Number(process.env.MAIL_PORT || 587);
 
-  console.log("[MAIL] using SMTP host:", host, "=> IPv4:", ipv4);
+  // 465 => secure true, sinon false
+  const secure = port === 465;
+
+  console.log(
+    "[MAIL] using SMTP host:",
+    host,
+    "port:",
+    port,
+    "secure:",
+    secure,
+  );
 
   return nodemailer.createTransport({
-    host: ipv4,
+    host,
     port,
     secure,
     auth: {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
-
-    localAddress: "0.0.0.0",
-
     requireTLS: port === 587,
-    tls: {
-      rejectUnauthorized: true,
-      servername: host,
-    },
   });
 }
 

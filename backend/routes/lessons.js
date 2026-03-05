@@ -42,30 +42,30 @@ router.get('/getLessons',
 /*
   authMiddleware,
   requireRole("teacher"),*/
-router.post('/postLesson',
+router.post('/addEvent',
   authMiddleware,
   requireRole("teacher"),
   function(req, res) {
     let arrayId = []
-    if(Array.isArray(req.body.studentId))
+    if(Array.isArray(req.body.student))
     {
-      for(let obj of req.body.studentId)
+      for(let obj of req.body.student)
       {
         arrayId.push(new mongoose.Types.ObjectId(obj))
       }
     }else{
-      arrayId.push(new mongoose.Types.ObjectId(req.body.studentId))
+      arrayId.push(new mongoose.Types.ObjectId(req.body.student))
     }
 
     const newLesson = new Lesson({
-      teacher: new mongoose.Types.ObjectId(req.body.teacherId),
+      teacher: new mongoose.Types.ObjectId(req.user.userId),
       student: arrayId,
       title:req.body.title,
-      startAt: req.body.startAt,
-      endAt: req.body.endAt,
+      startAt: req.body.start,
+      endAt: req.body.end,
       structure: req.body.structure,
-      teachersNote: req.body.description,
-      locationType: req.body.lieu,
+      teacherNotes: req.body.desc,
+      locationType: req.body.location,
       createdAt: new Date(),
       updatedAt: new Date()
     });
@@ -75,12 +75,12 @@ router.post('/postLesson',
     });
   });
 
-router.delete('/deleteLesson',
+router.delete('/removeEvent/:id',
   authMiddleware,
   requireRole("teacher"),
   function(req, res) {
 
-  Lesson.deleteOne({teacher: req.user.userId})
+  Lesson.deleteOne({_id: req.params.id})
   .then(result => {
     if(result.deletedCount > 0)
     {
