@@ -110,10 +110,8 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       result: true,
       expiresAt,
       emailSent,
-      inviteLink:
-        process.env.NODE_ENV === "production" ? undefined : inviteLink,
-      emailError:
-        process.env.NODE_ENV === "production" ? undefined : emailError,
+      inviteLink,
+      emailError,
     });
   } catch (e) {
     console.error(e);
