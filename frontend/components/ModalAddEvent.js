@@ -46,20 +46,20 @@ export default function ModalAddEvent({ onClose, start, end }) {
       console.error("Error adding event:", error);
     }
     // En attendant que le backend soit ok, on ajoute l'évènement directement dans le store
-    /*if (title !== "") {
-      dispatch(
-        addEventToStore({
-          id: Date.now(),
-          title,
-          desc,
-          start,
-          end,
-          structure,
-          location,
-          student,
-        }),
-      );
-    }*/
+    // if (title !== "") {
+    //   dispatch(
+    //     addEventToStore({
+    //       id: Date.now(),
+    //       title,
+    //       desc,
+    //       start,
+    //       end,
+    //       structure,
+    //       location,
+    //       student,
+    //     }),
+    //   );
+    // }
     onClose();
   };
 
@@ -67,6 +67,7 @@ export default function ModalAddEvent({ onClose, start, end }) {
     return (
       <>
         <option key={i} value={data.id}>
+          {data.firstName} {data.lastName}
           {data.firstName} {data.lastName}
         </option>
       </>
