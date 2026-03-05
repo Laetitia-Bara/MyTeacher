@@ -28,7 +28,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     }
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Vérifier que le prof a bien un teacher profile
+    // Vérifier teacher profile
     const teacher = await Teacher.findOne({ user: req.user.userId });
     if (!teacher) {
       return res
@@ -71,7 +71,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       expiresAt,
     });
 
-    // Lien d’invite (propre, sans //)
+    // Lien d’invite
     const inviteLink = new URL(
       `/signup_student?token=${token}`,
       process.env.FRONT_URL,
@@ -82,7 +82,18 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     let emailError = null;
 
     try {
-      await sendInviteEmail({ to: normalizedEmail, inviteLink });
+      console.log("[INVITE] about to send email to:", normalizedEmail);
+      const info = await sendInviteEmail({
+        to: normalizedEmail,
+        inviteLink,
+        teacherLabel: teacher?.displayName || teacher?.name || "Un professeur",
+      });
+      console.log("[INVITE] email send result:", {
+        messageId: info?.messageId,
+        response: info?.response,
+        accepted: info?.accepted,
+        rejected: info?.rejected,
+      });
       emailSent = true;
     } catch (mailErr) {
       emailError = mailErr?.message || String(mailErr);

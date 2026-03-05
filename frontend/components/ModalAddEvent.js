@@ -37,10 +37,6 @@ export default function ModalAddEvent({ onClose, start, end }) {
         },
       );
       const data = await response.json();
-      if (!response.ok) {
-        console.error("backend error", await response.text());
-        return;
-      }
       console.log("Data events fetched:", data);
       // Version dès que backend ok
       data.result
@@ -70,7 +66,7 @@ export default function ModalAddEvent({ onClose, start, end }) {
   const studentsChoice = studentsData.map((data, i) => {
     return (
       <>
-        <option key={i} value={data.name}>
+        <option key={i} value={data.id}>
           {data.firstname} {data.lastname}
         </option>
       </>
