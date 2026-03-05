@@ -9,7 +9,7 @@ export async function api(path, { method = "GET", body } = {}) {
     method,
     headers: body ? { "Content-Type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
-    credentials: "include",
+    credentials: "include", // cookie JWT
   });
 
   const data = await res.json().catch(() => ({}));
