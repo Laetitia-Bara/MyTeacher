@@ -1,12 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "../styles/HeaderStudent.module.css";
+import { logout } from "../lib/api";
 
 function HeaderStudent() {
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.error("Logout failed:", e);
+    } finally {
+      localStorage.removeItem("user");
+      router.push("/signin");
+    }
+  };
   return (
     <div className={styles.container}>
       <div>
@@ -37,10 +49,15 @@ function HeaderStudent() {
         <Link href="">
           <span className={styles.profil}>Julien</span>
         </Link>
-        <FontAwesomeIcon
-          className={styles.exit}
-          icon={faArrowRightFromBracket}
-        />
+        <button
+          type="button"
+          className={styles.btnLogout}
+          onClick={handleLogout}
+          aria-label="Déconnexion"
+          title="Déconnexion"
+        >
+          <FontAwesomeIcon icon={faArrowRightFromBracket} />
+        </button>
       </div>
     </div>
   );
