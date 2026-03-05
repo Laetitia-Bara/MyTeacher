@@ -178,6 +178,7 @@ export default function ModalAddStudent({ onClose, onInvited }) {
   const [statusMsg, setStatusMsg] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
@@ -222,9 +223,11 @@ export default function ModalAddStudent({ onClose, onInvited }) {
   };
 
   const onCopy = async () => {
+    if (!inviteLink) return;
     try {
       await navigator.clipboard.writeText(inviteLink);
-      setStatusMsg("Lien copié ✅");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch {
       setError("Impossible de copier le lien");
     }
@@ -275,7 +278,7 @@ export default function ModalAddStudent({ onClose, onInvited }) {
           <div className={styles.linkBox}>
             <div className={styles.linkText}>{inviteLink}</div>
             <button className={styles.copyBtn} onClick={onCopy} type="button">
-              Copier
+              {copied ? "✅ Copié !" : "Copier"}
             </button>
           </div>
         )}
