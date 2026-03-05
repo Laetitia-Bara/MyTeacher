@@ -55,9 +55,6 @@ function RessourcesTeacher() {
         console.error("Error fetching data:", error);
       }
     })();
-
-    // En attendant données backend, maj état avec données statiques
-    setRessourcesData(dataRessources);
   }, [addFlag]);
 
   const addToSharingList = (comingProps) => {
@@ -70,11 +67,11 @@ function RessourcesTeacher() {
   };
 
   const deleteRessource = async (comingProps) => {
-    console.log("Supprimer ressource", comingProps.id);
+    console.log("Supprimer ressource", comingProps._id);
     // Fetch delete ressource
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/deleteRessource/${comingProps.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/deleteRessource/${comingProps._id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -86,15 +83,12 @@ function RessourcesTeacher() {
       // Version dès que backend ok
       data.result
         ? setRessourcesData((ress) =>
-            ress.filter((r) => r.id !== comingProps.id),
+            ress.filter((r) => r._id !== comingProps._id),
           )
         : console.log(data.error);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-
-    // En attendant données backend, maj état en supprimant la ressource
-    setRessourcesData((ress) => ress.filter((r) => r.id !== comingProps.id));
   };
 
   const downloadRessource = (comingProps) => {
@@ -104,82 +98,6 @@ function RessourcesTeacher() {
   const removeFromSharingList = (comingProps) => {
     setSharingRessources((ress) => ress.filter((r) => r.id !== comingProps.id));
   };
-
-  const handleAddRessource = async (newRessource) => {
-    if (
-      newRessource.title !== "" &&
-      newRessource.type !== "" &&
-      newRessource.url !== ""
-    ) {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/add`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              // Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              title: newRessource.title,
-              type: newRessource.type,
-              url: newRessource.url,
-            }),
-          },
-        );
-
-        const data = await response.json();
-
-        if (data.result) {
-          alert("Ressource ajoutée !");
-          setAddFlag(!addFlag);
-        } else {
-          alert(`Erreur : ${data.error}`);
-        }
-      } catch (error) {
-        console.error("Error adding ressource :", error);
-      }
-    } else {
-      console.log("Input data missing");
-    }
-  };
-
-  const ressources = ressourcesData?.map((data, i) => (
-    <RessourceCard
-      key={i}
-      id={data.id}
-      title={data.title}
-      type={data.type}
-      addToSharingFct={addToSharingList}
-      deleteFct={deleteRessource}
-      downloadFct={downloadRessource}
-      removeFct={removeFromSharingList}
-      share={false}
-    />
-  ));
-
-  const ressourcesToShare = sharingRessources?.map((data, i) => (
-    <RessourceCard
-      key={i}
-      id={data.id}
-      title={data.title}
-      type={data.type}
-      onClick={addToSharingList}
-      delete={deleteRessource}
-      download={downloadRessource}
-      removeFct={removeFromSharingList}
-      share={true}
-    />
-  ));
-
-  const studentsChoice = studentsData.map((data, i) => {
-    return (
-      <option key={i} value={data.id}>
-        {data.firstname} {data.lastname}
-      </option>
-    );
-  });
 
   const shareRessources = async () => {
     // Fetch vers backend pour partager les ressources
@@ -219,6 +137,84 @@ function RessourcesTeacher() {
       );
     }
   };
+
+  const handleAddRessource = async (newRessource) => {
+    console.log("Ajouter ressource", newRessource);
+    if (
+      newRessource.title !== "" &&
+      newRessource.tag !== "" &&
+      newRessource.url !== ""
+    ) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/add`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: newRessource.title,
+              tag: newRessource.tag,
+              url: newRessource.url,
+            }),
+          },
+        );
+
+        const data = await response.json();
+        console.log("Data ressources fetched:", data);
+
+        if (data.result) {
+          alert("Ressource ajoutée !");
+          setAddFlag(!addFlag);
+        } else {
+          alert(`Erreur : ${data.error}`);
+        }
+      } catch (error) {
+        console.error("Error adding ressource :", error);
+      }
+    } else {
+      console.log("Input data missing");
+    }
+  };
+
+  const ressources = ressourcesData?.map((data, i) => (
+    <RessourceCard
+      key={i}
+      id={data._id}
+      title={data.title}
+      tag={data.tags[0]}
+      addToSharingFct={addToSharingList}
+      deleteFct={deleteRessource}
+      downloadFct={downloadRessource}
+      removeFct={removeFromSharingList}
+      share={false}
+    />
+  ));
+
+  const ressourcesToShare = sharingRessources?.map((data, i) => (
+    <RessourceCard
+      key={i}
+      id={data._id}
+      title={data.title}
+      type={data.type}
+      onClick={addToSharingList}
+      delete={deleteRessource}
+      download={downloadRessource}
+      removeFct={removeFromSharingList}
+      share={true}
+    />
+  ));
+
+  const studentsChoice = studentsData.map((data, i) => {
+    return (
+      <option key={i} value={data.id}>
+        {data.firstName} {data.lastName}
+      </option>
+    );
+  });
 
   return (
     <div className={styles.content}>

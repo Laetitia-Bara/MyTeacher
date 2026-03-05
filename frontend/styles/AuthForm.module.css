@@ -149,3 +149,12 @@
     word-break: break-all;
     text-align: left;
 }
+
+.infoBox {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(0, 128, 0, 0.08);
+    border: 1px solid rgba(0, 128, 0, 0.25);
+    font-size: 0.95rem;
+}

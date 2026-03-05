@@ -1,24 +1,27 @@
 import styles from "../styles/ModalAddRessource.module.css";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function ModalAddRessource({ onClose, addRessourceFct }) {
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("");
+  const [tag, setTag] = useState("");
   const [url, setUrl] = useState("");
 
   const handleAdd = () => {
-    if (!title && !type && !url) {
+    if (!title && !tag && !url) {
       console.log("Data missing in form");
     } else {
-      addRessourceFct({ title, type, url });
+      addRessourceFct({ title, tag, url });
       onClose();
     }
   };
 
   const handleUploadRessource = () => {
     // Logique manquante pour uploader la ressource puis l'envoyer sur cloudinary via backend et récupérer url
+    setUrl(
+      "https://res.cloudinary.com/dzj8q3n9o/image/upload/v1700000000/ressource_example.jpg",
+    );
   };
 
   return (
@@ -44,18 +47,26 @@ export default function ModalAddRessource({ onClose, addRessourceFct }) {
           <input
             className={styles.input}
             type="text"
-            placeholder="Type de la ressource"
+            placeholder="Tag de la ressource"
             maxLength="20"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
           />
-
-          <button
-            className={styles.btnImport}
-            onClick={() => handleUploadRessource()}
-          >
-            Importer une ressource
-          </button>
+          <div className={styles.fileImport}>
+            <button
+              className={`${styles.btnImport} ${url ? styles.btnImportWithIcon : styles.btnImportWithoutIcon}`}
+              onClick={() => handleUploadRessource()}
+            >
+              Importer une ressource
+            </button>
+            {url && (
+              <FontAwesomeIcon
+                className={styles.icon}
+                icon={faFileCircleCheck}
+                onClick={() => setUrl("")}
+              />
+            )}
+          </div>
 
           <button className={styles.btn} onClick={() => handleAdd()}>
             Ajouter

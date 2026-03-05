@@ -11,7 +11,7 @@ function RessourceCard(props) {
   return (
     <div className={styles.content}>
       <div className={styles.title}>{props.title}</div>
-      <div className={styles.type}>{props.type}</div>
+      <div className={styles.type}>{props.tag}</div>
       {!props.share && (
         <>
           <FontAwesomeIcon
