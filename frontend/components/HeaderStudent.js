@@ -51,7 +51,7 @@ function HeaderStudent() {
         </Link>
         <button
           type="button"
-          className={styles.btnLogout}
+          className={styles.exit}
           onClick={handleLogout}
           aria-label="Déconnexion"
           title="Déconnexion"
