@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 require('../models/connection');
+const mongoose = require('mongoose');
 const Lesson = require('../models/lessons');
+const Teacher = require('../models/teachers');
+const Student = require('../models/students');
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
@@ -36,29 +39,40 @@ router.get('/getLessons',
       res.json({result:false, error: "No lesson found"})}
   })
 });
-
-router.post('/postLesson',
+/*
   authMiddleware,
-  requireRole("teacher"),
+  requireRole("teacher"),*/
+router.post('/postLesson',
   function(req, res) {
+    
+    let arrayId = []
+    if(Array.isArray(req.body.studentId))
+    {
+      for(let obj of req.body.studentId)
+      {
+        arrayId.push(new mongoose.Types.ObjectId(obj))
+      }
+    }else{
+      arrayId.push(new mongoose.Types.ObjectId(req.body.studentId))
+    }
 
-  const newLesson = new Lesson({
-    teacher: req.body.teacherId,
-    student: req.body.studentId,
-    title:req.body.title,
-    startAt: req.body.startAt,
-    endAt: req.body.endAt,
-    structure: req.body.structure,
-    teachersNote: req.body.description,
-    locationType: req.body.lieu,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  });
+    const newLesson = new Lesson({
+      teacher: new mongoose.Types.ObjectId(req.body.teacherId),
+      student: arrayId,
+      title:req.body.title,
+      startAt: req.body.startAt,
+      endAt: req.body.endAt,
+      structure: req.body.structure,
+      teachersNote: req.body.description,
+      locationType: req.body.lieu,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
 
-  newLesson.save().then(() => {
-    res.json({ result: true, lesson:newLesson});
+    newLesson.save().then(() => {
+      res.json({ result: true, lesson:newLesson.toObject({getters:true})});
+    });
   });
-});
 
 router.delete('/deleteLesson',
   authMiddleware,
