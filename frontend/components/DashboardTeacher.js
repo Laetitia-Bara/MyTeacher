@@ -125,10 +125,7 @@ function DashboardTeacher() {
             credentials: "include",
           },
         );
-        if (!response.ok) {
-          console.error("backend error", await response.text());
-          return;
-        }
+
         const data = await response.json();
         console.log("Data students fetched:", data);
         // Version dès que backend ok
@@ -148,10 +145,7 @@ function DashboardTeacher() {
             credentials: "include",
           },
         );
-        if (!response.ok) {
-          console.error("backend error", await response.text());
-          return;
-        }
+
         const data = await response.json();
         console.log("Data invoices fetched:", data);
         // Version dès que backend ok
@@ -162,31 +156,29 @@ function DashboardTeacher() {
         console.error("Error fetching data:", error);
       }
 
-      // //fetch events
-      // try {
-      //   const response = await fetch(
-      //     `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
-      //     {
-      //       method: "GET",
-      //       credentials: "include",
-      //     },
-      //   );
-      //   if (!response.ok) {
-      //     console.error("backend error", await response.text());
-      //     return;
-      //   }
-      //   const data = await response.json();
-      //   console.log("Data lessonsfetched:", data);
-      // Version dès que backend ok
-      // data.result ? dispatch(getEvents(data.lessons)) : console.log(data.error);
-      // } catch (error) {
-      //   console.error("Error fetching data:", error);
-      // }
+      //fetch events
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+        console.log("Data lessonsfetched:", data);
+        // Version dès que backend ok
+        data.result
+          ? dispatch(getEvents(data.lessons))
+          : console.log(data.error);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     })();
 
     // En attendant données backend, dispatch de données statiques
     dispatch(getStudents(dataStudent));
-
     dispatch(getPayments(dataPayment));
     dispatch(getEvents(events));
   }, []);
