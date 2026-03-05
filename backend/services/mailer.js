@@ -1,33 +1,44 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns").promises;
 
-const dns = require("dns");
-dns.setDefaultResultOrder("ipv4first");
+async function resolveIPv4(host) {
+  // Prend la première IPv4
+  const res = await dns.lookup(host, { family: 4 });
+  return res.address;
+}
 
-function makeTransporter() {
+async function makeTransporter() {
   const port = Number(process.env.MAIL_PORT || 587);
   const secure = String(process.env.MAIL_SECURE) === "true"; // false pour 587
 
+  const host = process.env.MAIL_HOST;
+  const ipv4 = await resolveIPv4(host);
+
+  console.log("[MAIL] using SMTP host:", host, "=> IPv4:", ipv4);
+
   return nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
+    host: ipv4,
     port,
     secure,
     auth: {
       user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASS, // app password
+      pass: process.env.MAIL_PASS,
     },
-    family: 4,
-    requireTLS: !secure, // important avec 587
+
+    localAddress: "0.0.0.0",
+
+    requireTLS: port === 587,
     tls: {
-      // accept les certif douteux pour lever blocages
       rejectUnauthorized: true,
-      //servername: process.env.MAIL_HOST,
+      servername: host,
     },
   });
 }
 
 async function sendInviteEmail({ to, inviteLink, teacherLabel }) {
   console.log("[MAIL] sending to:", to);
-  const transporter = makeTransporter();
+
+  const transporter = await makeTransporter();
 
   const subject = "Invitation MyTeacher";
   const text =
@@ -45,7 +56,7 @@ async function sendInviteEmail({ to, inviteLink, teacherLabel }) {
 }
 
 async function verifyMailer() {
-  const transporter = makeTransporter();
+  const transporter = await makeTransporter();
   await transporter.verify();
   console.log("[MAIL] transporter verified OK");
 }
