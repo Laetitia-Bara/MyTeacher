@@ -89,10 +89,8 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
         teacherLabel: teacher?.displayName || teacher?.name || "Un professeur",
       });
       console.log("[INVITE] email send result:", {
-        messageId: info?.messageId,
-        response: info?.response,
-        accepted: info?.accepted,
-        rejected: info?.rejected,
+        providerId: info?.data?.id || info?.id,
+        error: info?.error,
       });
       emailSent = true;
     } catch (mailErr) {
