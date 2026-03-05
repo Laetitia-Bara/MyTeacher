@@ -191,8 +191,8 @@ function DashboardTeacher() {
       id={data.id}
       firstname={data.firstName}
       lastname={data.lastName}
-      firstname={data.firstName}
-      lastname={data.lastName}
+      //firstname={data.firstName}
+      //lastname={data.lastName}
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
