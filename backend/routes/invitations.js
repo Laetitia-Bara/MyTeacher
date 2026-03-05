@@ -13,7 +13,6 @@ const { sendInviteEmail } = require("../services/mailer");
 
 //-------------------------Helpers---------------------------------------------
 
-// Helper hash token
 function hashToken(token) {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
@@ -24,16 +23,18 @@ function hashToken(token) {
 router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email)
+    if (!email) {
       return res.status(400).json({ result: false, error: "Missing fields" });
+    }
     const normalizedEmail = email.toLowerCase().trim();
 
     // Vérifier que le prof a bien un teacher profile
     const teacher = await Teacher.findOne({ user: req.user.userId });
-    if (!teacher)
+    if (!teacher) {
       return res
         .status(404)
         .json({ result: false, error: "Teacher profile not found" });
+    }
 
     // Empêcher d’inviter un email déjà inscrit
     const existingUser = await User.findOne({ email: normalizedEmail });
@@ -50,6 +51,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       usedAt: { $exists: false },
       expiresAt: { $gt: new Date() },
     });
+
     if (existingActiveInvite) {
       return res.status(409).json({
         result: false,
@@ -61,6 +63,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex");
     const tokenHash = hashToken(token);
     const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48h
+
     await Invitation.create({
       teacher: teacher._id,
       email: normalizedEmail,
@@ -68,29 +71,38 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       expiresAt,
     });
 
-    const inviteLink = `${process.env.FRONT_URL}/signup_student?token=${token}`;
+    // Lien d’invite (propre, sans //)
+    const inviteLink = new URL(
+      `/signup_student?token=${token}`,
+      process.env.FRONT_URL,
+    ).toString();
 
-    // Envoi email
+    // Envoi email (best effort)
+    let emailSent = false;
+    let emailError = null;
+
     try {
       await sendInviteEmail({ to: normalizedEmail, inviteLink });
+      emailSent = true;
     } catch (mailErr) {
-      console.error("MAIL ERROR:", mailErr);
-
-      return res.status(500).json({
-        result: false,
-        error: "Email could not be sent",
-        // utile pour debug en dev
-        inviteLink:
-          process.env.NODE_ENV === "production" ? undefined : inviteLink,
+      emailError = mailErr?.message || String(mailErr);
+      console.error("MAIL ERROR:", {
+        message: mailErr?.message,
+        code: mailErr?.code,
+        response: mailErr?.response,
+        responseCode: mailErr?.responseCode,
+        command: mailErr?.command,
       });
     }
 
-    // Réponse
     return res.status(201).json({
       result: true,
+      expiresAt,
+      emailSent,
       inviteLink:
         process.env.NODE_ENV === "production" ? undefined : inviteLink,
-      expiresAt,
+      emailError:
+        process.env.NODE_ENV === "production" ? undefined : emailError,
     });
   } catch (e) {
     console.error(e);

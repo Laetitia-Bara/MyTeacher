@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEuroSign } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faInbox } from "@fortawesome/free-solid-svg-icons";
+import BigCalendar from "./BigCalendar"
 
 import styles from "../styles/DashboardStudent.module.css";
 
@@ -15,6 +16,7 @@ function DashboardStudent() {
       <div className={styles.content}>
         <fieldset className={styles.leftside}>
           <legend className={styles.titre}>Planning</legend>
+          <BigCalendar />
         </fieldset>
         <fieldset className={styles.rightside}>
           <legend className={styles.titre}>Alertes</legend>
