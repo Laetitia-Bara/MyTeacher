@@ -1,3 +1,8 @@
+console.log("API_URL DEBUG", {
+  NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  NODE_ENV: process.env.NODE_ENV,
+});
+
 const API_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ||
   (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "");
