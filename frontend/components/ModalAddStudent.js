@@ -185,33 +185,40 @@ export default function ModalAddStudent({ onClose, onInvited }) {
     setError("");
     setStatusMsg("");
     setInviteLink("");
+    setCopied(false);
 
     const normalized = email.trim().toLowerCase();
     if (!normalized) return setError("Email manquant");
     if (loading) return;
 
     setLoading(true);
-    const { ok, data } = await api("/invitations", {
-      method: "POST",
-      body: { email: normalized },
-    });
-    setLoading(false);
+    try {
+      const { ok, data } = await api("/invitations", {
+        method: "POST",
+        body: { email: normalized },
+      });
 
-    if (!ok) return setError(data?.error || "Invite failed");
+      console.log("INVITE API RESULT ✅", { ok, data });
 
-    if (data?.emailSent === true) {
-      setStatusMsg("✅ Email envoyé !");
-    } else if (data?.emailSent === false) {
-      setStatusMsg(
-        "⚠️ Email non envoyé. Copie le lien ci-dessous et envoie-le manuellement.",
-      );
-    } else {
-      setStatusMsg("✅ Invitation créée. Copie le lien ci-dessous.");
+      if (!ok) {
+        setError(data?.error || "Invite failed");
+        return;
+      }
+
+      const link = data?.inviteLink || "";
+      setInviteLink(link);
+
+      if (data?.emailSent === true) {
+        setStatusMsg("✅ Email envoyé !");
+      } else {
+        setStatusMsg("⚠️ Email non envoyé. Copie le lien ci-dessous.");
+      }
+    } catch (e) {
+      console.error("INVITE ERROR", e);
+      setError("Le serveur met trop longtemps à répondre.");
+    } finally {
+      setLoading(false);
     }
-    if (data?.inviteLink) setInviteLink(data?.inviteLink || "");
-
-    // optionnel: prévenir le parent pour refresh la liste
-    if (typeof onInvited === "function") onInvited(data);
   };
 
   const onCopy = async () => {
