@@ -1,5 +1,8 @@
 const nodemailer = require("nodemailer");
 
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
 function makeTransporter() {
   const port = Number(process.env.MAIL_PORT || 587);
   const secure = String(process.env.MAIL_SECURE) === "true"; // false pour 587
@@ -12,10 +15,11 @@ function makeTransporter() {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS, // app password
     },
+    family: 4,
     requireTLS: !secure, // important avec 587
     tls: {
       // accept les certif douteux pour lever blocages
-      rejectUnauthorized: false,
+      rejectUnauthorized: true,
       //servername: process.env.MAIL_HOST,
     },
   });
