@@ -35,6 +35,9 @@ app.use(
   }),
 );
 
+const { verifyMailer } = require("./services/mailer");
+verifyMailer().catch((e) => console.error("[MAIL] verify failed:", e));
+
 app.set("trust proxy", 1);
 
 app.use(logger("dev"));

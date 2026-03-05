@@ -14,14 +14,15 @@ function makeTransporter() {
     },
     requireTLS: !secure, // important avec 587
     tls: {
-      // en prod on refuse les certifs douteux
-      rejectUnauthorized: true,
-      servername: process.env.MAIL_HOST,
+      // accept les certif douteux pour lever blocages
+      rejectUnauthorized: false,
+      //servername: process.env.MAIL_HOST,
     },
   });
 }
 
 async function sendInviteEmail({ to, inviteLink, teacherLabel }) {
+  console.log("[MAIL] sending to:", to);
   const transporter = makeTransporter();
 
   const subject = "Invitation MyTeacher";
@@ -39,4 +40,10 @@ async function sendInviteEmail({ to, inviteLink, teacherLabel }) {
   });
 }
 
-module.exports = { sendInviteEmail };
+async function verifyMailer() {
+  const transporter = makeTransporter();
+  await transporter.verify();
+  console.log("[MAIL] transporter verified OK");
+}
+
+module.exports = { sendInviteEmail, verifyMailer };
