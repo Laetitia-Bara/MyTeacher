@@ -58,10 +58,7 @@ router.get(
 
 router.post("/addStudent", function (req, res) {
   //Standby
-  if (!checkBody(req.body, ["teacherId"])) {
-    res.json({ result: false, error: "Missing data" });
-    return;
-  }
+  
   res.json({ result: false });
 });
 
