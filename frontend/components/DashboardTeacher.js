@@ -18,6 +18,8 @@ const dataStudent = [
     id: 1,
     firstName: "Bob",
     lastName: "Smith",
+    firstName: "Bob",
+    lastName: "Smith",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -25,8 +27,8 @@ const dataStudent = [
   },
   {
     id: 2,
-    firstname: "Jo",
-    lastname: "Doe",
+    firstName: "Jo",
+    lastName: "Doe",
     discipline: "Trompette",
     invite: true,
     status: "Actif",
@@ -34,8 +36,8 @@ const dataStudent = [
   },
   {
     id: 3,
-    firstname: "Stephanie",
-    lastname: "Johnson",
+    firstName: "Stephanie",
+    lastName: "Johnson",
     discipline: "Guitare",
     invite: false,
     status: "Prospect",
@@ -43,8 +45,8 @@ const dataStudent = [
   },
   {
     id: 4,
-    firstname: "Lily",
-    lastname: "Doe",
+    firstName: "Lily",
+    lastName: "Doe",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -52,8 +54,8 @@ const dataStudent = [
   },
   {
     id: 5,
-    firstname: "Lulu",
-    lastname: "Smith",
+    firstName: "Lulu",
+    lastName: "Smith",
     discipline: "Trompette",
     invite: true,
     status: "Inactif",
@@ -64,15 +66,15 @@ const dataStudent = [
 const dataPayment = [
   {
     id: 1,
-    firstname: "Bob",
-    lastname: "Smith",
+    firstName: "Bob",
+    lastName: "Smith",
     paymentTerm: "Paiement 3x",
     status: "A suivre",
   },
   {
     id: 2,
-    firstname: "Lily",
-    lastname: "Doe",
+    firstName: "Lily",
+    lastName: "Doe",
     paymentTerm: "Paiement 1x",
     status: "Retard",
   },
@@ -187,6 +189,8 @@ function DashboardTeacher() {
     <StudentCard
       key={i}
       id={data.id}
+      firstname={data.firstName}
+      lastname={data.lastName}
       firstname={data.firstName}
       lastname={data.lastName}
       discipline={data.discipline}

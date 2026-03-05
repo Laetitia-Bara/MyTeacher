@@ -13,6 +13,7 @@ var teachersRouter = require("./routes/teachers");
 var studentsRouter = require("./routes/students");
 var lessonsRouter = require("./routes/lessons");
 var invoicesRouter = require("./routes/invoices");
+var ressourcesRouter = require("./routes/ressources");
 
 var app = express();
 
@@ -60,5 +61,6 @@ app.use("/students", studentsRouter);
 app.use("/lessons", lessonsRouter);
 app.use("/invitations", invitationsRouter);
 app.use("/invoices", invoicesRouter);
+app.use("/ressources", ressourcesRouter);
 
 module.exports = app;
