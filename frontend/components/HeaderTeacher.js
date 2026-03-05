@@ -1,11 +1,25 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/HeaderTeacher.module.css";
+import { logout } from "../lib/api";
 
 function HeaderTeacher() {
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.error("Logout failed:", e);
+    } finally {
+      localStorage.removeItem("user");
+      router.push("/signin");
+    }
+  };
+
   return (
     <header className={styles.content}>
       <div className={styles.logo}>
@@ -42,9 +56,15 @@ function HeaderTeacher() {
         <div className={styles.btnParameters}>
           <p>Julien</p>
         </div>
-        <div className={styles.btnLogout}>
+        <button
+          type="button"
+          className={styles.btnLogout}
+          onClick={handleLogout}
+          aria-label="Déconnexion"
+          title="Déconnexion"
+        >
           <FontAwesomeIcon icon={faArrowRightFromBracket} />
-        </div>
+        </button>
       </div>
     </header>
   );
