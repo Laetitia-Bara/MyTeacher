@@ -7,8 +7,6 @@ const studentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: false,
-      unique: true,
-      sparse: true,
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
@@ -55,6 +53,16 @@ const studentSchema = mongoose.Schema(
     },
   },
   { timestamps: true },
+);
+
+// plusieurs prospects sans user sont autorisés
+//un vrai user reste unique
+studentSchema.index(
+  { user: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { user: { $type: "objectId" } },
+  },
 );
 
 module.exports = mongoose.model("students", studentSchema);
