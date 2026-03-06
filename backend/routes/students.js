@@ -90,6 +90,8 @@ router.put("/changeStatus",
   authMiddleware,
   requireRole("teacher"), */
 router.put("/changeStatus",
+  authMiddleware,
+  requireRole("teacher"),
   function (req, res) {
 
     if(!checkBody(req.body, ['id', 'status']))
