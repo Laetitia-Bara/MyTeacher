@@ -105,6 +105,7 @@ router.post(
         lastName,
         email,
         status: "Prospect",
+        subscription: null,
       });
 
       return res.status(201).json({

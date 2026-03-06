@@ -129,10 +129,6 @@ function DashboardTeacher() {
     setSelectedStudent(student);
     setModalAddStudent(true);
   };
-  const openEmptyModal = () => {
-    setPrefillEmail("");
-    setModalAddStudent(true);
-  };
 
   useEffect(() => {
     (async () => {
@@ -211,8 +207,12 @@ function DashboardTeacher() {
       lastname={data.lastName}
       discipline={data.discipline}
       invite={data.invite}
-      status={data.status}
-      subscription={data.subscription?.type || data.subscription || ""}
+      status={data.status || "Prospect"}
+      subscription={
+        typeof data.subscription === "string"
+          ? data.subscription
+          : data.subscription?.type || ""
+      }
       email={data.email}
       onInviteClick={() => openInviteModal(data)}
     />
