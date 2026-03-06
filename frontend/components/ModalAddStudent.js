@@ -168,7 +168,7 @@ export default function ModalAddStudent({ onClose }) {
   );
 }*/
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../styles/ModalAddStudent.module.css";
 import { api } from "../lib/api";
 

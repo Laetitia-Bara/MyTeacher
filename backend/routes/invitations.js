@@ -8,6 +8,7 @@ const requireRole = require("../middlewares/requireRole");
 const Invitation = require("../models/invitations");
 const Teacher = require("../models/teachers");
 const User = require("../models/users");
+const Student = require("../models/students");
 
 const { sendInviteEmail } = require("../services/mailer");
 
@@ -48,7 +49,7 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
     const existingActiveInvite = await Invitation.findOne({
       teacher: teacher._id,
       email: normalizedEmail,
-      usedAt: { $exists: false },
+      acceptedAt: { $exists: false },
       expiresAt: { $gt: new Date() },
     });
 
@@ -98,7 +99,6 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
         providerId: info?.data?.id || info?.id,
         error: info?.error,
       });
-      emailSent = true;
     } catch (mailErr) {
       emailError = mailErr?.message || String(mailErr);
       console.error("MAIL ERROR:", {
@@ -116,6 +116,51 @@ router.post("/", authMiddleware, requireRole("teacher"), async (req, res) => {
       emailSent,
       inviteLink,
       emailError,
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
+// GET /resolve
+router.get("/resolve", async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({ result: false, error: "Missing token" });
+    }
+
+    const tokenHash = hashToken(token);
+    const invitation = await Invitation.findOne({ tokenHash });
+
+    if (!invitation) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Invalid invitation" });
+    }
+
+    if (invitation.acceptedAt) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Invitation already used" });
+    }
+
+    if (invitation.expiresAt < new Date()) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Invitation expired" });
+    }
+
+    return res.json({
+      result: true,
+      invitation: {
+        email: invitation.email,
+        firstName: invitation.firstName || "",
+        lastName: invitation.lastName || "",
+        expiresAt: invitation.expiresAt,
+      },
     });
   } catch (e) {
     console.error(e);

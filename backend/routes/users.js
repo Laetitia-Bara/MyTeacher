@@ -128,7 +128,7 @@ router.post("/signup/student", async (req, res) => {
     }
 
     // vérifier validité
-    if (invitation.usedAt) {
+    if (invitation.acceptedAt) {
       return res
         .status(400)
         .json({ result: false, error: "Invitation already used" });
@@ -160,14 +160,30 @@ router.post("/signup/student", async (req, res) => {
       lastName,
     });
 
-    // create student profile
-    const newStudent = await Student.create({
-      user: newUser._id,
+    // create or attach student profile
+    let studentProfile = await Student.findOne({
       teacher: invitation.teacher,
+      email,
     });
 
+    if (studentProfile) {
+      studentProfile.user = newUser._id;
+      studentProfile.firstName = newUser.firstName;
+      studentProfile.lastName = newUser.lastName;
+      studentProfile.email = newUser.email;
+      await studentProfile.save();
+    } else {
+      studentProfile = await Student.create({
+        user: newUser._id,
+        teacher: invitation.teacher,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+      });
+    }
+
     // mark invitation used
-    invitation.usedAt = new Date();
+    invitation.acceptedAt = new Date();
     await invitation.save();
 
     // JWT + cookie
@@ -185,7 +201,7 @@ router.post("/signup/student", async (req, res) => {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
-        studentId: newStudent._id,
+        studentId: studentProfile._id,
         teacherId: invitation.teacher,
       },
     });
