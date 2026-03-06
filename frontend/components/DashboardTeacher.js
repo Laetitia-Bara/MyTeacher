@@ -279,6 +279,8 @@ function DashboardTeacher() {
 
             if (data?.student) {
               dispatch(addStudentToStore(data.student));
+              setSelectedStudent(data.student);
+              setModalAddStudent(true);
             }
           }}
         />
