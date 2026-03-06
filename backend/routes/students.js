@@ -86,4 +86,85 @@ router.put("/changeStatus",
       })
 });
 
+/* 
+  authMiddleware,
+  requireRole("teacher"), */
+router.put("/changeStatus",
+  function (req, res) {
+
+    if(!checkBody(req.body, ['id', 'status']))
+    {
+      res.json({ result: false, error: "Missing or empty fields" });
+      return;
+    }
+
+    Student.findOneAndUpdate({_id: req.body.id},{ status: req.body.status}, { //(filter, target, option)
+      returnDocument: 'after'
+    }).then((data) => {
+        if(data)
+        {
+          res.json({ result: true, student: data});
+        }else{
+          res.json({ result: false, error: "No student found" });
+        }
+      })
+});
+
+// Update student
+router.put(
+  "/updateIdentity",
+  authMiddleware,
+  requireRole("teacher"),
+  function (req, res) {
+    if (
+      !checkBody(req.body, [
+        "studentId",
+        "firstName",
+        "lastName",
+        "email",
+        "phone",
+      ])
+    ) {
+      res.json({ result: false, error: "Missing data" });
+      return;
+    }
+
+    Student.findOne({ _id: req.body.studentId, teacher: req.user.userId })
+      .populate("user")
+      .then((student) => {
+        if (!student) {
+          res.json({ result: false, error: "Student not found" });
+          return;
+        }
+
+        student.phone = req.body.phone;
+
+        student
+          .save()
+          .then(() => {
+            student.user.firstName = req.body.firstName;
+            student.user.lastName = req.body.lastName;
+            student.user.email = req.body.email.toLowerCase().trim();
+
+            student.user
+              .save()
+              .then(() => {
+                res.json({ result: true });
+              })
+              .catch((error) => {
+                console.log(error);
+                res.json({ result: false, error: "User update failed" });
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+            res.json({ result: false, error: "Student update failed" });
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.json({ result: false, error: "Server error" });
+      });
+  },
+);
 module.exports = router;
