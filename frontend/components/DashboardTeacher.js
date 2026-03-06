@@ -206,7 +206,7 @@ function DashboardTeacher() {
       firstname={data.firstName}
       lastname={data.lastName}
       discipline={data.discipline}
-      invite={data.invite}
+      invite={(data.status || "Prospect") === "Prospect"}
       status={data.status || "Prospect"}
       subscription={
         typeof data.subscription === "string"
