@@ -17,6 +17,9 @@ var ressourcesRouter = require("./routes/ressources");
 
 var app = express();
 
+const fileUpload = require("express-fileupload");
+app.use(fileUpload());
+
 const cors = require("cors");
 
 const allowedOrigins = [
