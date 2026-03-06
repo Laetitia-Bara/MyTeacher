@@ -4,6 +4,8 @@ const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 const { checkBody } = require("../modules/checkBody");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // Get all ressources of a teacher
 router.get(
@@ -31,17 +33,16 @@ router.post(
   requireRole("teacher"),
   async (req, res) => {
     try {
-      if (!checkBody(req.body, ["title", "tag", "url"])) {
-        res.status(400).json({ result: false, error: "Missing fields" });
-        return;
-      }
-    } catch (error) {
-      console.log("Error", error);
-      res.status(500).json({ result: false, error: "Error with inputs" });
-    }
-    const teacherId = req.user.userId;
-    const { title, tag, url } = req.body;
-    try {
+      const filePath = `./tmp/${Date.now()}_${req.files.file.name}`;
+      const resultMove = await req.files.file.mv(filePath);
+      const resultCloudinary = await cloudinary.uploader.upload(filePath);
+
+      fs.unlinkSync(filePath);
+
+      const teacherId = req.user.userId;
+      const { title, tag } = req.body;
+      const url = resultCloudinary.secure_url;
+
       const newRessource = await Ressource.create({
         teacherId,
         title,
@@ -56,17 +57,8 @@ router.post(
       res
         .status(500)
         .json({ result: false, error: "Error creating ressource" });
-      return;
     }
   },
-);
-
-// Add doc on cloudinary and get url back
-router.post(
-  "/upload",
-  authMiddleware,
-  requireRole("teacher"),
-  async (req, res) => {},
 );
 
 // Share a ressource
@@ -98,24 +90,23 @@ router.post(
           res.status(404).json({ result: false, error: "Ressource not found" });
           return;
         } else {
-          console.log(ressourceCheck);
-          res.json({ result: true, ressource: ressourceCheck });
+          console.log("ressourceCheck", ressourceCheck);
+          let studentIdTable = ressourceCheck.studentId;
+          studentIdTable.some((id) => id.toString() === students[0])
+            ? console.log("Student already has access to this ressource")
+            : studentIdTable.push(students[0]);
+          const updateRessource = await Ressource.updateOne(
+            { _id: obj._id },
+            { studentId: studentIdTable },
+          );
         }
-        // let ressourceDatabase = await Ressource.updateOne({ _id: obj._id },  {studentId: students} );
       }
+      res.json({ result: true, message: "Sharing done" });
     } catch (error) {
       console.log("Error", error);
       res.status(500).json({ result: false, error: "Error for sharing" });
     }
   },
-);
-
-// Download a ressource
-router.get(
-  "/download/:id",
-  authMiddleware,
-  requireRole("teacher"),
-  async (req, res) => {},
 );
 
 // Delete a ressource
