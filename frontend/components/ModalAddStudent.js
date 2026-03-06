@@ -182,15 +182,15 @@ export default function ModalAddStudent({ student, onClose, onInvited }) {
 
   const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
+  useEffect(() => {
+    setEmail(student?.email || "");
+  }, [student]);
+
   const onInvite = async () => {
     setError("");
     setStatusMsg("");
     setInviteLink("");
     setCopied(false);
-
-    useEffect(() => {
-      setEmail(student?.email || "");
-    }, [student]);
 
     const normalized = email.trim().toLowerCase();
     if (!normalized) return setError("Email manquant");
