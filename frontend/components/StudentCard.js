@@ -31,7 +31,7 @@ function StudentCard(props) {
         </button>
       )} 
        changement du bloc invite pour faire fonctionner l'envoi de mail */}
-      {props.invite && (
+      {props.status === "Prospect" && (
         <button
           className={styles.inviteBtn}
           type="button"
