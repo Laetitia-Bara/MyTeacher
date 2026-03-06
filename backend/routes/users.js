@@ -171,6 +171,7 @@ router.post("/signup/student", async (req, res) => {
       studentProfile.firstName = newUser.firstName;
       studentProfile.lastName = newUser.lastName;
       studentProfile.email = newUser.email;
+      studentProfile.status = "Actif";
       await studentProfile.save();
     } else {
       studentProfile = await Student.create({
@@ -179,6 +180,7 @@ router.post("/signup/student", async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
+        status: "Actif",
       });
     }
 

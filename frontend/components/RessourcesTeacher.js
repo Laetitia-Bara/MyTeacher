@@ -46,7 +46,6 @@ function RessourcesTeacher() {
           },
         );
         const data = await response.json();
-        console.log("Data ressources fetched:", data);
         // Version dès que backend ok
         data.result
           ? setRessourcesData(data.ressources)
@@ -58,7 +57,7 @@ function RessourcesTeacher() {
   }, [addFlag]);
 
   const addToSharingList = (comingProps) => {
-    if (!sharingRessources.some((ress) => ress.id === comingProps.id)) {
+    if (!sharingRessources.some((ress) => ress._id === comingProps._id)) {
       setSharingRessources((ress) => [
         ...ress,
         { ...comingProps, share: true },
@@ -91,12 +90,10 @@ function RessourcesTeacher() {
     }
   };
 
-  const downloadRessource = (comingProps) => {
-    console.log("Télécharger ressource", comingProps);
-  };
-
   const removeFromSharingList = (comingProps) => {
-    setSharingRessources((ress) => ress.filter((r) => r.id !== comingProps.id));
+    setSharingRessources((ress) =>
+      ress.filter((r) => r._id !== comingProps._id),
+    );
   };
 
   const shareRessources = async () => {
@@ -120,21 +117,14 @@ function RessourcesTeacher() {
         const data = await response.json();
         console.log("Data ressources fetched:", data);
         // Version dès que backend ok
-        data.result ? setSharingRessources([]) : console.log(data.error);
+        data.result
+          ? (setSharingRessources([]),
+            setStudents([]),
+            alert("Ressources partagées !"))
+          : console.log(data.error);
       } catch (error) {
         console.error("Error adding event:", error);
       }
-
-      // En attendant que le backend soit ok
-      setSharingRessources([]);
-      setStudents([]);
-      alert("Partage effectué !");
-      console.log(
-        "Partager ressources",
-        sharingRessources,
-        "à l'élève",
-        students[0],
-      );
     }
   };
 
@@ -143,23 +133,24 @@ function RessourcesTeacher() {
     if (
       newRessource.title !== "" &&
       newRessource.tag !== "" &&
-      newRessource.url !== ""
+      newRessource.file !== ""
     ) {
+      const formData = new FormData();
+      formData.append("file", newRessource.file);
+      formData.append("title", newRessource.title);
+      formData.append("tag", newRessource.tag);
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/add`,
           {
             method: "POST",
             credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              // Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              title: newRessource.title,
-              tag: newRessource.tag,
-              url: newRessource.url,
-            }),
+            // headers: {
+            //   "Content-Type": "application/json",
+            //   // Authorization: `Bearer ${token}`,
+            // },
+            body: formData,
           },
         );
 
@@ -183,26 +174,25 @@ function RessourcesTeacher() {
   const ressources = ressourcesData?.map((data, i) => (
     <RessourceCard
       key={i}
-      id={data._id}
+      _id={data._id}
       title={data.title}
-      tag={data.tags[0]}
+      tags={data.tags[0]}
       addToSharingFct={addToSharingList}
       deleteFct={deleteRessource}
-      downloadFct={downloadRessource}
       removeFct={removeFromSharingList}
       share={false}
+      url={data.url}
     />
   ));
 
   const ressourcesToShare = sharingRessources?.map((data, i) => (
     <RessourceCard
       key={i}
-      id={data._id}
+      _id={data._id}
       title={data.title}
-      type={data.type}
+      tags={data.tags}
       onClick={addToSharingList}
       delete={deleteRessource}
-      download={downloadRessource}
       removeFct={removeFromSharingList}
       share={true}
     />
@@ -210,7 +200,7 @@ function RessourcesTeacher() {
 
   const studentsChoice = studentsData.map((data, i) => {
     return (
-      <option key={i} value={data.id}>
+      <option key={i} value={data._id}>
         {data.firstName} {data.lastName}
       </option>
     );

@@ -33,7 +33,8 @@ router.get(
           const hasInvite =
             invitations.find((element) => element.email === email) != undefined;
 
-          const invite = !hasInvite;
+          // bouton inviter seulement pour un prospect sans invitation active
+          const invite = obj.status === "Prospect" && !hasInvite;
 
           students.push({
             id: obj._id,

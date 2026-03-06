@@ -16,7 +16,7 @@ import styles from "../styles/DashboardTeacher.module.css";
 
 const dataStudent = [
   {
-    id: 1,
+    _id: "67c9f1f1a2b3c4d4e6f7a8b9",
     firstName: "Bob",
     lastName: "Smith",
     firstName: "Bob",
@@ -28,7 +28,7 @@ const dataStudent = [
     subscription: "Trimestre",
   },
   {
-    id: 2,
+    _id: "67c9f2f1a2b3c4d4e6f7a8b9",
     firstName: "Jo",
     lastName: "Doe",
     email: "bob@example.com",
@@ -38,7 +38,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
-    id: 3,
+    _id: 3,
     firstName: "Stephanie",
     lastName: "Johnson",
     email: "bob@example.com",
@@ -48,7 +48,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
-    id: 4,
+    _id: 4,
     firstName: "Lily",
     lastName: "Doe",
     email: "bob@example.com",
@@ -58,7 +58,7 @@ const dataStudent = [
     subscription: "A l'unité",
   },
   {
-    id: 5,
+    _id: 5,
     firstName: "Lulu",
     lastName: "Smith",
     email: "bob@example.com",

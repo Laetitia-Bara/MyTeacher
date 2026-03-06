@@ -6,13 +6,14 @@ import { faXmark, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
 export default function ModalAddRessource({ onClose, addRessourceFct }) {
   const [title, setTitle] = useState("");
   const [tag, setTag] = useState("");
-  const [url, setUrl] = useState("");
+  const [file, setFile] = useState(null);
+  console.log("file", file);
 
   const handleAdd = () => {
-    if (!title && !tag && !url) {
+    if (!title && !tag && !file) {
       console.log("Data missing in form");
     } else {
-      addRessourceFct({ title, tag, url });
+      addRessourceFct({ title, tag, file });
       onClose();
     }
   };
@@ -52,21 +53,28 @@ export default function ModalAddRessource({ onClose, addRessourceFct }) {
             value={tag}
             onChange={(e) => setTag(e.target.value)}
           />
-          <div className={styles.fileImport}>
-            <button
-              className={`${styles.btnImport} ${url ? styles.btnImportWithIcon : styles.btnImportWithoutIcon}`}
-              onClick={() => handleUploadRessource()}
-            >
-              Importer une ressource
-            </button>
-            {url && (
+          <label className={styles.label} for="uploadFile">
+            Choisir un fichier pdf
+          </label>
+          <input
+            id="uploadFile"
+            style={{ display: "none" }}
+            className={styles.input}
+            type="file"
+            accept=".pdf"
+            // value={file}
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          {file && (
+            <>
+              <div className={styles.infoFile}>{file.name}</div>
               <FontAwesomeIcon
                 className={styles.icon}
                 icon={faFileCircleCheck}
-                onClick={() => setUrl("")}
+                onClick={() => setFile("")}
               />
-            )}
-          </div>
+            </>
+          )}
 
           <button className={styles.btn} onClick={() => handleAdd()}>
             Ajouter
