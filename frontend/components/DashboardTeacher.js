@@ -122,9 +122,9 @@ function DashboardTeacher() {
   const dispatch = useDispatch();
 
   // connexion modal invite student dans la liste des students
-  const [prefillEmail, setPrefillEmail] = useState("");
-  const openInviteModal = (email) => {
-    setPrefillEmail(email || "");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const openInviteModal = (student) => {
+    setSelectedStudent(student);
     setModalAddStudent(true);
   };
   const openEmptyModal = () => {
@@ -214,7 +214,7 @@ function DashboardTeacher() {
       status={data.status}
       subscription={data.subscription?.type || data.subscription}
       email={data.email}
-      onInviteClick={(email) => openInviteModal(email)}
+      onInviteClick={() => openInviteModal(data)}
     />
   ));
 
@@ -273,7 +273,7 @@ function DashboardTeacher() {
       <FooterTeacher />
       {modalAddStudent && (
         <ModalAddStudent
-          initialEmail={prefillEmail}
+          student={selectedStudent}
           onClose={() => setModalAddStudent(false)}
           onInvited={() => setModalAddStudent(false)}
         />
