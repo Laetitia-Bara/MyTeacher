@@ -33,7 +33,6 @@ router.get('/getLessons',
           lieu: obj.locationType
         })
       }
-      console.log(lessons)
       res.json({result:true, lessons: lessons}) //lessons pluriel
     }else{
       res.json({result:false, error: "No lesson found"})}

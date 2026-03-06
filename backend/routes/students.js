@@ -62,4 +62,28 @@ router.post("/addStudent", function (req, res) {
   res.json({ result: false });
 });
 
+/* 
+  authMiddleware,
+  requireRole("teacher"), */
+router.put("/changeStatus",
+  function (req, res) {
+
+    if(!checkBody(req.body, ['id', 'status']))
+    {
+      res.json({ result: false, error: "Missing or empty fields" });
+      return;
+    }
+
+    Student.findOneAndUpdate({_id: req.body.id},{ status: req.body.status}, { //(filter, target, option)
+      returnDocument: 'after'
+    }).then((data) => {
+        if(data)
+        {
+          res.json({ result: true, student: data});
+        }else{
+          res.json({ result: false, error: "No student found" });
+        }
+      })
+});
+
 module.exports = router;
