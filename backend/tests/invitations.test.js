@@ -7,7 +7,7 @@ const User = require("../models/users");
 const Teacher = require("../models/teachers");
 const Invitation = require("../models/invitations");
 
-describe("POST /invitations - integration without mock", () => {
+describe("POST /invitations - sans mock", () => {
   let token;
   let teacher;
   let user;
