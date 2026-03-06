@@ -25,9 +25,23 @@ function StudentCard(props) {
         </Link>
       </button>
       <p className={styles.discipline}>{props.discipline}</p>
-      {!props.invite && (
+      {/*{!props.invite && (
         <button className={styles.inviteBtn}>
           <span className={styles.inviteText}>Inviter</span>
+        </button>
+      )} 
+       changement du bloc invite pour faire fonctionner l'envoi de mail */}
+      {props.invite && (
+        <button
+          className={styles.inviteBtn}
+          type="button"
+          onClick={() => props.onInviteClick?.(props.email)}
+          disabled={!props.email}
+          title={!props.email ? "Email manquant" : "Inviter cet élève"}
+        >
+          <span className={styles.inviteText}>
+            {props.email ? "Inviter" : "Email manquant"}
+          </span>
         </button>
       )}
       <select

@@ -20,6 +20,7 @@ const dataStudent = [
     lastName: "Smith",
     firstName: "Bob",
     lastName: "Smith",
+    email: "bob@example.com",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -29,6 +30,7 @@ const dataStudent = [
     id: 2,
     firstName: "Jo",
     lastName: "Doe",
+    email: "bob@example.com",
     discipline: "Trompette",
     invite: true,
     status: "Actif",
@@ -38,6 +40,7 @@ const dataStudent = [
     id: 3,
     firstName: "Stephanie",
     lastName: "Johnson",
+    email: "bob@example.com",
     discipline: "Guitare",
     invite: false,
     status: "Prospect",
@@ -47,6 +50,7 @@ const dataStudent = [
     id: 4,
     firstName: "Lily",
     lastName: "Doe",
+    email: "bob@example.com",
     discipline: "Guitare",
     invite: true,
     status: "Actif",
@@ -56,6 +60,7 @@ const dataStudent = [
     id: 5,
     firstName: "Lulu",
     lastName: "Smith",
+    email: "bob@example.com",
     discipline: "Trompette",
     invite: true,
     status: "Inactif",
@@ -115,6 +120,17 @@ function DashboardTeacher() {
   const studentsData = useSelector((state) => state.students.value);
   const paymentsData = useSelector((state) => state.payments.value);
   const dispatch = useDispatch();
+
+  // connexion modal invite student dans la liste des students
+  const [prefillEmail, setPrefillEmail] = useState("");
+  const openInviteModal = (email) => {
+    setPrefillEmail(email || "");
+    setModalAddStudent(true);
+  };
+  const openEmptyModal = () => {
+    setPrefillEmail("");
+    setModalAddStudent(true);
+  };
 
   useEffect(() => {
     (async () => {
@@ -196,7 +212,9 @@ function DashboardTeacher() {
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      subscription={data.subscription.type}
+      subscription={data.subscription?.type || data.subscription}
+      email={data.email}
+      onInviteClick={(email) => openInviteModal(email)}
     />
   ));
 
@@ -228,7 +246,7 @@ function DashboardTeacher() {
                 <p className={styles.subtitle}>Mes élèves</p>
                 <button
                   className={styles.addStudentBtn}
-                  onClick={() => setModalAddStudent(true)}
+                  onClick={openEmptyModal}
                 >
                   <span className={styles.addText}>+ Ajouter un élève</span>
                 </button>
@@ -255,6 +273,7 @@ function DashboardTeacher() {
       <FooterTeacher />
       {modalAddStudent && (
         <ModalAddStudent
+          initialEmail={prefillEmail}
           onClose={() => setModalAddStudent(false)}
           onInvited={() => setModalAddStudent(false)}
         />
