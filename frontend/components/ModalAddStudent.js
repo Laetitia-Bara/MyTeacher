@@ -241,7 +241,7 @@ export default function ModalAddStudent({ student, onClose, onInvited }) {
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Inviter un élève</h2>
+          {/*<h2 className={styles.title}>Inviter un élève</h2>*/}
           {student && (
             <p className={styles.studentName}>
               Invitation pour{" "}
