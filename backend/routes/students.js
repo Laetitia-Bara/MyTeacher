@@ -10,7 +10,6 @@ const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
 /* GET teachers students. */
-/* GET teachers students. */
 router.get(
   "/getStudents",
   authMiddleware,
@@ -52,6 +51,7 @@ router.get(
 
         return res.json({ result: true, students });
       } else {
+        // quand plus de data mockées => result: true, students: []
         return res.json({ result: false, error: "No student found" });
       }
     } catch (error) {
