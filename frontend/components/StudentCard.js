@@ -8,11 +8,34 @@ function StudentCard(props) {
   const [status, setStatus] = useState(props.status);
   const dispatch = useDispatch();
 
-  const handleStatusChange = (newStatus) => {
+  const handleStatusChange = async (newStatus) => {
     setStatus(newStatus);
     // Fetch pour mettre à jour le statut de l'étudiant dans la base de données à ajouter
-    // Puid dispatch pour mettre à jour le statut de l'étudiant dans le store si retour BDD OK
-    dispatch(updateStudentStatus({ id: props.id, status: newStatus }));
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/students/changeStatus`,
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: props.id,
+            status: newStatus
+          }),
+        },
+      );
+
+      const data = await response.json();
+      console.log("Status student updated:", data);
+      // Version dès que backend ok
+      data.result
+        ? dispatch(updateStudentStatus({ id: props.id, status: newStatus }))
+        : console.log(data.error);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (
