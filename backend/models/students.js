@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const studentSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: true,
+      required: false,
       unique: true,
+      sparse: true,
+      default: null,
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
@@ -14,23 +17,43 @@ const studentSchema = mongoose.Schema(
       required: true,
     },
 
+    // ✅ utiles pour les prospects sans compte
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      validate: {
+        validator: (v) => !v || validator.isEmail(v),
+        message: "Invalid email",
+      },
+    },
+    //////////////////////////////////////////
+
     avatarUrl: { type: String },
     phone: { type: String },
     discipline: { type: String },
     structure: { type: String },
     status: {
       type: String,
-      enum: ['Inactif', 'Actif', 'Prospect'],
-      default: 'Prospect'
+      enum: ["Inactif", "Actif", "Prospect"],
+      default: "Prospect",
     },
     subscription: {
       type: {
         type: String,
-        enum: ['A l\'unité', 'Trimestre', 'Annuel'],
+        enum: ["A l'unité", "Trimestre", "Annuel"],
       },
-      price: {type: Number},
-      modalite: {type: String}
-    }
+      price: { type: Number },
+      modalite: { type: String },
+    },
   },
   { timestamps: true },
 );

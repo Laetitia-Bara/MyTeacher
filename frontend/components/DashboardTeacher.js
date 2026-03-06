@@ -209,12 +209,10 @@ function DashboardTeacher() {
       id={data.id}
       firstname={data.firstName}
       lastname={data.lastName}
-      //firstname={data.firstName}
-      //lastname={data.lastName}
       discipline={data.discipline}
       invite={data.invite}
       status={data.status}
-      subscription={data.subscription?.type || data.subscription}
+      subscription={data.subscription?.type || data.subscription || ""}
       email={data.email}
       onInviteClick={() => openInviteModal(data)}
     />
@@ -276,9 +274,12 @@ function DashboardTeacher() {
       {modalCreateStudent && (
         <ModalCreateStudent
           onClose={() => setModalCreateStudent(false)}
-          onCreated={() => {
+          onCreated={(data) => {
             setModalCreateStudent(false);
-            // prévoir refresh students
+
+            if (data?.student) {
+              dispatch(addStudentToStore(data.student));
+            }
           }}
         />
       )}
