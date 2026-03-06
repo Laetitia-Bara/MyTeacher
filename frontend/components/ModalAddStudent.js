@@ -172,44 +172,66 @@ import { useMemo, useState } from "react";
 import styles from "../styles/ModalAddStudent.module.css";
 import { api } from "../lib/api";
 
-export default function ModalAddStudent({ onClose, onInvited }) {
-  const [email, setEmail] = useState("");
+export default function ModalAddStudent({ student, onClose, onInvited }) {
+  const [email, setEmail] = useState(student?.email || "");
   const [inviteLink, setInviteLink] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const canSubmit = useMemo(() => email.trim().length > 3, [email]);
+  const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
   const onInvite = async () => {
     setError("");
     setStatusMsg("");
     setInviteLink("");
+    setCopied(false);
+
+    useEffect(() => {
+      setEmail(student?.email || "");
+    }, [student]);
 
     const normalized = email.trim().toLowerCase();
     if (!normalized) return setError("Email manquant");
     if (loading) return;
 
     setLoading(true);
-    const { ok, data } = await api("/invitations", {
-      method: "POST",
-      body: { email: normalized },
-    });
-    setLoading(false);
+    try {
+      const { ok, data } = await api("/invitations", {
+        method: "POST",
+        body: { email: normalized },
+      });
 
-    if (!ok) return setError(data?.error || "Invite failed");
+      console.log("INVITE API RESULT ✅", { ok, data });
 
-    setStatusMsg("Invitation envoyée ✅");
-    if (data?.inviteLink) setInviteLink(data.inviteLink);
+      if (!ok) {
+        setError(data?.error || "Invite failed");
+        return;
+      }
 
-    // optionnel: prévenir le parent pour refresh la liste
-    if (typeof onInvited === "function") onInvited(data);
+      const link = data?.inviteLink || "";
+      setInviteLink(link);
+
+      if (data?.emailSent === true) {
+        setStatusMsg("✅ Email envoyé !");
+      } else {
+        setStatusMsg("⚠️ Email non envoyé. Copie le lien ci-dessous.");
+      }
+    } catch (e) {
+      console.error("INVITE ERROR", e);
+      setError("Le serveur met trop longtemps à répondre.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onCopy = async () => {
+    if (!inviteLink) return;
     try {
       await navigator.clipboard.writeText(inviteLink);
-      setStatusMsg("Lien copié ✅");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch {
       setError("Impossible de copier le lien");
     }
@@ -219,7 +241,15 @@ export default function ModalAddStudent({ onClose, onInvited }) {
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Inviter un élève</h2>
+          {/*<h2 className={styles.title}>Inviter un élève</h2>*/}
+          {student && (
+            <p className={styles.studentName}>
+              Invitation pour{" "}
+              <strong>
+                {student.firstName} {student.lastName}
+              </strong>
+            </p>
+          )}
           <button className={styles.close} onClick={onClose} type="button">
             ✕
           </button>
@@ -260,7 +290,7 @@ export default function ModalAddStudent({ onClose, onInvited }) {
           <div className={styles.linkBox}>
             <div className={styles.linkText}>{inviteLink}</div>
             <button className={styles.copyBtn} onClick={onCopy} type="button">
-              Copier
+              {copied ? "✅ Copié !" : "Copier"}
             </button>
           </div>
         )}

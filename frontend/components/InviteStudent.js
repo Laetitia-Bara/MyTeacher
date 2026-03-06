@@ -65,6 +65,7 @@ export default function InviteStudent() {
       await navigator.clipboard.writeText(inviteLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
+      setStatusMsg("Lien copié ✅");
     } catch {
       setError("Impossible de copier le lien automatiquement.");
     }
