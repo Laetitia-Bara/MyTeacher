@@ -9,7 +9,6 @@ const studentSchema = mongoose.Schema(
       required: false,
       unique: true,
       sparse: true,
-      default: null,
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,

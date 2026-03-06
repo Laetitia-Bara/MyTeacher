@@ -4,6 +4,7 @@ var router = express.Router();
 require("../models/connection");
 const User = require("../models/users");
 const Student = require("../models/students");
+const Teacher = require("../models/teachers");
 const Invitation = require("../models/invitations");
 const { checkBody } = require("../modules/checkBody");
 const authMiddleware = require("../middlewares/auth");
@@ -16,14 +17,21 @@ router.get(
   requireRole("teacher"),
   async function (req, res) {
     try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher profile not found" });
+      }
+
       let students = [];
 
-      const data = await Student.find({ teacher: req.user.userId }).populate(
+      const data = await Student.find({ teacher: teacher._id }).populate(
         "user",
       );
 
       if (data.length > 0) {
-        const invitations = await Invitation.find({ teacher: req.user.userId });
+        const invitations = await Invitation.find({ teacher: teacher._id });
 
         for (let obj of data) {
           const firstName = obj.user?.firstName || obj.firstName || "";
@@ -53,11 +61,12 @@ router.get(
         return res.json({ result: true, students });
       } else {
         // quand plus de data mockées => result: true, students: []
-        return res.json({ result: false, error: "No student found" });
+        //return res.json({ result: false, error: "No student found" });
+        return res.json({ result: true, students: [] });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ result: false, error: "Server error" });
+      return res.status(500).json({ result: false, error: "Server error" });
     }
   },
 );
@@ -77,6 +86,14 @@ router.post(
       const lastName = req.body.lastName.trim();
       const email = req.body.email.toLowerCase().trim();
 
+      // récupérer le vrai profile teacher
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher profile not found" });
+      }
+
       // Vérifier si un vrai compte user existe déjà avec cet email
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -88,20 +105,19 @@ router.post(
 
       // Vérifier si un prospect/student existe déjà pour ce prof avec cet email
       const existingStudent = await Student.findOne({
-        teacher: req.user.userId,
+        teacher: teacher._id,
         email,
       });
 
       if (existingStudent) {
-        return res.json({
+        return res.status(409).json({
           result: false,
           error: "Un élève/prospect avec cet email existe déjà",
         });
       }
 
       const newStudent = await Student.create({
-        user: null,
-        teacher: req.user.userId,
+        teacher: teacher._id,
         firstName,
         lastName,
         email,
@@ -126,7 +142,7 @@ router.post(
       });
     } catch (error) {
       console.log(error);
-      return res.json({ result: false, error: "Server error" });
+      return res.status(500).json({ result: false, error: "Server error" });
     }
   },
 );
@@ -136,7 +152,7 @@ router.put(
   "/updateIdentity",
   authMiddleware,
   requireRole("teacher"),
-  function (req, res) {
+  async function (req, res) {
     if (
       !checkBody(req.body, [
         "studentId",
@@ -150,7 +166,8 @@ router.put(
       return;
     }
 
-    Student.findOne({ _id: req.body.studentId, teacher: req.user.userId })
+    const teacher = await Teacher.findOne({ user: req.user.userId });
+    Student.findOne({ _id: req.body.studentId, teacher: teacher._id })
       .populate("user")
       .then((student) => {
         if (!student) {
