@@ -5,6 +5,7 @@ import StudentCard from "./StudentCard";
 import PaymentCard from "./PaymentCard";
 import BigCalendar from "./BigCalendar";
 import ModalAddStudent from "./ModalAddStudent";
+import ModalCreateStudent from "./ModalCreateStudent";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents, addEventToStore } from "../reducers/planning";
@@ -117,6 +118,7 @@ const events = [
 
 function DashboardTeacher() {
   const [modalAddStudent, setModalAddStudent] = useState(false);
+  const [modalCreateStudent, setModalCreateStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
   const paymentsData = useSelector((state) => state.payments.value);
   const dispatch = useDispatch();
@@ -246,7 +248,7 @@ function DashboardTeacher() {
                 <p className={styles.subtitle}>Mes élèves</p>
                 <button
                   className={styles.addStudentBtn}
-                  onClick={openEmptyModal}
+                  onClick={() => setModalCreateStudent(true)}
                 >
                   <span className={styles.addText}>+ Ajouter un élève</span>
                 </button>
@@ -271,6 +273,15 @@ function DashboardTeacher() {
         </div>
       </main>
       <FooterTeacher />
+      {modalCreateStudent && (
+        <ModalCreateStudent
+          onClose={() => setModalCreateStudent(false)}
+          onCreated={() => {
+            setModalCreateStudent(false);
+            // prévoir refresh students
+          }}
+        />
+      )}
       {modalAddStudent && (
         <ModalAddStudent
           student={selectedStudent}
