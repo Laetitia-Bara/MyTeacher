@@ -230,3 +230,9 @@
 .copyBtn {
   background: #85dccf;
 }
+
+.studentName {
+  margin: 4px 0 10px;
+  font-size: 14px;
+  color: #555;
+}

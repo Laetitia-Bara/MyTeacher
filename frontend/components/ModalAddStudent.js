@@ -172,8 +172,8 @@ import { useMemo, useState } from "react";
 import styles from "../styles/ModalAddStudent.module.css";
 import { api } from "../lib/api";
 
-export default function ModalAddStudent({ onClose, onInvited }) {
-  const [email, setEmail] = useState("");
+export default function ModalAddStudent({ student, onClose, onInvited }) {
+  const [email, setEmail] = useState(student?.email || "");
   const [inviteLink, setInviteLink] = useState("");
   const [statusMsg, setStatusMsg] = useState("");
   const [error, setError] = useState("");
@@ -187,6 +187,10 @@ export default function ModalAddStudent({ onClose, onInvited }) {
     setStatusMsg("");
     setInviteLink("");
     setCopied(false);
+
+    useEffect(() => {
+      setEmail(student?.email || "");
+    }, [student]);
 
     const normalized = email.trim().toLowerCase();
     if (!normalized) return setError("Email manquant");
@@ -238,6 +242,14 @@ export default function ModalAddStudent({ onClose, onInvited }) {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2 className={styles.title}>Inviter un élève</h2>
+          {student && (
+            <p className={styles.studentName}>
+              Invitation pour{" "}
+              <strong>
+                {student.firstName} {student.lastName}
+              </strong>
+            </p>
+          )}
           <button className={styles.close} onClick={onClose} type="button">
             ✕
           </button>
