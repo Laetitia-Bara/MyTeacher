@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/TeacherProfile.module.css";
 
 function TeacherProfile() {
@@ -60,6 +62,20 @@ function TeacherProfile() {
     }));
   };
 
+  const handleAvatarEdit = () => {
+    const newAvatar = window.prompt(
+      "Entrez l’URL de votre avatar :",
+      formData.avatarUrl,
+    );
+
+    if (newAvatar !== null) {
+      setFormData((prev) => ({
+        ...prev,
+        avatarUrl: newAvatar,
+      }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -107,17 +123,25 @@ function TeacherProfile() {
       <main className={styles.container}>
         <h1 className={styles.title}>Mon profil</h1>
 
-        <div className={styles.card}>
-          <div className={styles.avatarSection}>
-            <img
-              src={formData.avatarUrl || "https://via.placeholder.com/110"}
-              alt="Avatar"
-              className={styles.avatarPreview}
-            />
-          </div>
+        <form className={styles.card} onSubmit={handleSubmit}>
+          <div className={styles.leftColumn}>
+            <div className={styles.avatarWrapper}>
+              <img
+                src={formData.avatarUrl || "https://via.placeholder.com/120"}
+                alt="Avatar"
+                className={styles.avatarPreview}
+              />
+              <button
+                type="button"
+                className={styles.avatarEditButton}
+                onClick={handleAvatarEdit}
+                title="Modifier l’avatar"
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+            </div>
 
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <div className={styles.inlineRow}>
+            <div className={styles.identityBlock}>
               <div className={styles.row}>
                 <label>Prénom</label>
                 <input
@@ -137,13 +161,15 @@ function TeacherProfile() {
                   onChange={handleChange}
                 />
               </div>
-            </div>
 
-            <div className={styles.row}>
-              <label>Email</label>
-              <input type="text" value={formData.email} disabled />
+              <div className={styles.row}>
+                <label>Email</label>
+                <input type="text" value={formData.email} disabled />
+              </div>
             </div>
+          </div>
 
+          <div className={styles.rightColumn}>
             <div className={styles.row}>
               <label>Téléphone</label>
               <input
@@ -175,16 +201,6 @@ function TeacherProfile() {
               />
             </div>
 
-            <div className={styles.row}>
-              <label>Avatar URL</label>
-              <input
-                type="text"
-                name="avatarUrl"
-                value={formData.avatarUrl}
-                onChange={handleChange}
-              />
-            </div>
-
             <div className={styles.actions}>
               <button type="submit" className={styles.saveButton}>
                 Enregistrer
@@ -192,8 +208,8 @@ function TeacherProfile() {
             </div>
 
             {message && <p className={styles.message}>{message}</p>}
-          </form>
-        </div>
+          </div>
+        </form>
       </main>
 
       <FooterTeacher />
