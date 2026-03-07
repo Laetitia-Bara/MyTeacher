@@ -54,7 +54,7 @@ function HeaderTeacher() {
           </Link>
         </button>
         <div className={styles.btnParameters}>
-          <p>Julien</p>
+          <p>{user?.firstName || "Profil"}</p>
         </div>
         <button
           type="button"
