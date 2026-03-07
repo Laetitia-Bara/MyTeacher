@@ -98,6 +98,7 @@ function SignupTeacher() {
                 className={styles.input}
                 type={showPwd ? "text" : "password"}
                 placeholder="Mot de passe (8 caractères mini.)"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -113,8 +114,9 @@ function SignupTeacher() {
             <div className={styles.passwordWrap}>
               <input
                 className={styles.input}
-                type={showPwd2 ? "text" : "password2"}
+                type={showPwd2 ? "text" : "password"}
                 placeholder="Confirmation du mot de passe"
+                autoComplete="new-password"
                 value={password2}
                 onChange={(e) => setPassword2(e.target.value)}
               />
