@@ -115,10 +115,12 @@ function HeaderTeacher() {
           {showPopover && (
             <div className={styles.popover}>
               <Link href="/teacher_profile" className={styles.popoverItem}>
+                <span className={styles.popoverIcon}>👤</span>
                 Mon profil
               </Link>
 
               <Link href="/" className={styles.popoverItem}>
+                <span className={styles.popoverIcon}>⚙️</span>
                 Paramètres
               </Link>
 

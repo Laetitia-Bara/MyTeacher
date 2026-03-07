@@ -127,7 +127,10 @@ function TeacherProfile() {
           <div className={styles.leftColumn}>
             <div className={styles.avatarWrapper}>
               <img
-                src={formData.avatarUrl || "https://via.placeholder.com/120"}
+                src={
+                  formData.avatarUrl ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
                 alt="Avatar"
                 className={styles.avatarPreview}
               />
