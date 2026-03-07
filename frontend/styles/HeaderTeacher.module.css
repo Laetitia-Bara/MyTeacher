@@ -170,3 +170,12 @@
 .popoverLogout:hover {
   background-color: #fff3f3;
 }
+
+.logo img {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
