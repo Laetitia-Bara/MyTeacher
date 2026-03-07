@@ -250,8 +250,13 @@ export default function ModalAddStudent({ student, onClose, onInvited }) {
               </strong>
             </p>
           )}
-          <button className={styles.close} onClick={onClose} type="button">
-            ✕
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            type="button"
+            aria-label="Fermer la fenêtre"
+          >
+            <span className={styles.closeIcon}></span>
           </button>
         </div>
 

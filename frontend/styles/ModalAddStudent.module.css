@@ -236,3 +236,51 @@
   font-size: 14px;
   color: #555;
 }
+.closeButton {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: #f3f3f3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.closeButton:hover {
+  background: #e6e6e6;
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+/* La croix */
+
+.closeIcon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.closeIcon::before,
+.closeIcon::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  background: #2f2a28;
+  top: 50%;
+  left: 0;
+}
+
+.closeIcon::before {
+  transform: rotate(45deg);
+}
+
+.closeIcon::after {
+  transform: rotate(-45deg);
+}
