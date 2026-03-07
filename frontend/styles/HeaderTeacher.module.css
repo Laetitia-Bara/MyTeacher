@@ -59,7 +59,6 @@
   justify-content: center;
   align-items: center;
   min-width: 100px;
-  /* font-family: ; */
 }
 
 .btnParameters:hover {
@@ -78,10 +77,84 @@
   justify-content: center;
   align-items: center;
   width: 35px;
-  /* font-family: ; */
 }
 
 .btnLogout:hover {
   background-color: #84b7d4;
   cursor: pointer;
+}
+
+.profileMenuWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.btnParameters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #2f2a28;
+  min-height: 42px;
+}
+
+.btnParameters:hover {
+  background-color: #f7f7f7;
+}
+
+.chevronIcon {
+  font-size: 0.85rem;
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 180px;
+  background: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+}
+
+.popoverItem {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #2f2a28;
+  font-weight: 500;
+}
+
+.popoverItem:hover {
+  background-color: #f4f4f4;
+}
+
+.popoverLogout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #b14d4d;
+  font-weight: 600;
+  text-align: left;
+}
+
+.popoverLogout:hover {
+  background-color: #fff3f3;
 }
