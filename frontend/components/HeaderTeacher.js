@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/HeaderTeacher.module.css";
@@ -9,6 +10,32 @@ import { logout } from "../lib/api";
 
 function HeaderTeacher() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (data.result) {
+          setUser(data.user);
+        }
+      } catch (e) {
+        console.error("Fetch user failed:", e);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await logout();

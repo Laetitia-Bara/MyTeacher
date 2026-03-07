@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import HeaderTeacher from "../../components/HeaderTeacher";
-import FooterTeacher from "../../components/FooterTeacher";
-import styles from "../../styles/TeacherProfile.module.css";
+import HeaderTeacher from "./HeaderTeacher";
+import FooterTeacher from "./FooterTeacher";
+import styles from "../styles/TeacherProfile.module.css";
 
 function TeacherProfile() {
   const [formData, setFormData] = useState({
@@ -110,48 +110,79 @@ function TeacherProfile() {
         <div className={styles.card}>
           <div className={styles.avatarSection}>
             <img
-              src="https://via.placeholder.com/110"
+              src={formData.avatarUrl || "https://via.placeholder.com/110"}
               alt="Avatar"
               className={styles.avatarPreview}
             />
           </div>
 
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.inlineRow}>
               <div className={styles.row}>
                 <label>Prénom</label>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className={styles.row}>
                 <label>Nom</label>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
             <div className={styles.row}>
               <label>Email</label>
-              <input type="text" disabled />
+              <input type="text" value={formData.email} disabled />
             </div>
 
             <div className={styles.row}>
               <label>Téléphone</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
             </div>
 
             <div className={styles.row}>
               <label>Adresse</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+              />
             </div>
 
             <div className={styles.row}>
               <label>Disciplines</label>
-              <input type="text" placeholder="Maths, Piano, Guitare..." />
+              <input
+                type="text"
+                name="discipline"
+                value={formData.discipline}
+                onChange={handleChange}
+                placeholder="Maths, Piano, Guitare..."
+              />
             </div>
 
             <div className={styles.row}>
               <label>Avatar URL</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="avatarUrl"
+                value={formData.avatarUrl}
+                onChange={handleChange}
+              />
             </div>
 
             <div className={styles.actions}>
