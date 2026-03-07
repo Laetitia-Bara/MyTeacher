@@ -85,7 +85,7 @@ function HeaderTeacher() {
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          <Link href="/teacher_payments">
             <span className={styles.menuText}>Suivi paiements</span>
           </Link>
         </button>
