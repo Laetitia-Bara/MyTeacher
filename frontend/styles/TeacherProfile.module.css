@@ -36,6 +36,7 @@
 .rightColumn {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 18px;
 }
 
