@@ -1,44 +1,82 @@
 .container {
     min-height: calc(100vh - 140px);
     background-color: #f3f3f3;
-    padding: 40px 20px;
+    padding: 30px 20px 40px;
 }
 
 .title {
     text-align: center;
     font-size: 2.2rem;
     font-weight: 700;
-    letter-spacing: 1px;
     color: #2f2a28;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .card {
     width: 100%;
-    max-width: 760px;
+    max-width: 1100px;
     margin: 0 auto;
     background: #ffffff;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: start;
 }
 
-.avatarSection {
+.leftColumn {
     display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.avatarWrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
 }
 
 .avatarPreview {
-    width: 110px;
-    height: 110px;
+    width: 120px;
+    height: 120px;
     border-radius: 999px;
     object-fit: cover;
     border: 4px solid #a9d8f3;
     background-color: #eaeaea;
 }
 
-.form {
+.avatarEditButton {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 999px;
+    background-color: #a9d8f3;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarEditButton:hover {
+    opacity: 0.95;
+}
+
+.identityBlock {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -56,9 +94,7 @@
     color: #2f2a28;
 }
 
-.row input,
-.row textarea,
-.row select {
+.row input {
     width: 100%;
     min-height: 44px;
     padding: 10px 12px;
@@ -68,17 +104,9 @@
     background: #fff;
     color: #2f2a28;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.row textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.row input:focus,
-.row textarea:focus,
-.row select:focus {
+.row input:focus {
     border-color: #9fd3ef;
     box-shadow: 0 0 0 3px rgba(159, 211, 239, 0.2);
 }
@@ -89,16 +117,10 @@
     cursor: not-allowed;
 }
 
-.inlineRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
 .actions {
     display: flex;
-    justify-content: center;
-    margin-top: 12px;
+    justify-content: flex-start;
+    margin-top: 8px;
 }
 
 .saveButton {
@@ -111,77 +133,31 @@
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .saveButton:hover {
     opacity: 0.95;
-    transform: translateY(-1px);
-}
-
-.saveButton:active {
-    transform: translateY(0);
 }
 
 .message {
-    margin-top: 18px;
-    text-align: center;
+    margin-top: 12px;
     font-size: 0.95rem;
     font-weight: 600;
     color: #4b7f52;
 }
 
-.error {
-    margin-top: 18px;
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #b14d4d;
-}
-
-.structuresBox {
-    margin-top: 10px;
-    padding: 14px;
-    border-radius: 8px;
-    background-color: #f8f8f8;
-    border: 1px solid #e3e3e3;
-}
-
-.structuresTitle {
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #2f2a28;
-}
-
-.structureItem {
-    padding: 8px 10px;
-    border-radius: 6px;
-    background: #fff;
-    border: 1px solid #ececec;
-    margin-bottom: 8px;
-    font-size: 0.93rem;
-}
-
-.structureItem:last-child {
-    margin-bottom: 0;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 25px 12px;
-    }
-
-    .title {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-    }
-
+@media (max-width: 900px) {
     .card {
-        padding: 20px;
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
 
-    .inlineRow {
-        grid-template-columns: 1fr;
+    .leftColumn {
+        align-items: center;
+    }
+
+    .actions {
+        justify-content: center;
     }
 
     .saveButton {
