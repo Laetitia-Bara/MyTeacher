@@ -69,7 +69,7 @@ function HeaderTeacher() {
   return (
     <header className={styles.content}>
       <div className={styles.logo}>
-        <Link href="/">
+        <Link href="/" className={styles.logoLink}>
           <Image src="/LogoMT.ico" alt="Logo" width={65} height={50} />
         </Link>
       </div>
