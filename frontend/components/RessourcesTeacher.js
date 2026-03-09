@@ -33,6 +33,7 @@ function RessourcesTeacher() {
   const [students, setStudents] = useState([]);
   const [modalAddRessource, setModalAddRessource] = useState(false);
   const [addFlag, setAddFlag] = useState(false);
+  console.log("studentsData", studentsData);
 
   useEffect(() => {
     (async () => {
@@ -46,6 +47,7 @@ function RessourcesTeacher() {
           },
         );
         const data = await response.json();
+        console.log("data ressources", data);
         // Version dès que backend ok
         data.result
           ? setRessourcesData(data.ressources)
@@ -99,6 +101,7 @@ function RessourcesTeacher() {
   const shareRessources = async () => {
     // Fetch vers backend pour partager les ressources
     if (students.length > 0 && sharingRessources.length > 0) {
+      console.log("students", students);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/share`,
@@ -200,7 +203,7 @@ function RessourcesTeacher() {
 
   const studentsChoice = studentsData.map((data, i) => {
     return (
-      <option key={i} value={data._id}>
+      <option key={i} value={data.id}>
         {data.firstName} {data.lastName}
       </option>
     );
