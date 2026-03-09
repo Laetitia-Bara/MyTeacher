@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 function FicheStudentTeacherPage() {
   const router = useRouter();
   const { id } = router.query; // /fiche_student_teacher?id=123
-
+  console.log(id)
   return <FicheStudentTeacher studentId={id}/>;
 }
 
