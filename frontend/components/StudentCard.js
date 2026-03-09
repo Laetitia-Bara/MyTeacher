@@ -47,7 +47,7 @@ function StudentCard(props) {
   return (
     <div className={styles.content}>
       <button className={styles.studentLink}>
-          <span className={styles.name} onClick={() => router.push(`/fiche_student_teacher?${props.id}`)}>
+          <span className={styles.name} onClick={() => router.push(`/fiche_student_teacher?id=${props.id}`)}>
             {props.firstname} {props.lastname}
           </span>
       </button>
