@@ -42,6 +42,42 @@ router.get('/getInvoices',
             }).then(() => {res.json({result: true, invoices: invoices})})
         }else{res.json({result: false, error : "No invoices found"})}
     })
-})
+});
+
+// Get invoices d'un étudiant par son userId
+router.get("/getInvoicesStudentById/:userId", function (req, res) {
+  Student.findOne({ user: req.params.userId })
+    .then((student) => {
+      if (!student) {
+        res.json({ result: false, error: "Student not found" });
+        return;
+      }
+
+      Invoice.find({ student: student._id }).then((data) => {
+        let invoices = [];
+
+        if (data.length > 0) {
+          for (let obj of data) {
+            invoices.push({
+              period: obj.period,
+              label: obj.label,
+              amount: obj.amount,
+              status: obj.status,
+              createdAt: obj.createdAt,
+              paidAt: obj.paidAt,
+            });
+          }
+
+          res.json({ result: true, invoices: invoices });
+        } else {
+          res.json({ result: true, invoices: [] });
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.json({ result: false, error: "Server error" });
+    });
+});
 
 module.exports = router;

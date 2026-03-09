@@ -65,4 +65,91 @@ router.post("/addStudent", function (req, res) {
   res.json({ result: false });
 });
 
+
+// Update student identity
+router.put("/updateIdentity", async function (req, res) {
+  const { studentId, firstName, lastName, email, phone } = req.body;
+
+  console.log("BODY :", req.body);
+
+  if (!studentId || !firstName || !lastName || !email || !phone) {
+    res.json({ result: false, error: "Missing data" });
+    return;
+  }
+
+  try {
+    const student = await Student.findById(studentId).populate("user");
+
+    if (!student || !student.user) {
+      res.json({ result: false, error: "Student not found" });
+      return;
+    }
+
+    student.phone = phone;
+    await student.save();
+
+    student.user.firstName = firstName;
+    student.user.lastName = lastName;
+    student.user.email = email.toLowerCase().trim();
+    await student.user.save();
+
+    res.json({
+      result: true,
+      student: {
+        id: student._id,
+        firstName: student.user.firstName,
+        lastName: student.user.lastName,
+        email: student.user.email,
+        phone: student.phone,
+        discipline: student.discipline,
+        status: student.status,
+        structure: student.structure,
+        subscription: student.subscription,
+      },
+    });
+  } catch (error) {
+    console.log("UPDATE IDENTITY ERROR :", error);
+    res.json({ result: false, error: error.message });
+  }
+});
+
+
+// Update student subscription
+router.put("/updateSubscription", async function (req, res) {
+  const { studentId, type, price, modalite } = req.body;
+
+  if (!studentId || !type || price === undefined || !modalite) {
+    res.json({ result: false, error: "Missing data" });
+    return;
+  }
+
+  try {
+    const student = await Student.findById(studentId);
+
+    if (!student) {
+      res.json({ result: false, error: "Student not found" });
+      return;
+    }
+
+    student.subscription = {
+      type,
+      price,
+      modalite,
+    };
+
+    await student.save();
+
+    res.json({
+      result: true,
+      student: {
+        id: student._id,
+        subscription: student.subscription,
+      },
+    });
+  } catch (error) {
+    console.log("UPDATE SUBSCRIPTION ERROR :", error);
+    res.json({ result: false, error: error.message });
+  }
+});
+
 module.exports = router;
