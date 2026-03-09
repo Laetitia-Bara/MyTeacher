@@ -175,15 +175,21 @@ function TeacherPayments() {
                   <div className={styles.cellStatus}>
                     {inv.status === "paid"
                       ? "Paiement : effectué"
-                      : inv.status === "late"
-                        ? "Paiement : en retard"
-                        : "Paiement : à venir"}
+                      : inv.status === "pending"
+                        ? "Paiement : en attente"
+                        : inv.status === "scheduled"
+                          ? "Paiement : programmé"
+                          : "Paiement : en retard"}
                   </div>
 
                   <div className={styles.cellAmount}>{inv.amount}€</div>
 
                   <div className={styles.cellAction}>
-                    {inv.status !== "paid" ? (
+                    {inv.status === "paid" ? (
+                      <span className={styles.doneIcon}>✓</span>
+                    ) : inv.status === "scheduled" ? (
+                      <span className={styles.waitIcon}>⏳</span>
+                    ) : (
                       <button
                         className={styles.payButton}
                         onClick={() => handleMarkPaid(inv._id)}
@@ -191,8 +197,6 @@ function TeacherPayments() {
                       >
                         ⬇
                       </button>
-                    ) : (
-                      <span className={styles.doneIcon}>✓</span>
                     )}
                   </div>
                 </div>

@@ -9,6 +9,26 @@ const { checkBody } = require("../modules/checkBody");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
+//---------------------Helpers------------------
+
+async function refreshInvoiceStatuses(invoices) {
+  const now = new Date();
+  const updates = [];
+
+  for (const inv of invoices) {
+    if (inv.status === "scheduled" && inv.dueAt && new Date(inv.dueAt) <= now) {
+      inv.status = "pending";
+      updates.push(inv.save());
+    }
+  }
+
+  if (updates.length) {
+    await Promise.all(updates);
+  }
+}
+
+//---------------------Routes-------------------
+
 // GET /invoices/getInvoices
 router.get(
   "/getInvoices",
@@ -30,6 +50,7 @@ router.get(
           populate: "user",
         })
         .sort({ createdAt: -1 });
+      await refreshInvoiceStatuses(data);
 
       if (!data.length) {
         return res.json({ result: true, invoices: [] });
@@ -80,6 +101,7 @@ router.get("/my", authMiddleware, requireRole("student"), async (req, res) => {
     const invoices = await Invoice.find({ student: student._id })
       .sort({ createdAt: -1 })
       .lean();
+    await refreshInvoiceStatuses(data);
 
     return res.json({ result: true, invoices });
   } catch (e) {

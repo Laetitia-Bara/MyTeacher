@@ -2,166 +2,251 @@ var express = require("express");
 var router = express.Router();
 
 require("../models/connection");
-const mongoose = require("mongoose");
+
 const Lesson = require("../models/lessons");
 const Teacher = require("../models/teachers");
 const Student = require("../models/students");
+const Invoice = require("../models/invoices");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
-/* GET teachers students. */
+// GET /lessons/getLessons
+// Récupérer les cours du teacher connecté
 router.get(
-  "/getLessonsStudent",
+  "/getLessons",
   authMiddleware,
-  requireRole("student"),
-  function (req, res) {
-    Lesson.find({ teacher: req.user.userId }).then((data) => {
-      let lessons = [];
+  requireRole("teacher"),
+  async function (req, res) {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
 
-      if (data != null) {
-        for (let obj of data) {
-          lessons.push({
-            id: obj._id,
-            title: obj.title,
-            startAt: obj.startAt,
-            endAt: obj.endAt,
-            desc: obj.teacherNotes,
-            structure: obj.structure,
-            lieu: obj.locationType,
-          });
-        }
-        res.json({ result: true, lessons: lessons }); //lessons pluriel
-      } else {
-        res.json({ result: false, error: "No lesson found" });
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
       }
-    });
+
+      const data = await Lesson.find({ teacher: teacher._id }).sort({
+        startAt: 1,
+      });
+
+      const lessons = data.map((obj) => ({
+        id: obj._id,
+        title: obj.title,
+        startAt: obj.startAt,
+        endAt: obj.endAt,
+        desc: obj.teacherNotes,
+        structure: obj.structure,
+        lieu: obj.locationType,
+      }));
+
+      return res.json({ result: true, lessons });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
   },
 );
-/*
-  authMiddleware,
-  requireRole("teacher"),*/
+
+// POST /lessons/addEvent
+// Créer un cours + créer automatiquement une facture
 router.post(
   "/addEvent",
   authMiddleware,
   requireRole("teacher"),
-  function (req, res) {
-    let arrayId = [];
-    if (Array.isArray(req.body.student)) {
-      for (let obj of req.body.student) {
-        arrayId.push(new mongoose.Types.ObjectId(obj));
+  async function (req, res) {
+    try {
+      const { title, desc, start, end, structure, location, student } =
+        req.body;
+
+      if (!student || !title || !start || !end) {
+        return res.status(400).json({ result: false, error: "Missing fields" });
       }
-    } else {
-      arrayId.push(new mongoose.Types.ObjectId(req.body.student));
+
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      const studentDoc = await Student.findOne({
+        _id: student,
+        teacher: teacher._id,
+      });
+
+      if (!studentDoc) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
+      }
+
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
+      const newLesson = new Lesson({
+        teacher: teacher._id,
+        student: [studentDoc._id],
+        title,
+        startAt: startDate,
+        endAt: endDate,
+        structure,
+        teacherNotes: desc,
+        locationType: location,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      await newLesson.save();
+
+      const lessonPrice = studentDoc.subscription?.price || 30;
+
+      const newInvoice = new Invoice({
+        teacher: teacher._id,
+        student: studentDoc._id,
+        lesson: newLesson._id,
+        period: startDate.toLocaleDateString("fr-FR", {
+          month: "long",
+          year: "numeric",
+        }),
+        label: title || "Cours",
+        amount: lessonPrice,
+        status: endDate <= new Date() ? "pending" : "scheduled",
+        dueAt: endDate,
+        provider: "manual",
+        paymentMethod: "cash",
+      });
+
+      await newInvoice.save();
+
+      return res.json({
+        result: true,
+        lesson: {
+          id: newLesson._id,
+          title: newLesson.title,
+          startAt: newLesson.startAt,
+          endAt: newLesson.endAt,
+          student: studentDoc._id,
+          structure: newLesson.structure,
+          lieu: newLesson.locationType,
+          desc: newLesson.teacherNotes,
+        },
+        invoice: newInvoice,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
     }
-
-    const newLesson = new Lesson({
-      teacher: new mongoose.Types.ObjectId(req.user.userId),
-      student: arrayId,
-      title: req.body.title,
-      startAt: req.body.start,
-      endAt: req.body.end,
-      structure: req.body.structure,
-      teacherNotes: req.body.desc,
-      locationType: req.body.location,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    newLesson.save().then(() => {
-      res.json({ result: true, lesson: newLesson.toObject({ getters: true }) });
-    });
   },
 );
 
+// DELETE /lessons/removeEvent/:id
 router.delete(
   "/removeEvent/:id",
   authMiddleware,
   requireRole("teacher"),
-  function (req, res) {
-    Lesson.deleteOne({ _id: req.params.id }).then((result) => {
-      if (result.deletedCount > 0) {
-        res.json({ result: true });
-      } else {
-        res.json({ result: false, error: "Lesson not found" });
+  async function (req, res) {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
       }
-    });
+
+      const result = await Lesson.deleteOne({
+        _id: req.params.id,
+        teacher: teacher._id,
+      });
+
+      if (result.deletedCount > 0) {
+        return res.json({ result: true });
+      } else {
+        return res.json({ result: false, error: "Lesson not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
   },
 );
 
-// Get lessons des étudiants
-router.get("/getLessonsStudent", function (req, res) {
-  Student.findOne({ user: req.user.userId })
-    .then((student) => {
+// GET /lessons/getLessonsStudent
+// Récupérer les cours du student connecté
+router.get(
+  "/getLessonsStudent",
+  authMiddleware,
+  requireRole("student"),
+  async function (req, res) {
+    try {
+      const student = await Student.findOne({ user: req.user.userId });
+
       if (!student) {
-        res.json({ result: false, error: "Student not found" });
-        return;
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
       }
 
-      Lesson.find({ student: student._id }).then((data) => {
-        let lessons = [];
-
-        if (data != null) {
-          for (let obj of data) {
-            lessons.push({
-              id: obj._id,
-              title: obj.title,
-              start: obj.startAt,
-              end: obj.endAt,
-              student: student._id,
-              structure: obj.structure,
-              location: obj.locationType,
-              desc: obj.teacherNotes,
-            });
-          }
-
-          res.json({ result: true, lessons: lessons });
-        } else {
-          res.json({ result: false, error: "No lesson found" });
-        }
+      const data = await Lesson.find({ student: student._id }).sort({
+        startAt: 1,
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({ result: false, error: "Server error" });
-    });
-});
 
-// Get lessons d'un étudiant par son id
-router.get("/getLessonsStudentById/:studentId", function (req, res) {
-  Student.findById(req.params.studentId)
-    .then((student) => {
+      const lessons = data.map((obj) => ({
+        id: obj._id,
+        title: obj.title,
+        start: obj.startAt,
+        end: obj.endAt,
+        student: student._id,
+        structure: obj.structure,
+        location: obj.locationType,
+        desc: obj.teacherNotes,
+      }));
+
+      return res.json({ result: true, lessons });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
+// GET /lessons/getLessonsStudentById/:studentId
+// Optionnel : récupérer les cours d'un étudiant par son id
+router.get(
+  "/getLessonsStudentById/:studentId",
+  authMiddleware,
+  async function (req, res) {
+    try {
+      const student = await Student.findById(req.params.studentId);
+
       if (!student) {
-        res.json({ result: false, error: "Student not found" });
-        return;
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
       }
 
-      Lesson.find({ student: student._id }).then((data) => {
-        let lessons = [];
-
-        if (data != null) {
-          for (let obj of data) {
-            lessons.push({
-              id: obj._id,
-              title: obj.title,
-              start: obj.startAt,
-              end: obj.endAt,
-              student: student._id,
-              structure: obj.structure,
-              location: obj.locationType,
-              desc: obj.teacherNotes,
-            });
-          }
-
-          res.json({ result: true, lessons: lessons });
-        } else {
-          res.json({ result: false, error: "No lesson found" });
-        }
+      const data = await Lesson.find({ student: student._id }).sort({
+        startAt: 1,
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.json({ result: false, error: "Server error" });
-    });
-});
+
+      const lessons = data.map((obj) => ({
+        id: obj._id,
+        title: obj.title,
+        start: obj.startAt,
+        end: obj.endAt,
+        student: student._id,
+        structure: obj.structure,
+        location: obj.locationType,
+        desc: obj.teacherNotes,
+      }));
+
+      return res.json({ result: true, lessons });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
 
 module.exports = router;
