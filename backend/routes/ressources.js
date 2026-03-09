@@ -82,6 +82,7 @@ router.post(
     }
 
     const { ressources, students } = req.body;
+    console.log("students", students);
 
     try {
       for (let obj of ressources) {
@@ -92,7 +93,7 @@ router.post(
         } else {
           console.log("ressourceCheck", ressourceCheck);
           let studentIdTable = ressourceCheck.studentId;
-          studentIdTable.some((id) => id.toString() === students[0])
+          studentIdTable.some((id) => id === students[0])
             ? console.log("Student already has access to this ressource")
             : studentIdTable.push(students[0]);
           const updateRessource = await Ressource.updateOne(
