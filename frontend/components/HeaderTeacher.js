@@ -23,33 +23,37 @@ function HeaderTeacher() {
   return (
     <header className={styles.content}>
       <div className={styles.logo}>
-        <Link href="/">
+        <Link href="/dashboard_teacher">
           <Image src="/LogoMT.ico" alt="Logo" width={65} height={50} />
         </Link>
       </div>
       <div className={styles.menu}>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          {/* Add page for structures */}
+          <Link href="/dashboard_teacher"> 
             <span className={styles.menuText}>Mes structures</span>
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          <Link href="/ressources_teacher">
             <span className={styles.menuText}>Ressources</span>
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          {/* Add page for paiement */}
+          <Link href="/dashboard_teacher"> 
             <span className={styles.menuText}>Suivi paiements</span>
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          {/* Add page for planning */}
+          <Link href="/dashboard_teacher"> 
             <span className={styles.menuText}>Planning</span>
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/">
+          {/* Add page for messagerie */}
+          <Link href="/dashboard_teacher"> 
             <span className={styles.menuText}>Messagerie</span>
           </Link>
         </button>
