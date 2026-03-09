@@ -17,7 +17,7 @@ function DashboardStudent() {
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
 
-  useEffect(() => {
+  /*useEffect(() => {
     api("/users/me").then(({ ok, data }) => {
       if (!ok || !data?.result) {
         console.log(data?.error || "Erreur récupération utilisateur");
@@ -61,6 +61,36 @@ function DashboardStudent() {
         }
       });
     });
+  }, [dispatch]);*/
+
+  useEffect(() => {
+    (async () => {
+      // Charger les cours de l'étudiant connecté
+      const lessonsRes = await api("/lessons/getLessonsStudent");
+      if (lessonsRes.ok && lessonsRes.data?.result) {
+        dispatch(getEvents(lessonsRes.data.lessons || []));
+      } else {
+        console.log(lessonsRes.data?.error || "Erreur chargement cours élève");
+      }
+
+      // Charger les paiements de l'étudiant connecté
+      const invoicesRes = await api("/invoices/my");
+      if (invoicesRes.ok && invoicesRes.data?.result) {
+        const invoices = invoicesRes.data.invoices || [];
+
+        if (invoices.some((i) => i.status === "late")) {
+          setPaymentStatus("En retard");
+        } else if (invoices.some((i) => i.status === "pending")) {
+          setPaymentStatus("En attente");
+        } else if (invoices.some((i) => i.status === "paid")) {
+          setPaymentStatus("À jour");
+        } else {
+          setPaymentStatus("Aucun paiement");
+        }
+      } else {
+        console.log(invoicesRes.data?.error || "Erreur chargement paiements");
+      }
+    })();
   }, [dispatch]);
 
   return (
