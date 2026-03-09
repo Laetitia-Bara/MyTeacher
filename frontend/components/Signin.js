@@ -33,7 +33,7 @@ function Signin() {
     if (data?.user?.role === "student") {
       router.push("/dashboard_student");
     } else {
-      router.push("/");
+      router.push("/dashboard_teacher");
     }
   };
 
