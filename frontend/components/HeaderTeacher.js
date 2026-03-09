@@ -124,7 +124,7 @@ function HeaderTeacher() {
                 </a>
               </Link>
 
-              <Link href="/">
+              <Link href="/dashboard_teacher">
                 <a className={styles.popoverItem}>
                   <span className={styles.popoverIcon}>⚙️</span>
                   <span>Paramètres</span>
