@@ -185,18 +185,18 @@ function DashboardTeacher() {
         const data = await response.json();
         console.log("Data lessonsfetched:", data);
         // Version dès que backend ok
-        // data.result
-        //   ? dispatch(getEvents(data.lessons))
-        //   : console.log(data.error);
+        data.result
+          ? dispatch(getEvents(data.lessons))
+          : console.log(data.error);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     })();
 
     // En attendant données backend, dispatch de données statiques
-    dispatch(getStudents(dataStudent));
-    dispatch(getPayments(dataPayment));
-    dispatch(getEvents(events));
+    // dispatch(getStudents(dataStudent));
+    // dispatch(getPayments(dataPayment));
+    // dispatch(getEvents(events));
   }, []);
 
   const students = studentsData.map((data, i) => (
