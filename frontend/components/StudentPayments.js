@@ -24,7 +24,14 @@ export default function StudentPaymentsPage() {
             {inv.period} — {inv.label}
           </div>
           <div>{inv.amount} €</div>
-          <div>Status: {inv.status}</div>
+          <div>
+            Statut :{" "}
+            {inv.status === "paid"
+              ? "payé"
+              : inv.status === "late"
+                ? "en retard"
+                : "en attente"}
+          </div>
         </div>
       ))}
     </div>

@@ -88,6 +88,34 @@ function TeacherPayments() {
       ]),
     ];
 
+    const handleSeedMock = async () => {
+      setMessage("");
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/seed-mock`,
+          {
+            method: "POST",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+
+        if (data.result) {
+          setMessage("Factures mock créées");
+          fetchInvoices();
+        } else {
+          setMessage(
+            data.error || "Erreur lors de la création des factures mock",
+          );
+        }
+      } catch (error) {
+        console.error("Seed mock error:", error);
+        setMessage("Erreur serveur");
+      }
+    };
+
     const csvContent = lines.map((row) => row.join(";")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = window.URL.createObjectURL(blob);
@@ -121,6 +149,9 @@ function TeacherPayments() {
 
             <button className={styles.exportButton} onClick={handleExport}>
               Exporter les factures
+            </button>
+            <button className={styles.exportButton} onClick={handleSeedMock}>
+              Générer des factures test
             </button>
           </div>
 

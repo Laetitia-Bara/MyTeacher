@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateStudentStatus } from "../reducers/students";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function StudentCard(props) {
+  const router = useRouter();
   const [status, setStatus] = useState(props.status);
   useEffect(() => {
     setStatus(props.status);
@@ -45,11 +47,9 @@ function StudentCard(props) {
   return (
     <div className={styles.content}>
       <button className={styles.studentLink}>
-        <Link href="/">
-          <span className={styles.name}>
+          <span className={styles.name} onClick={() => router.push(`/fiche_student_teacher?id=${props.id}`)}>
             {props.firstname} {props.lastname}
           </span>
-        </Link>
       </button>
       <p className={styles.discipline}>{props.discipline}</p>
       {/*{!props.invite && (

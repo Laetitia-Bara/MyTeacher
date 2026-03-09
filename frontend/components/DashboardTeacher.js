@@ -90,8 +90,8 @@ const events = [
   {
     id: 1,
     title: "SUPERTEST",
-    start: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
-    end: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
+    startAt: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
+    endAt: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
   },
 
   {
@@ -130,6 +130,7 @@ function DashboardTeacher() {
     setModalAddStudent(true);
   };
 
+  /*
   useEffect(() => {
     (async () => {
       // Fetch students
@@ -197,7 +198,74 @@ function DashboardTeacher() {
     dispatch(getStudents(dataStudent));
     dispatch(getPayments(dataPayment));
     dispatch(getEvents(events));
-  }, []);
+  }, []);*/
+
+  // les mocks ne servent qu’en secours
+  useEffect(() => {
+    (async () => {
+      let hasStudents = false;
+      let hasPayments = false;
+      let hasEvents = false;
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/students/getStudents`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+        if (data.result) {
+          dispatch(getStudents(data.students));
+          hasStudents = true;
+        }
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+        if (data.result) {
+          dispatch(getPayments(data.invoices));
+          hasPayments = true;
+        }
+      } catch (error) {
+        console.error("Error fetching invoices:", error);
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/getLessons`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const data = await response.json();
+        if (data.result) {
+          dispatch(getEvents(data.lessons));
+          hasEvents = true;
+        }
+      } catch (error) {
+        console.error("Error fetching lessons:", error);
+      }
+
+      if (!hasStudents) dispatch(getStudents(dataStudent));
+      if (!hasPayments) dispatch(getPayments(dataPayment));
+      if (!hasEvents) dispatch(getEvents(events));
+    })();
+  }, [dispatch]);
 
   const students = studentsData.map((data, i) => (
     <StudentCard
