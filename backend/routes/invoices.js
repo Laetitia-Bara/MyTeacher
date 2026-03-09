@@ -44,8 +44,9 @@ router.get(
 
         return {
           _id: obj._id,
-          firstName: obj.student?.user?.firstName || "",
-          lastName: obj.student?.user?.lastName || "",
+          firstName:
+            obj.student?.user?.firstName || obj.student?.firstName || "",
+          lastName: obj.student?.user?.lastName || obj.student?.lastName || "",
           period: obj.period || "",
           label: obj.label || "",
           amount: obj.amount || 0,
@@ -123,6 +124,83 @@ router.post(
       await invoice.save();
 
       return res.json({ result: true, invoice });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
+// --------------------------MOCK -------------------------
+// POST seed-mock
+router.post(
+  "/seed-mock",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      const students = await Student.find({ teacher: teacher._id }).limit(3);
+
+      if (!students.length) {
+        return res.status(400).json({
+          result: false,
+          error: "No students found for this teacher",
+        });
+      }
+
+      const docs = [];
+
+      if (students[0]) {
+        docs.push({
+          teacher: teacher._id,
+          student: students[0]._id,
+          period: "Mars 2026",
+          label: "Cours hebdomadaire",
+          amount: 45,
+          status: "pending",
+          provider: "manual",
+          paymentMethod: "cash",
+        });
+      }
+
+      if (students[1]) {
+        docs.push({
+          teacher: teacher._id,
+          student: students[1]._id,
+          period: "Février 2026",
+          label: "Abonnement mensuel",
+          amount: 60,
+          status: "paid",
+          provider: "manual",
+          paymentMethod: "transfer",
+          paidAt: new Date(),
+        });
+      }
+
+      if (students[2]) {
+        docs.push({
+          teacher: teacher._id,
+          student: students[2]._id,
+          period: "Janvier 2026",
+          label: "Cours individuel",
+          amount: 50,
+          status: "late",
+          provider: "manual",
+          paymentMethod: "check",
+        });
+      }
+
+      const created = await Invoice.insertMany(docs);
+
+      return res.json({ result: true, invoices: created });
     } catch (e) {
       console.error(e);
       return res.status(500).json({ result: false, error: "Server error" });
