@@ -4,50 +4,65 @@ var router = express.Router();
 require("../models/connection");
 const Invoice = require("../models/invoices");
 const Student = require("../models/students");
+const Teacher = require("../models/teachers");
 const { checkBody } = require("../modules/checkBody");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
-//Get Invoices
-// ne plus accepter teacherId dans le body (sécurité)
+// GET /invoices/getInvoices
 router.get(
   "/getInvoices",
   authMiddleware,
   requireRole("teacher"),
-  function (req, res) {
-    let invoices = [];
-    Invoice.find({ teacher: req.user.userId })
-      .populate({
-        path: "student",
-        populate: "user",
-      })
-      .then((data) => {
-        if (data.length > 0) {
-          Student.find({ teacher: req.user.userId })
-            .then((studentInfo) => {
-              for (let obj of data) {
-                let modalite = studentInfo.find(
-                  (element) => String(element._id) === String(obj.student._id),
-                ).subscription.modalite;
-                invoices.push({
-                  firstName: obj.student.user.firstName,
-                  lastName: obj.student.user.lastName,
-                  period: obj.period,
-                  label: obj.label,
-                  amount: obj.amount,
-                  status: obj.status,
-                  createdAt: obj.createdAt,
-                  modalite: modalite, //modalite de paiement dans student
-                });
-              }
-            })
-            .then(() => {
-              res.json({ result: true, invoices: invoices });
-            });
-        } else {
-          res.json({ result: false, error: "No invoices found" });
-        }
+  async function (req, res) {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      const data = await Invoice.find({ teacher: teacher._id })
+        .populate({
+          path: "student",
+          populate: "user",
+        })
+        .sort({ createdAt: -1 });
+
+      if (!data.length) {
+        return res.json({ result: true, invoices: [] });
+      }
+
+      const studentInfo = await Student.find({ teacher: teacher._id });
+
+      const invoices = data.map((obj) => {
+        const matchedStudent = studentInfo.find(
+          (element) => String(element._id) === String(obj.student?._id),
+        );
+
+        return {
+          _id: obj._id,
+          firstName: obj.student?.user?.firstName || "",
+          lastName: obj.student?.user?.lastName || "",
+          period: obj.period || "",
+          label: obj.label || "",
+          amount: obj.amount || 0,
+          status: obj.status || "pending",
+          createdAt: obj.createdAt || null,
+          modalite: matchedStudent?.subscription?.modalite || "",
+          pdfURL: obj.pdfURL || "",
+          provider: obj.provider || "manual",
+          paymentMethod: obj.paymentMethod || "cash",
+        };
       });
+
+      res.json({ result: true, invoices });
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ result: false, error: "Server error" });
+    }
   },
 );
 
@@ -78,12 +93,20 @@ router.post(
   requireRole("teacher"),
   async (req, res) => {
     try {
-      const { method = "cash" } = req.body; // "cash" | "check" | "transfer"
+      const { method = "cash" } = req.body;
       const invoiceId = req.params.id;
+
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
 
       const invoice = await Invoice.findOne({
         _id: invoiceId,
-        teacher: req.user.userId, // sécurité : le prof ne peut modifier que SES factures
+        teacher: teacher._id,
       });
 
       if (!invoice) {
@@ -94,14 +117,14 @@ router.post(
 
       invoice.status = "paid";
       invoice.paidAt = new Date();
-
-      invoice.label = invoice.label || "Invoice";
-      invoice.label = `${invoice.label} (paid: ${method})`;
+      invoice.provider = "manual";
+      invoice.paymentMethod = method;
 
       await invoice.save();
 
       return res.json({ result: true, invoice });
     } catch (e) {
+      console.error(e);
       return res.status(500).json({ result: false, error: "Server error" });
     }
   },

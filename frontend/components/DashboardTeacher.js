@@ -16,7 +16,7 @@ import styles from "../styles/DashboardTeacher.module.css";
 
 const dataStudent = [
   {
-    id: 1,
+    _id: "67c9f1f1a2b3c4d4e6f7a8b9",
     firstName: "Bob",
     lastName: "Smith",
     firstName: "Bob",
@@ -28,7 +28,7 @@ const dataStudent = [
     subscription: "Trimestre",
   },
   {
-    id: 2,
+    _id: "67c9f2f1a2b3c4d4e6f7a8b9",
     firstName: "Jo",
     lastName: "Doe",
     email: "bob@example.com",
@@ -38,7 +38,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
-    id: 3,
+    _id: 3,
     firstName: "Stephanie",
     lastName: "Johnson",
     email: "bob@example.com",
@@ -48,7 +48,7 @@ const dataStudent = [
     subscription: "Annuel",
   },
   {
-    id: 4,
+    _id: 4,
     firstName: "Lily",
     lastName: "Doe",
     email: "bob@example.com",
@@ -58,7 +58,7 @@ const dataStudent = [
     subscription: "A l'unité",
   },
   {
-    id: 5,
+    _id: 5,
     firstName: "Lulu",
     lastName: "Smith",
     email: "bob@example.com",
@@ -127,10 +127,6 @@ function DashboardTeacher() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const openInviteModal = (student) => {
     setSelectedStudent(student);
-    setModalAddStudent(true);
-  };
-  const openEmptyModal = () => {
-    setPrefillEmail("");
     setModalAddStudent(true);
   };
 
@@ -209,12 +205,14 @@ function DashboardTeacher() {
       id={data.id}
       firstname={data.firstName}
       lastname={data.lastName}
-      //firstname={data.firstName}
-      //lastname={data.lastName}
       discipline={data.discipline}
-      invite={data.invite}
-      status={data.status}
-      subscription={data.subscription?.type || data.subscription}
+      invite={(data.status || "Prospect") === "Prospect"}
+      status={data.status || "Prospect"}
+      subscription={
+        typeof data.subscription === "string"
+          ? data.subscription
+          : data.subscription?.type || ""
+      }
       email={data.email}
       onInviteClick={() => openInviteModal(data)}
     />
@@ -276,9 +274,14 @@ function DashboardTeacher() {
       {modalCreateStudent && (
         <ModalCreateStudent
           onClose={() => setModalCreateStudent(false)}
-          onCreated={() => {
+          onCreated={(data) => {
             setModalCreateStudent(false);
-            // prévoir refresh students
+
+            if (data?.student) {
+              dispatch(addStudentToStore(data.student));
+              setSelectedStudent(data.student);
+              setModalAddStudent(true);
+            }
           }}
         />
       )}

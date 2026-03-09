@@ -11,7 +11,7 @@ function RessourceCard(props) {
   return (
     <div className={styles.content}>
       <div className={styles.title}>{props.title}</div>
-      <div className={styles.type}>{props.tag}</div>
+      <div className={styles.type}>{props.tags}</div>
       {!props.share && (
         <>
           <FontAwesomeIcon
@@ -19,11 +19,10 @@ function RessourceCard(props) {
             icon={faPlus}
             onClick={() => props.addToSharingFct(props)}
           />
-          <FontAwesomeIcon
-            className={styles.icon}
-            icon={faDownload}
-            onClick={() => props.downloadFct(props)}
-          />
+          <a href={props.url} target="_blank">
+            <FontAwesomeIcon className={styles.icon} icon={faDownload} />
+          </a>
+
           <FontAwesomeIcon
             className={styles.icon}
             icon={faTrash}

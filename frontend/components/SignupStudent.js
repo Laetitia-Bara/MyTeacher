@@ -2,7 +2,7 @@ import Image from "next/image";
 import FooterStudent from "./FooterStudent";
 import styles from "../styles/AuthForm.module.css";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api";
 
 export default function SignupStudent() {
@@ -11,6 +11,8 @@ export default function SignupStudent() {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
@@ -19,6 +21,25 @@ export default function SignupStudent() {
   const [loading, setLoading] = useState(false);
 
   const [showPwd, setShowPwd] = useState(false);
+
+  useEffect(() => {
+    if (!token) return;
+
+    (async () => {
+      const { ok, data } = await api(`/invitations/resolve?token=${token}`, {
+        method: "GET",
+      });
+
+      if (!ok) {
+        setError(data?.error || "Invitation invalide");
+        return;
+      }
+
+      setFirstName(data?.invitation?.firstName || "");
+      setLastName(data?.invitation?.lastName || "");
+      setEmail(data?.invitation?.email || "");
+    })();
+  }, [token]);
 
   const canSubmit = useMemo(() => {
     return (
@@ -37,8 +58,9 @@ export default function SignupStudent() {
     if (loading) return;
 
     if (!token) return setError("Lien invalide : token manquant.");
-    if (password !== password2)
+    if (password !== password2) {
       return setError("Les mots de passe ne correspondent pas");
+    }
 
     setLoading(true);
     const { ok, data } = await api("/users/signup/student", {
@@ -99,6 +121,14 @@ export default function SignupStudent() {
               />
             </div>
 
+            <input
+              className={styles.input}
+              placeholder="Email"
+              autoComplete="email"
+              value={email}
+              readOnly
+            />
+
             <div className={styles.passwordWrap}>
               <input
                 className={styles.input}
@@ -144,7 +174,7 @@ export default function SignupStudent() {
             </button>
 
             {error && <div className={styles.errorBox}>{error}</div>}
-            {success && <div className={styles.errorBox}>{success}</div>}
+            {success && <div className={styles.successBox}>{success}</div>}
 
             <button
               className={styles.secondaryBtn}

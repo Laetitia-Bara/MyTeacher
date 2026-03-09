@@ -78,6 +78,24 @@
   font-size: 15px;
 }
 
+.label {
+  background: #bccce0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: "Roboto Bold";
+  font-size: 15px;
+  width: 80%;
+  text-align: center;
+}
+
+.label:hover {
+  background: rgb(103, 143, 167);
+  cursor: pointer;
+}
+
 .btn {
   background: #a6d9f7;
   color: white;
@@ -88,6 +106,7 @@
   width: 80%;
   font-family: "Roboto Bold";
   font-size: 15px;
+  margin-top: 20px;
 }
 
 .btn:hover {
@@ -117,11 +136,7 @@
   background: rgb(103, 143, 167);
 }
 
-.fileImport {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  width: 80%;
+.infoFile {
+  font-family: "Roboto Italic";
+  font-size: 12px;
 }

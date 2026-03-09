@@ -59,8 +59,13 @@ export default function ModalCreateStudent({ onClose, onCreated }) {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2 className={styles.title}>Ajouter un élève</h2>
-          <button className={styles.close} onClick={onClose} type="button">
-            ✕
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            type="button"
+            aria-label="Fermer la fenêtre"
+          >
+            <span className={styles.closeIcon}></span>
           </button>
         </div>
 

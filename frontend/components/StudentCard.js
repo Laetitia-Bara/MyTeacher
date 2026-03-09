@@ -1,11 +1,15 @@
 import styles from "../styles/StudentCard.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateStudentStatus } from "../reducers/students";
 import Link from "next/link";
 
 function StudentCard(props) {
   const [status, setStatus] = useState(props.status);
+  useEffect(() => {
+    setStatus(props.status);
+  }, [props.status]);
+
   const dispatch = useDispatch();
 
   const handleStatusChange = async (newStatus) => {
@@ -22,7 +26,7 @@ function StudentCard(props) {
           },
           body: JSON.stringify({
             id: props.id,
-            status: newStatus
+            status: newStatus,
           }),
         },
       );
@@ -54,7 +58,7 @@ function StudentCard(props) {
         </button>
       )} 
        changement du bloc invite pour faire fonctionner l'envoi de mail */}
-      {props.status === "Prospect" && (
+      {status === "Prospect" && (
         <button
           className={styles.inviteBtn}
           type="button"

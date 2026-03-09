@@ -168,7 +168,7 @@ export default function ModalAddStudent({ onClose }) {
   );
 }*/
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../styles/ModalAddStudent.module.css";
 import { api } from "../lib/api";
 
@@ -182,15 +182,15 @@ export default function ModalAddStudent({ student, onClose, onInvited }) {
 
   const canSubmit = useMemo(() => /\S+@\S+\.\S+/.test(email.trim()), [email]);
 
+  useEffect(() => {
+    setEmail(student?.email || "");
+  }, [student]);
+
   const onInvite = async () => {
     setError("");
     setStatusMsg("");
     setInviteLink("");
     setCopied(false);
-
-    useEffect(() => {
-      setEmail(student?.email || "");
-    }, [student]);
 
     const normalized = email.trim().toLowerCase();
     if (!normalized) return setError("Email manquant");
@@ -250,8 +250,13 @@ export default function ModalAddStudent({ student, onClose, onInvited }) {
               </strong>
             </p>
           )}
-          <button className={styles.close} onClick={onClose} type="button">
-            ✕
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            type="button"
+            aria-label="Fermer la fenêtre"
+          >
+            <span className={styles.closeIcon}></span>
           </button>
         </div>
 

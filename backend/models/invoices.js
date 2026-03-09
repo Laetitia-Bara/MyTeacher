@@ -19,7 +19,7 @@ const invoiceSchema = mongoose.Schema({
     enum: ["pending", "paid", "late"],
   },
   pdfURL: String,
-  createdAt: Date,
+  createdAt: { type: Date, default: Date.now },
   paidAt: Date,
 
   // Gestion du "payé"
