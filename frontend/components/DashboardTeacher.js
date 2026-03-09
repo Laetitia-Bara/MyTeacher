@@ -90,8 +90,8 @@ const events = [
   {
     id: 1,
     title: "SUPERTEST",
-    start: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
-    end: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
+    startAt: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
+    endAt: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
   },
 
   {
