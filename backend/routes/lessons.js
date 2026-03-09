@@ -89,4 +89,83 @@ router.delete('/removeEvent/:id',
   })
 });
 
+// Get lessons des étudiants
+router.get(
+  "/getLessonsStudent",
+  function (req, res) {
+    Student.findOne({ user: req.user.userId })
+      .then((student) => {
+        if (!student) {
+          res.json({ result: false, error: "Student not found" });
+          return;
+        }
+
+        Lesson.find({ student: student._id }).then((data) => {
+          let lessons = [];
+
+          if (data != null) {
+            for (let obj of data) {
+              lessons.push({
+                id: obj._id,
+                title: obj.title,
+                start: obj.startAt,
+                end: obj.endAt,
+                student: student._id,
+                structure: obj.structure,
+                location: obj.locationType,
+                desc: obj.teacherNotes,
+              });
+            }
+
+            res.json({ result: true, lessons: lessons });
+          } else {
+            res.json({ result: false, error: "No lesson found" });
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.json({ result: false, error: "Server error" });
+      });
+  },
+);
+
+// Get lessons d'un étudiant par son id
+router.get("/getLessonsStudentById/:studentId", function (req, res) {
+  Student.findById(req.params.studentId)
+    .then((student) => {
+      if (!student) {
+        res.json({ result: false, error: "Student not found" });
+        return;
+      }
+
+      Lesson.find({ student: student._id }).then((data) => {
+        let lessons = [];
+
+        if (data != null) {
+          for (let obj of data) {
+            lessons.push({
+              id: obj._id,
+              title: obj.title,
+              start: obj.startAt,
+              end: obj.endAt,
+              student: student._id,
+              structure: obj.structure,
+              location: obj.locationType,
+              desc: obj.teacherNotes,
+            });
+          }
+
+          res.json({ result: true, lessons: lessons });
+        } else {
+          res.json({ result: false, error: "No lesson found" });
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.json({ result: false, error: "Server error" });
+    });
+});
+
 module.exports = router;
