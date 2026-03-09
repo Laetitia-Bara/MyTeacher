@@ -82,8 +82,13 @@ function DashboardStudent() {
           setPaymentStatus("En retard");
         } else if (invoices.some((i) => i.status === "pending")) {
           setPaymentStatus("En attente");
-        } else if (invoices.some((i) => i.status === "paid")) {
+        } else if (
+          invoices.length > 0 &&
+          invoices.every((i) => i.status === "paid")
+        ) {
           setPaymentStatus("À jour");
+        } else if (invoices.some((i) => i.status === "scheduled")) {
+          setPaymentStatus("À venir");
         } else {
           setPaymentStatus("Aucun paiement");
         }
