@@ -2,12 +2,15 @@ import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/FicheStudentTeacher.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { api } from "../lib/api";
 import { getStudents } from "../reducers/students";
 import { getPayments } from "../reducers/payments";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 function FicheStudentTeacher({ studentId }) {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const firstNameRef = useRef(null);
@@ -34,6 +37,10 @@ function FicheStudentTeacher({ studentId }) {
   const type_abonnement = student?.subscription?.type || "";
   const price = student?.subscription?.price ?? "";
   const modalite = student?.subscription?.modalite || "";
+
+  useEffect(() => {
+    checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+  }, []);
 
   const studentPayments = useMemo(() => {
     if (!student) return [];

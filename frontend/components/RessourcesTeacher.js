@@ -5,6 +5,8 @@ import RessourceCard from "./RessourceCard";
 import ModalAddRessource from "./ModalAddRessource";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 import styles from "../styles/RessourcesTeacher.module.css";
 
@@ -27,6 +29,7 @@ const dataRessources = [
 ];
 
 function RessourcesTeacher() {
+  const router = useRouter();
   const [ressourcesData, setRessourcesData] = useState([]);
   const [sharingRessources, setSharingRessources] = useState([]);
   const studentsData = useSelector((state) => state.students.value);
@@ -37,6 +40,7 @@ function RessourcesTeacher() {
 
   useEffect(() => {
     (async () => {
+      checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
       // Fetch ressources
       try {
         const response = await fetch(

@@ -4,8 +4,11 @@ import FooterTeacher from "./FooterTeacher";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import styles from "../styles/TeacherProfile.module.css";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 function TeacherProfile() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,6 +22,7 @@ function TeacherProfile() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
+    checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
     const fetchProfile = async () => {
       try {
         const [userRes, teacherRes] = await Promise.all([
