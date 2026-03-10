@@ -36,7 +36,7 @@ export default function BigCalendar() {
   const eventsCalendar = eventsData.map((e) => {
     // si e.student vaut undefined sur un event, ça crash.
     // const description = `${e.student[0] ? e.student[0] : ""} - ${e.structure ? e.structure : ""} - ${e.location ? e.location : ""} - ${e.desc ? e.desc : ""}`;
-    const description = `${Array.isArray(e.student) ? (e.student[0] ?? "") : (e.student ?? "")} - ${e.structure ?? ""} - ${e.location ?? ""} - ${e.desc ?? ""}`;
+    const description = `${e.student !== null ? e.student.firstName : ""} - ${e.structure ?? ""} - ${e.location ?? ""} - ${e.desc ?? ""}`;
     return {
       id: e.id,
       title: e.title,

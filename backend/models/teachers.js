@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+const structureSchema = mongoose.Schema({
+  name: { type: String, required: true },
+  weekWorkLoad: Number,
+  feesPlace: Number,
+  accountability: Number,
+  income: Number,
+});
+
 const teacherSchema = mongoose.Schema(
   {
     user: {
@@ -14,7 +22,7 @@ const teacherSchema = mongoose.Schema(
     address: { type: String },
 
     discipline: [{ type: String }],
-    structures: [{ type: mongoose.Schema.Types.Mixed }],
+    structures: [structureSchema],
   },
   { timestamps: true },
 );
