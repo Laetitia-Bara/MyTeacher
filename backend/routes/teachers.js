@@ -158,7 +158,7 @@ router.post(
   },
 );
 
-// Delete a ressource
+// Delete a structure
 router.delete(
   "/deleteStructure/:id",
   authMiddleware,

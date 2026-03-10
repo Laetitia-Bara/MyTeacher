@@ -29,13 +29,16 @@ function PaymentCard(props) {
         <p className={styles.name}>
           {props.firstname} {props.lastname}
         </p>
-        <p className={styles.meta}>
+        <p className={styles.term}>
           {props.discipline || "Discipline non renseignée"}
         </p>
       </div>
 
       <div className={styles.middle}>
         <p className={styles.date}>{formattedDate}</p>
+      </div>
+
+      <div className={styles.middle}>
         <p className={styles.amount}>{props.amount || 0} €</p>
       </div>
 
