@@ -119,7 +119,7 @@ const events = [
 ];
 
 function DashboardTeacher() {
-  const router = useRouter()
+  const router = useRouter();
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const [modalCreateStudent, setModalCreateStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
@@ -206,7 +206,6 @@ function DashboardTeacher() {
   // les mocks ne servent qu’en secours
   useEffect(() => {
     (async () => {
-
       checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
 
       let hasStudents = false;
@@ -294,10 +293,11 @@ function DashboardTeacher() {
   const payments = paymentsData.map((data, i) => (
     <PaymentCard
       key={i}
-      // id={data.id}
       firstname={data.firstName}
       lastname={data.lastName}
-      paymentTerm={data.modalite}
+      discipline={data.discipline}
+      date={data.dueAt || data.createdAt}
+      amount={data.amount}
       status={data.status}
     />
   ));
