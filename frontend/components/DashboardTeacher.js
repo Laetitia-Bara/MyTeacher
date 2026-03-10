@@ -119,7 +119,7 @@ const events = [
 ];
 
 function DashboardTeacher() {
-  const router = useRouter()
+  const router = useRouter();
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const [modalCreateStudent, setModalCreateStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
@@ -206,7 +206,6 @@ function DashboardTeacher() {
   // les mocks ne servent qu’en secours
   useEffect(() => {
     (async () => {
-
       checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
 
       let hasStudents = false;
@@ -258,6 +257,7 @@ function DashboardTeacher() {
         );
 
         const data = await response.json();
+        console.log("check lessons", data);
         if (data.result) {
           dispatch(getEvents(data.lessons));
           hasEvents = true;
