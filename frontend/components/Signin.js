@@ -38,9 +38,9 @@ function Signin() {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     checkNeedSignin(router);
-  }, []);
+  }, []);*/
 
   return (
     <div className={styles.page}>
