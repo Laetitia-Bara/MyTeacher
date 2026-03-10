@@ -169,7 +169,7 @@ function SignupTeacher() {
 
             <button
               className={styles.secondaryBtn}
-              onClick={() => router.push("/signin")}
+              onClick={() => router.replace("/signin")}
               type="button"
             >
               Déjà un compte ? Se connecter !
