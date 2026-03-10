@@ -32,15 +32,15 @@ function Signin() {
     if (!ok) return setError(data?.error || "Login failed");
 
     if (data?.user?.role === "student") {
-      router.push("/dashboard_student");
+      router.replace("/dashboard_student");
     } else {
-      router.push("/dashboard_teacher");
+      router.replace("/dashboard_teacher");
     }
   };
 
-  /*useEffect(() => {
+  useEffect(() => {
     checkNeedSignin(router);
-  }, []);*/
+  }, [router]);
 
   return (
     <div className={styles.page}>
