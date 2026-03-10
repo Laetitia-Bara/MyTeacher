@@ -34,7 +34,7 @@ function TeacherPayments() {
   };
 
   useEffect(() => {
-    checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+    checkIsSignin(router);
     fetchInvoices();
   }, []);
 
@@ -106,6 +106,38 @@ function TeacherPayments() {
     }
   };
 
+  const handleDeleteInvoice = async (invoiceId) => {
+    setMessage("");
+
+    const confirmed = window.confirm(
+      "Voulez-vous vraiment supprimer cette facture ?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/${invoiceId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        setMessage("Facture supprimée");
+        fetchInvoices();
+      } else {
+        setMessage(data.error || "Erreur lors de la suppression");
+      }
+    } catch (error) {
+      console.error("Delete invoice error:", error);
+      setMessage("Erreur serveur");
+    }
+  };
+
   const handleExport = () => {
     const lines = [
       ["Élève", "Date", "Libellé", "Montant", "Statut"],
@@ -155,9 +187,9 @@ function TeacherPayments() {
               Exporter les factures
             </button>
 
-            <button className={styles.exportButton} onClick={handleSeedMock}>
+            {/*<button className={styles.exportButton} onClick={handleSeedMock}>
               Générer des factures test
-            </button>
+            </button>*/}
           </div>
 
           <div className={styles.tableWrapper}>
@@ -191,16 +223,26 @@ function TeacherPayments() {
                   <div className={styles.cellAction}>
                     {inv.status === "paid" ? (
                       <span className={styles.doneIcon}>✓</span>
-                    ) : inv.status === "scheduled" ? (
-                      <span className={styles.waitIcon}>⏳</span>
                     ) : (
-                      <button
-                        className={styles.payButton}
-                        onClick={() => handleMarkPaid(inv._id)}
-                        title="Marquer comme payé"
-                      >
-                        ⬇
-                      </button>
+                      <>
+                        {inv.status === "pending" ? null : (
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => handleDeleteInvoice(inv._id)}
+                            title="Supprimer la facture"
+                          >
+                            🗑
+                          </button>
+                        )}
+
+                        <button
+                          className={styles.payButton}
+                          onClick={() => handleMarkPaid(inv._id)}
+                          title="Marquer comme payé"
+                        >
+                          ⬇
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

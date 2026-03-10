@@ -155,16 +155,46 @@ router.delete(
           .json({ result: false, error: "Teacher not found" });
       }
 
-      const result = await Lesson.deleteOne({
+      const lesson = await Lesson.findOne({
         _id: req.params.id,
         teacher: teacher._id,
       });
 
-      if (result.deletedCount > 0) {
-        return res.json({ result: true });
-      } else {
-        return res.json({ result: false, error: "Lesson not found" });
+      if (!lesson) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Lesson not found" });
       }
+
+      // empêcher suppression si le cours est déjà passé
+      if (lesson.startAt <= new Date()) {
+        return res.status(400).json({
+          result: false,
+          error: "Impossible de supprimer un cours déjà passé",
+        });
+      }
+
+      // vérifier si une facture existe
+      const invoice = await Invoice.findOne({ lesson: lesson._id });
+
+      if (invoice) {
+        // si facture déjà payée → interdit
+        if (invoice.status === "paid") {
+          return res.status(400).json({
+            result: false,
+            error:
+              "Impossible de supprimer ce cours car la facture est déjà payée",
+          });
+        }
+
+        // supprimer la facture
+        await Invoice.deleteOne({ _id: invoice._id });
+      }
+
+      // supprimer le cours
+      await Lesson.deleteOne({ _id: lesson._id });
+
+      return res.json({ result: true });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ result: false, error: "Server error" });

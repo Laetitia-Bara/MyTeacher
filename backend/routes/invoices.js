@@ -153,6 +153,59 @@ router.post(
   },
 );
 
+// DELETE /invoices/:id  (teacher only)
+router.delete(
+  "/:id",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      const invoice = await Invoice.findOne({
+        _id: req.params.id,
+        teacher: teacher._id,
+      });
+
+      if (!invoice) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Invoice not found" });
+      }
+
+      // facture déjà payée
+      if (invoice.status === "paid") {
+        return res.status(400).json({
+          result: false,
+          error: "Impossible de supprimer une facture déjà payée",
+        });
+      }
+
+      // cours déjà passé
+      if (invoice.dueAt && new Date(invoice.dueAt) <= new Date()) {
+        return res.status(400).json({
+          result: false,
+          error:
+            "Impossible de supprimer une facture liée à un cours déjà passé",
+        });
+      }
+
+      await Invoice.deleteOne({ _id: invoice._id });
+
+      return res.json({ result: true });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
 // --------------------------MOCK -------------------------
 // POST seed-mock
 router.post(
