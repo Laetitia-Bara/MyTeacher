@@ -24,23 +24,28 @@ function PaymentCard(props) {
           : styles.pending;
 
   return (
-    <div className={styles.content}>
-      <div className={styles.left}>
+    <div className={styles.card}>
+      <div className={styles.studentBlock}>
         <p className={styles.name}>
           {props.firstname} {props.lastname}
         </p>
-        <p className={styles.meta}>
+        <p className={styles.discipline}>
           {props.discipline || "Discipline non renseignée"}
         </p>
       </div>
 
-      <div className={styles.middle}>
-        <p className={styles.date}>{formattedDate}</p>
-        <p className={styles.amount}>{props.amount || 0} €</p>
+      <div className={styles.dateBlock}>
+        <span className={styles.label}>Date</span>
+        <p className={styles.value}>{formattedDate}</p>
       </div>
 
-      <div className={styles.right}>
-        <p className={`${styles.status} ${statusClass}`}>{statusLabel}</p>
+      <div className={styles.amountBlock}>
+        <span className={styles.label}>Montant</span>
+        <p className={styles.value}>{props.amount || 0} €</p>
+      </div>
+
+      <div className={styles.statusBlock}>
+        <span className={`${styles.status} ${statusClass}`}>{statusLabel}</span>
       </div>
     </div>
   );
