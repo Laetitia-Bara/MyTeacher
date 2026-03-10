@@ -17,6 +17,8 @@ function SignupTeacher() {
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [showPwd2, setShowPwd2] = useState(false);
+  const [pwdWarning, setPwdWarning] = useState("");
+  const [pwdMatchWarning, setPwdMatchWarning] = useState("");
 
   const canSubmit = useMemo(() => {
     return (
@@ -100,7 +102,18 @@ function SignupTeacher() {
                 placeholder="Mot de passe (8 caractères mini.)"
                 autoComplete="new-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword(value);
+
+                  if (value.length > 0 && value.length < 8) {
+                    setPwdWarning(
+                      "Le mot de passe doit contenir au moins 8 caractères",
+                    );
+                  } else {
+                    setPwdWarning("");
+                  }
+                }}
               />
               <button
                 type="button"
@@ -110,6 +123,7 @@ function SignupTeacher() {
                 {showPwd ? "Masquer" : "Afficher"}
               </button>
             </div>
+            {pwdWarning && <div className={styles.errorBox}>{pwdWarning}</div>}
 
             <div className={styles.passwordWrap}>
               <input
@@ -118,7 +132,18 @@ function SignupTeacher() {
                 placeholder="Confirmation du mot de passe"
                 autoComplete="new-password"
                 value={password2}
-                onChange={(e) => setPassword2(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setPassword2(value);
+
+                  if (password && value !== password) {
+                    setPwdMatchWarning(
+                      "Les mots de passe ne correspondent pas",
+                    );
+                  } else {
+                    setPwdMatchWarning("");
+                  }
+                }}
               />
               <button
                 type="button"
@@ -128,6 +153,9 @@ function SignupTeacher() {
                 {showPwd2 ? "Masquer" : "Afficher"}
               </button>
             </div>
+            {pwdMatchWarning && (
+              <div className={styles.errorBox}>{pwdMatchWarning}</div>
+            )}
 
             <button
               className={styles.primaryBtn}
