@@ -16,8 +16,18 @@ async function refreshInvoiceStatuses(invoices) {
   const updates = [];
 
   for (const inv of invoices) {
-    if (inv.status === "scheduled" && inv.dueAt && new Date(inv.dueAt) <= now) {
+    if (!inv.dueAt || inv.status === "paid") continue;
+
+    const dueDate = new Date(inv.dueAt);
+
+    if (inv.status === "scheduled" && dueDate <= now) {
       inv.status = "pending";
+      updates.push(inv.save());
+      continue;
+    }
+
+    if (inv.status === "pending" && dueDate < now) {
+      inv.status = "late";
       updates.push(inv.save());
     }
   }
@@ -68,11 +78,13 @@ router.get(
           firstName:
             obj.student?.user?.firstName || obj.student?.firstName || "",
           lastName: obj.student?.user?.lastName || obj.student?.lastName || "",
+          discipline: matchedStudent?.discipline || "",
           period: obj.period || "",
           label: obj.label || "",
           amount: obj.amount || 0,
           status: obj.status || "pending",
           createdAt: obj.createdAt || null,
+          dueAt: obj.dueAt || null,
           modalite: matchedStudent?.subscription?.modalite || "",
           pdfURL: obj.pdfURL || "",
           provider: obj.provider || "manual",
@@ -98,10 +110,11 @@ router.get("/my", authMiddleware, requireRole("student"), async (req, res) => {
         .json({ result: false, error: "Student not found" });
     }
 
-    const invoices = await Invoice.find({ student: student._id })
-      .sort({ createdAt: -1 })
-      .lean();
-    await refreshInvoiceStatuses(data);
+    const invoices = await Invoice.find({ student: student._id }).sort({
+      createdAt: -1,
+    });
+
+    await refreshInvoiceStatuses(invoices);
 
     return res.json({ result: true, invoices });
   } catch (e) {

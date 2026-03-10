@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: center;
   font-family: "Roboto-Regular";
-  border-bottom: 1px lightgrey solid;
+  border-bottom: 1px rgb(211, 211, 211) solid;
   gap: 5px;
 }
 
@@ -34,4 +34,46 @@
   background-color: #bf98a0;
   text-align: center;
   width: 20%;
+}
+
+.paid {
+  background: #cdebdc;
+  color: #1f6b46;
+}
+
+.pending {
+  background: #ead0d5;
+  color: #7a4c56;
+}
+
+.scheduled {
+  background: #d6e7f7;
+  color: #3c6282;
+}
+
+.late {
+  background: #f4b5b5;
+  color: #a01818;
+  font-weight: 700;
+}
+
+.left {
+  flex: 1.4;
+}
+
+.middle {
+  flex: 1;
+  text-align: center;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.date,
+.amount {
+  margin: 0;
+  font-size: 0.95rem;
 }
