@@ -9,10 +9,13 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { api } from "../lib/api";
 import { getEvents } from "../reducers/planning";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 import styles from "../styles/DashboardStudent.module.css";
 
 function DashboardStudent() {
+  const router = useRouter()
   const dispatch = useDispatch();
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
@@ -65,6 +68,9 @@ function DashboardStudent() {
 
   useEffect(() => {
     (async () => {
+
+      checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+
       // Charger les cours de l'étudiant connecté
       const lessonsRes = await api("/lessons/getLessonsStudent");
       if (lessonsRes.ok && lessonsRes.data?.result) {
