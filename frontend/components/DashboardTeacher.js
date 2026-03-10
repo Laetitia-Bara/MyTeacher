@@ -257,6 +257,7 @@ function DashboardTeacher() {
         );
 
         const data = await response.json();
+        console.log("check lessons", data);
         if (data.result) {
           dispatch(getEvents(data.lessons));
           hasEvents = true;
