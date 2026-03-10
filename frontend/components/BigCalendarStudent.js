@@ -35,9 +35,9 @@ function BigCalendarStudent() {
     <div className={styles.planningCalendar}>
       <Calendar
         localizer={localizer}
-        views={["day", "week", "month"]}
+        defaultView="week"
+        views={['week']}
         defaultDate={new Date()}
-        defaultView="month"
         events={eventsCalendar}
         startAccessor="start"
         endAccessor="end"
