@@ -310,7 +310,13 @@ router.get("/me", authMiddleware, async (req, res) => {
 
 // POST /users/logout
 router.post("/logout", (req, res) => {
-  res.clearCookie("access_token", { path: "/" });
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
+    path: "/",
+  });
+
   return res.status(200).json({ result: true });
 });
 
@@ -376,7 +382,12 @@ router.post("/reset_password/:token", async (req, res) => {
     await user.save();
 
     // Déconnecter partout => on supprime le cookie
-    res.clearCookie("access_token", { path: "/" });
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
+      path: "/",
+    });
 
     return res.status(200).json({ result: true });
   } catch (e) {
