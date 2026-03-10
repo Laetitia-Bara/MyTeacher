@@ -26,18 +26,21 @@ router.get(
           .json({ result: false, error: "Teacher not found" });
       }
 
-      const data = await Lesson.find({ teacher: teacher._id }).sort({
-        startAt: 1,
-      });
+      const data = await Lesson.find({ teacher: teacher._id })
+        .populate("student")
+        .sort({
+          startAt: 1,
+        });
 
       const lessons = data.map((obj) => ({
         id: obj._id,
+        student: obj.student[0],
         title: obj.title,
         startAt: obj.startAt,
         endAt: obj.endAt,
         desc: obj.teacherNotes,
         structure: obj.structure,
-        lieu: obj.locationType,
+        location: obj.locationType,
       }));
 
       return res.json({ result: true, lessons });

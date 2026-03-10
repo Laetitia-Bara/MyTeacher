@@ -6,6 +6,7 @@ const Teacher = require("../models/teachers");
 const User = require("../models/users");
 const authMiddleware = require("../middlewares/auth");
 const { checkBody } = require("../modules/checkBody");
+const requireRole = require("../middlewares/requireRole");
 
 /* GET teachers students. */
 router.get("/", function (req, res) {
@@ -99,5 +100,104 @@ router.put("/me", authMiddleware, async (req, res) => {
     return res.status(500).json({ result: false, error: "Server error" });
   }
 });
+
+// Get all structures of a teacher
+router.get(
+  "/getStructures",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    const teacherId = req.user.userId;
+    try {
+      const struct = await Teacher.findOne({ user: teacherId });
+      res.json({ result: true, structures: struct.structures });
+    } catch (error) {
+      console.log("Error", error);
+      res
+        .status(500)
+        .json({ result: false, error: "Error fetching structures" });
+    }
+  },
+);
+
+// Add a structure
+router.post(
+  "/addStructure",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      if (!checkBody(req.body, ["name"])) {
+        res.json({ result: false, error: "Input data missing" });
+        return;
+      }
+      const teacherId = req.user.userId;
+      const teacherModif = await Teacher.findOne({ user: teacherId });
+
+      if (
+        !teacherModif.structures.some((stru) => stru.name === req.body.name)
+      ) {
+        const structureModif = [...teacherModif.structures, req.body];
+        await Teacher.updateOne(
+          {
+            user: teacherId,
+          },
+          { structures: structureModif },
+        );
+
+        res.json({ result: true });
+      } else {
+        res.json({ result: false, error: "Structure already existing" });
+      }
+    } catch (error) {
+      console.log("Error", error);
+      res
+        .status(500)
+        .json({ result: false, error: "Error creating ressource" });
+    }
+  },
+);
+
+// Delete a ressource
+router.delete(
+  "/deleteStructure/:id",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const teacherId = req.user.userId;
+      const teacherModif = await Teacher.findOne({ user: teacherId });
+      console.log("retour", teacherModif);
+      console.log("params", req.params.id);
+      if (
+        teacherModif.structures.some(
+          (stru) => stru._id.toString() === req.params.id,
+        )
+      ) {
+        const structureModif = teacherModif.structures.filter(
+          (stru) => stru._id.toString() !== req.params.id,
+        );
+        await Teacher.updateOne(
+          {
+            user: teacherId,
+          },
+          { structures: structureModif },
+        );
+
+        res.json({ result: true });
+      } else {
+        res.json({
+          result: false,
+          error: "Structure not existing in database",
+        });
+      }
+    } catch (error) {
+      console.log("Error", error);
+      res
+        .status(500)
+        .json({ result: false, error: "Error deleting ressource" });
+    }
+  },
+);
 
 module.exports = router;
