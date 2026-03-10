@@ -2,8 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/TeacherPayments.module.css";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 function TeacherPayments() {
+  const router = useRouter();
   const [invoices, setInvoices] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -31,6 +34,7 @@ function TeacherPayments() {
   };
 
   useEffect(() => {
+    checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
     fetchInvoices();
   }, []);
 

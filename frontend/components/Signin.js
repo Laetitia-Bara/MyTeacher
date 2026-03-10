@@ -1,9 +1,10 @@
 import Image from "next/image";
 import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/AuthForm.module.css";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { api } from "../lib/api";
+const { checkNeedSignin } = require("../modules/checkRole");
 
 function Signin() {
   const router = useRouter();
@@ -36,6 +37,10 @@ function Signin() {
       router.push("/dashboard_teacher");
     }
   };
+
+  useEffect(() => {
+    checkNeedSignin(router);
+  }, []);
 
   return (
     <div className={styles.page}>

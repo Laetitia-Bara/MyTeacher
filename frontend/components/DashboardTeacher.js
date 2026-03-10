@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents, addEventToStore } from "../reducers/planning";
 import { getStudents, addStudentToStore } from "../reducers/students";
 import { getPayments } from "../reducers/payments";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 import styles from "../styles/DashboardTeacher.module.css";
 
@@ -117,6 +119,7 @@ const events = [
 ];
 
 function DashboardTeacher() {
+  const router = useRouter()
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const [modalCreateStudent, setModalCreateStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
@@ -203,10 +206,12 @@ function DashboardTeacher() {
   // les mocks ne servent qu’en secours
   useEffect(() => {
     (async () => {
+
+      checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+
       let hasStudents = false;
       let hasPayments = false;
       let hasEvents = false;
-
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/students/getStudents`,

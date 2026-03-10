@@ -68,7 +68,6 @@ export default function ModalAddEvent({ onClose, start, end }) {
       <>
         <option key={i} value={data.id}>
           {data.firstName} {data.lastName}
-          {data.firstName} {data.lastName}
         </option>
       </>
     );
@@ -85,10 +84,10 @@ export default function ModalAddEvent({ onClose, start, end }) {
         </div>
         <div className={styles.content}>
           <div className={styles.date}>
-            Début : {moment(start).format("Do MMM YYYY")}
+            Début : {moment(start).format("Do MMM YYYY, hh:mm a")}
           </div>
           <div className={styles.date}>
-            Fin : {moment(end).format("Do MMM YYYY")}
+            Fin : {moment(end).format("Do MMM YYYY, hh:mm a")}
           </div>
           <input
             className={styles.input}
