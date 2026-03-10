@@ -56,14 +56,12 @@
 }
 
 .content {
-    width: 30vw;
     height: auto;
 
     border: 1px solid black;
     border-radius: 15px;
 
     background-color: white;
-    overflow-y: scroll;
 }
 
 .title {
@@ -82,7 +80,14 @@
 
 .field {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
+
+}
+
+.fieldSpecial {
+    display: flex;
     align-items: center;
     margin-top: 1.2em;
     margin-bottom: 1.2em;
@@ -90,7 +95,7 @@
 
 .label {
     font-size: 18px;
-    width: 10em;
+    width: 4em;
 }
 
 .input {

@@ -151,7 +151,7 @@ function DashboardStudent() {
         </fieldset>
       </div>
 
-      <FooterStudent />
+      <FooterStudent className={styles.footer}/>
     </div>
   );
 }

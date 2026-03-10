@@ -37,6 +37,8 @@ function BigCalendarStudent() {
         localizer={localizer}
         defaultView="week"
         views={['week']}
+        min={new Date(0, 0, 0, 7, 0, 0)}
+        max={new Date(0, 0, 0, 21, 0, 0)}
         defaultDate={new Date()}
         events={eventsCalendar}
         startAccessor="start"

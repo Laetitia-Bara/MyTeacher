@@ -250,9 +250,9 @@ function FicheStudentTeacher({ studentId }) {
           <fieldset className={styles.content}>
             <legend className={styles.title}>Formule</legend>
 
-            <div className={styles.field}>
+            <div className={styles.fieldSpecial}>
               <label className={styles.label} style={{ textAlign: "left" }}>
-                Type d'abonnement
+                Type
               </label>
               <label className={styles.label} style={{ textAlign: "center" }}>
                 :

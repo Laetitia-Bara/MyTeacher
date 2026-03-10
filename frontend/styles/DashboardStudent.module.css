@@ -12,12 +12,15 @@
 
 .title {
     margin: 0;
-    padding-top: 1em;
     font-size: 4em;
 }
 
 .content {
     display: flex;
+    justify-content: space-between;
+    width: 95vw;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .leftside {
@@ -26,8 +29,8 @@
 
     background-color: white;
 
-    width: 45vw;
-    height: 60vh;
+    width: 55vw;
+    height: 50vh;
 
     margin: 2em;
 }
@@ -39,10 +42,13 @@
     background-color: white;
 
     width: 30vw;
-    height: 60vh;
+    height: 50vh;
 
     margin: 2em;
     padding-top: 3em;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .titre {
@@ -69,6 +75,8 @@
     justify-content: space-between;
     align-items: center;
 
+    height: 12vh;
+
     border-top: 1px solid black;
 }
 
@@ -81,6 +89,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    height: 12vh;
 
     border-top: 1px solid black;
     border-bottom: 1px solid black;
