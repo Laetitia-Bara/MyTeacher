@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import styles from "../styles/DashboardStudent.module.css";
 
 function DashboardStudent() {
-  const router = useRouter()
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
@@ -70,7 +70,6 @@ function DashboardStudent() {
 
   useEffect(() => {
     (async () => {
-
       checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
 
       // Charger les cours de l'étudiant connecté
@@ -132,7 +131,9 @@ function DashboardStudent() {
       if (ressourcesRes.ok && ressourcesRes.data?.result) {
         setDocumentsCount((ressourcesRes.data.ressources || []).length);
       } else {
-        console.log(ressourcesRes.data?.error || "Erreur chargement ressources");
+        console.log(
+          ressourcesRes.data?.error || "Erreur chargement ressources",
+        );
       }
     })();
   }, [dispatch]);
@@ -141,7 +142,7 @@ function DashboardStudent() {
     <div className={styles.body}>
       <HeaderStudent />
 
-      <h1 className={styles.title}>Mon dashboard</h1>
+      <h1 className={styles.title}>MON DASHBOARD</h1>
 
       <div className={styles.content}>
         <fieldset className={styles.leftside}>
@@ -169,7 +170,9 @@ function DashboardStudent() {
               </span>{" "}
               Prochain cours :
             </p>
-            <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>{nextLesson}</p>
+            <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>
+              {nextLesson}
+            </p>
           </div>
 
           <div className={styles.contenuebot}>
@@ -184,7 +187,7 @@ function DashboardStudent() {
         </fieldset>
       </div>
 
-      <FooterStudent className={styles.footer}/>
+      <FooterStudent className={styles.footer} />
     </div>
   );
 }
