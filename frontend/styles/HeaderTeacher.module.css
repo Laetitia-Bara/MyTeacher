@@ -11,12 +11,10 @@
 }
 
 .logo {
-  /* border: 1px solid rgb(255, 242, 0); */
   color: white;
 }
 
 .menu {
-  /* border: 1px solid greenyellow; */
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -88,24 +86,6 @@
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.btnParameters {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #2f2a28;
-  min-height: 42px;
-}
-
-.btnParameters:hover {
-  background-color: #f7f7f7;
 }
 
 .chevronIcon {
