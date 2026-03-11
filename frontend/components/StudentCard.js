@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 
 function StudentCard(props) {
   const router = useRouter();
-  const [status, setStatus] = useState(props.status);
+  const [status, setStatus] = useState(props.status || "");
   useEffect(() => {
-    setStatus(props.status);
+    setStatus(props.status || "");
   }, [props.status]);
 
   const dispatch = useDispatch();
@@ -47,9 +47,12 @@ function StudentCard(props) {
   return (
     <div className={styles.content}>
       <button className={styles.studentLink}>
-          <span className={styles.name} onClick={() => router.push(`/fiche_student_teacher?id=${props.id}`)}>
-            {props.firstname} {props.lastname}
-          </span>
+        <span
+          className={styles.name}
+          onClick={() => router.push(`/fiche_student_teacher?id=${props.id}`)}
+        >
+          {props.firstname} {props.lastname}
+        </span>
       </button>
       <p className={styles.discipline}>{props.discipline}</p>
       {/*{!props.invite && (
@@ -73,11 +76,12 @@ function StudentCard(props) {
       )}
       <select
         className={styles.selectList}
-        type="text"
         value={status}
         onChange={(e) => handleStatusChange(e.target.value)}
       >
-        <option value="">Choisir une option</option>
+        <option value="" disabled hidden>
+          Choisir une option
+        </option>
         <option value="Actif">Actif</option>
         <option value="Inactif">Inactif</option>
         <option value="Prospect">Prospect</option>
