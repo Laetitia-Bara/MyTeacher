@@ -296,4 +296,58 @@ router.post(
   },
 );
 
+// GET /invoices/getInvoicesStudentById/:studentId
+router.get(
+  "/getInvoicesStudentById/:studentId",
+  authMiddleware,
+  requireRole("teacher"),
+  async function (req, res) {
+    try {
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      const student = await Student.findOne({
+        _id: req.params.studentId,
+        teacher: teacher._id,
+      }).populate("user");
+
+      if (!student) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
+      }
+
+      const data = await Invoice.find({
+        teacher: teacher._id,
+        student: student._id,
+      }).sort({ createdAt: -1 });
+
+      await refreshInvoiceStatuses(data);
+
+      const invoices = data.map((obj) => ({
+        _id: obj._id,
+        period: obj.period || "",
+        label: obj.label || "",
+        amount: obj.amount || 0,
+        status: obj.status || "pending",
+        createdAt: obj.createdAt || null,
+        dueAt: obj.dueAt || null,
+        pdfURL: obj.pdfURL || "",
+        provider: obj.provider || "manual",
+        paymentMethod: obj.paymentMethod || "cash",
+      }));
+
+      return res.json({ result: true, invoices });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
 module.exports = router;
