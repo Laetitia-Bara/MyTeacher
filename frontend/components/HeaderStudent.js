@@ -22,22 +22,24 @@ function HeaderStudent() {
   return (
     <div className={styles.container}>
       <div>
-        <Image
-          className={styles.logo}
-          src="/LogoMT.ico"
-          alt="Logo"
-          width={65}
-          height={50}
-        />
+        <Link href="/dashboard_student">
+          <Image
+            className={styles.logo}
+            src="/LogoMT.ico"
+            alt="Logo"
+            width={65}
+            height={50}
+          />
+        </Link>
       </div>
       <div className={styles.right_side}>
-        <Link href="">
+        <Link href="/dashboard_student">
           <span className={styles.link}>Dashboard</span>
         </Link>
-        <Link href="">
+        <Link href="/ressources_student">
           <span className={styles.link}>Mes ressources</span>
         </Link>
-        <Link href="">
+        <Link href="/student_payments">
           <span className={styles.link}>Paiement</span>
         </Link>
         <Link href="">

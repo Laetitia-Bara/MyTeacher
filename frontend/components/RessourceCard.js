@@ -6,8 +6,18 @@ import {
   faPlus,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
 
 function RessourceCard(props) {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    if(props.show === false)
+    {
+      setShow(props.show);
+    }
+  }, []);
+
   return (
     <div className={styles.content}>
       <div className={styles.title}>{props.title}</div>
@@ -18,6 +28,7 @@ function RessourceCard(props) {
             className={styles.icon}
             icon={faPlus}
             onClick={() => props.addToSharingFct(props)}
+            style={{ display: show ? "block" : "none" }}
           />
           <a href={props.url} target="_blank">
             <FontAwesomeIcon className={styles.icon} icon={faDownload} />
@@ -27,6 +38,7 @@ function RessourceCard(props) {
             className={styles.icon}
             icon={faTrash}
             onClick={() => props.deleteFct(props)}
+            style={{ display: show ? "block" : "none" }}
           />
         </>
       )}

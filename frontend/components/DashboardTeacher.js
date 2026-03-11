@@ -339,28 +339,25 @@ function DashboardTeacher() {
         <div className={styles.section}>
           <div className={styles.leftSection}>
             <div className={styles.studentSection}>
-              <div className={styles.studentList}>
-                <p className={styles.subtitle}>Mes élèves</p>
-                <button
-                  className={styles.addStudentBtn}
-                  onClick={() => setModalCreateStudent(true)}
-                >
-                  <span className={styles.addText}>+ Ajouter un élève</span>
-                </button>
-                {students}
-              </div>
+              <p className={styles.subtitle}>Mes élèves</p>
+              <button
+                className={styles.addStudentBtn}
+                onClick={() => setModalCreateStudent(true)}
+              >
+                <span className={styles.addText}>+ Ajouter un élève</span>
+              </button>
+              <div className={styles.studentList}>{students}</div>
             </div>
             <div className={styles.paymentSection}>
-              <div className={styles.paymentList}>
-                <p className={styles.subtitle}>Suivi paiements</p>
-                {payments}
-              </div>
+              <p className={styles.subtitle}>Suivi paiements</p>
+              <div className={styles.paymentList}>{payments}</div>
             </div>
           </div>
           <div className={styles.rightSection}>
             <div className={styles.planningSection}>
+              <p className={styles.subtitle}>Planning</p>
+
               <div className={styles.planningDetails}>
-                <p className={styles.subtitle}>Planning</p>
                 <BigCalendar />
               </div>
             </div>

@@ -38,8 +38,8 @@
   color: white;
   position: absolute;
   z-index: 2;
-  top: -35px;
-  left: 5px;
+  top: -20px;
+  left: 15px;
   padding: 5px 10px;
   font-family: "Roboto Bold";
   border-radius: 5px;
@@ -54,7 +54,7 @@
   width: 40%;
   position: absolute;
   z-index: 2;
-  top: -20px;
+  top: -5px;
   left: 50%;
 }
 
@@ -77,6 +77,7 @@
   height: 90%;
   padding: 1%;
   gap: 10px;
+  position: relative;
 }
 
 .structuresList {
@@ -89,8 +90,9 @@
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
-  position: relative;
   border-radius: 5px;
   gap: 10px;
-  /* overflow: scroll; */
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #a6d9f7 transparent;
 }

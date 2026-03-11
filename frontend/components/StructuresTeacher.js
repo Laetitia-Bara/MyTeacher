@@ -149,16 +149,14 @@ function StructuresTeacher() {
           <p className={styles.title}>MES STRUCTURES</p>
         </div>
         <div className={styles.section}>
-          <div className={styles.structuresList}>
-            <p className={styles.subtitle}>Mes structures</p>
-            <button
-              className={styles.btn}
-              onClick={() => setModalAddStructure(true)}
-            >
-              <span className={styles.addText}>+ Ajouter</span>
-            </button>
-            {structures}
-          </div>
+          <p className={styles.subtitle}>Mes structures</p>
+          <button
+            className={styles.btn}
+            onClick={() => setModalAddStructure(true)}
+          >
+            <span className={styles.addText}>+ Ajouter</span>
+          </button>
+          <div className={styles.structuresList}>{structures}</div>
         </div>
       </main>
       <FooterTeacher />

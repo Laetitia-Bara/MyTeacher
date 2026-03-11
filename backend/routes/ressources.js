@@ -1,11 +1,13 @@
 const express = require("express");
 const Ressource = require("../models/ressources");
+const Student = require("../models/students");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 const { checkBody } = require("../modules/checkBody");
 const router = express.Router();
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
+const mongoose = require("mongoose");
 
 // Get all ressources of a teacher
 router.get(
@@ -128,6 +130,32 @@ router.delete(
       res
         .status(500)
         .json({ result: false, error: "Error deleting ressource" });
+    }
+  },
+);
+
+// Get all ressources of a student
+router.get(
+  "/getRessourcesStudent",
+  authMiddleware,
+  requireRole("student"),
+  async (req, res) => {
+    try {
+      const student = await Student.findOne({ user: req.user.userId });
+
+      if (!student) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
+      }
+
+      const ressources = await Ressource.find({ studentId: new mongoose.Types.ObjectId(student._id) });
+      res.json({ result: true, ressources });
+    } catch (error) {
+      console.log("Error", error);
+      res
+        .status(500)
+        .json({ result: false, error: "Error fetching ressources" });
     }
   },
 );

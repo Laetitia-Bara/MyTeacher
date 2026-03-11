@@ -2,13 +2,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../lib/api";
 import { setInvoices } from "../reducers/invoices";
+const { checkIsSignin } = require("../modules/checkRole");
+import { useRouter } from "next/router";
 
 export default function StudentPaymentsPage() {
+  const router = useRouter()
   const dispatch = useDispatch();
   const invoices = useSelector((state) => state.invoices.value);
 
   useEffect(() => {
     (async () => {
+      checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
       const { ok, data } = await api("/invoices/my");
       if (ok && data.result) dispatch(setInvoices(data.invoices));
     })();

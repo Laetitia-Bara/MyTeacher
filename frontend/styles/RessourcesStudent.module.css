@@ -39,12 +39,13 @@
   position: absolute;
   z-index: 2;
   top: -35px;
+  left: 5px;
   padding: 5px 10px;
   font-family: "Roboto Bold";
   border-radius: 5px;
 }
 
-.addStudentBtn {
+.btn {
   background-color: #a6d9f7;
   font-size: 15px;
   border: none;
@@ -57,9 +58,19 @@
   left: 50%;
 }
 
-.addStudentBtn:hover {
+.btn:hover,
+.shareBtn:hover {
   background-color: #84b7d4;
   cursor: pointer;
+}
+
+.shareBtn {
+  background-color: #a6d9f7;
+  font-size: 15px;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: 40%;
 }
 
 .addText {
@@ -80,6 +91,34 @@
 
 .leftSection {
   /* border: 1px solid rgb(13, 0, 255); */
+  width: 50%;
+  height: 100%;
+}
+
+.ressourcesSection {
+  /* border: 1px solid rgb(0, 179, 255); */
+  width: 100%;
+  height: 100%;
+  padding: 1%;
+}
+
+.ressourcesList {
+  /* border: 1px solid rgb(0, 255, 38); */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 5% 1% 1% 1%;
+  background-color: white;
+  position: relative;
+  border-radius: 5px;
+  /* overflow: scroll; */
+}
+
+.rightSection {
+  /* border: 1px solid rgb(13, 0, 255); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -89,15 +128,14 @@
   gap: 15px;
 }
 
-.studentSection {
+.sharingSection {
   /* border: 1px solid rgb(0, 179, 255); */
   width: 100%;
   height: 60%;
   padding: 1%;
-  position: relative;
 }
 
-.studentList {
+.sharingList {
   /* border: 1px solid rgb(0, 255, 38); */
   display: flex;
   flex-direction: column;
@@ -107,60 +145,35 @@
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
+  position: relative;
   border-radius: 5px;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: #a6d9f7 transparent;
 }
 
-.paymentSection {
+.studentsSection {
   /* border: 1px solid rgb(0, 179, 255); */
   width: 100%;
   height: 40%;
   padding: 1%;
-  position: relative;
 }
 
-.paymentList {
+.studentsList {
   /* border: 1px solid rgb(0, 255, 38); */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-around;
+  align-items: center;
   width: 100%;
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
-  border-radius: 5px;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: #a6d9f7 transparent;
-}
-
-.rightSection {
-  /* border: 1px solid rgb(13, 0, 255); */
-  width: 50%;
-  height: 100%;
-}
-
-.planningSection {
-  /* border: 1px solid rgb(0, 179, 255); */
-  width: 100%;
-  height: 100%;
-  padding: 1%;
   position: relative;
+  border-radius: 5px;
 }
 
-.planningDetails {
-  /* border: 1px solid rgb(0, 255, 38); */
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+.selectList {
   width: 100%;
-  min-height: 0;
-  height: 100%;
-  padding: 5% 1% 1% 1%;
-  background-color: white;
+  padding: 5px;
   border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
