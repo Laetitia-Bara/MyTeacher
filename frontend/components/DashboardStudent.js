@@ -20,6 +20,7 @@ function DashboardStudent() {
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
   const [documentsCount, setDocumentsCount] = useState(0);
+  const [nextLesson, setNextLesson] = useState("Aucun cours prévu");
 
   /*useEffect(() => {
     api("/users/me").then(({ ok, data }) => {
@@ -75,7 +76,30 @@ function DashboardStudent() {
       // Charger les cours de l'étudiant connecté
       const lessonsRes = await api("/lessons/getLessonsStudent");
       if (lessonsRes.ok && lessonsRes.data?.result) {
-        dispatch(getEvents(lessonsRes.data.lessons || []));
+        const lessons = lessonsRes.data.lessons || [];
+
+        dispatch(getEvents(lessons));
+
+        const now = new Date();
+        const upcomingLessons = lessons
+          .filter((lesson) => new Date(lesson.start) > now)
+          .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+        if (upcomingLessons.length > 0) {
+          const nextLessonDate = new Date(upcomingLessons[0].start);
+          const formattedDate = nextLessonDate.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "long",
+          });
+          const formattedTime = nextLessonDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          setNextLesson(`${formattedDate} ${formattedTime}`);
+        } else {
+          setNextLesson("Aucun cours prévu");
+        }
       } else {
         console.log(lessonsRes.data?.error || "Erreur chargement cours élève");
       }
@@ -136,6 +160,16 @@ function DashboardStudent() {
               Status paiement :
             </p>
             <p className={styles.status}>{paymentStatus}</p>
+          </div>
+
+          <div className={styles.contenue}>
+            <p>
+              <span style={{ color: "#84DCCF" }}>
+                <FontAwesomeIcon icon={faEnvelope} />
+              </span>{" "}
+              Prochain cours :
+            </p>
+            <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>{nextLesson}</p>
           </div>
 
           <div className={styles.contenuebot}>
