@@ -26,6 +26,11 @@
     margin-top: 0;
 }
 
+.content1 {
+    width: 100vw;
+    height: 100vh;
+}
+
 .leftside {
     border: 1px solid black;
     border-radius: 15px;
