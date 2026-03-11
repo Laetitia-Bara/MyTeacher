@@ -3,6 +3,7 @@ import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
 import RessourceCard from "./RessourceCard";
 import ModalAddRessource from "./ModalAddRessource";
+import Loading from "./Loading";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 const { checkIsSignin } = require("../modules/checkRole");
@@ -36,11 +37,13 @@ function RessourcesTeacher() {
   const [students, setStudents] = useState([]);
   const [modalAddRessource, setModalAddRessource] = useState(false);
   const [addFlag, setAddFlag] = useState(false);
-  console.log("studentsData", studentsData);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     (async () => {
       checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+      (async () => {})();
       // Fetch ressources
       try {
         const response = await fetch(
@@ -51,11 +54,12 @@ function RessourcesTeacher() {
           },
         );
         const data = await response.json();
-        console.log("data ressources", data);
         // Version dès que backend ok
         data.result
           ? setRessourcesData(data.ressources)
           : console.log(data.error);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -271,6 +275,7 @@ function RessourcesTeacher() {
           addRessourceFct={handleAddRessource}
         />
       )}
+      {loading && <Loading />}
     </div>
   );
 }
