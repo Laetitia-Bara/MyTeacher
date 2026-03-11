@@ -83,7 +83,7 @@ function HeaderStudent() {
             <span className={styles.link}>Paiements / Factures</span>
           </Link>
           <Link href="">
-            <span className={styles.mlink}>Messagerie</span>
+            <span className={styles.link}>Messagerie</span>
           </Link>
         </div>
         <div className={styles.profileMenuWrapper} ref={menuRef}>
