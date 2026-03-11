@@ -4,7 +4,10 @@
   align-items: center;
   padding: 5px 1%;
   height: 8%;
-  font-family: "Roboto Regular";
+  font-family: "Roboto", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   background-color: #312f2f;
   width: 100vw;
 }
