@@ -31,15 +31,6 @@ function HeaderStudent() {
             height={50}
           />
         </Link>
-        <Link href="/dashboard_student">
-          <Image
-            className={styles.logo}
-            src="/LogoMT.ico"
-            alt="Logo"
-            width={65}
-            height={50}
-          />
-        </Link>
       </div>
       <div className={styles.right_side}>
         <Link href="/dashboard_student">
