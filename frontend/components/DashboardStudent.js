@@ -1,3 +1,4 @@
+import Head from "next/head";
 import HeaderStudent from "./HeaderStudent";
 import FooterStudent from "./FooterStudent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
