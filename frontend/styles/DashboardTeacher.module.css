@@ -94,6 +94,7 @@
   width: 100%;
   height: 60%;
   padding: 1%;
+  position: relative;
 }
 
 .studentList {
@@ -106,9 +107,10 @@
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
-  position: relative;
   border-radius: 5px;
-  /* overflow: scroll; */
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #a6d9f7 transparent;
 }
 
 .paymentSection {
@@ -116,6 +118,7 @@
   width: 100%;
   height: 40%;
   padding: 1%;
+  position: relative;
 }
 
 .paymentList {
@@ -128,9 +131,10 @@
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
-  position: relative;
   border-radius: 5px;
-  /* overflow: scroll; */
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #a6d9f7 transparent;
 }
 
 .rightSection {
@@ -144,6 +148,7 @@
   width: 100%;
   height: 100%;
   padding: 1%;
+  position: relative;
 }
 
 .planningDetails {
@@ -157,6 +162,5 @@
   height: 100%;
   padding: 5% 1% 1% 1%;
   background-color: white;
-  position: relative;
   border-radius: 5px;
 }
