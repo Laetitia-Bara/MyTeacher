@@ -139,7 +139,10 @@ function DashboardStudent() {
   }, [dispatch]);
 
   return (
-    <div className={styles.body}>
+    <div className={styles.content1}>
+      <Head>
+        <title>MyTeacher - Dashboard </title>
+      </Head>
       <HeaderStudent />
 
       <h1 className={styles.title}>MON DASHBOARD</h1>
