@@ -1,4 +1,3 @@
-//import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -75,9 +74,8 @@ function HeaderTeacher() {
       </div>
       <div className={styles.menu}>
         <button className={styles.btnNavigation}>
-          {/* Add page for structures */}
           <Link href="/structures_teacher">
-            <span className={styles.menuText}>Mes structures</span>
+            <span className={styles.menuText}>Structures</span>
           </Link>
         </button>
         <button className={styles.btnNavigation}>
@@ -87,17 +85,10 @@ function HeaderTeacher() {
         </button>
         <button className={styles.btnNavigation}>
           <Link href="/teacher_payments">
-            <span className={styles.menuText}>Suivi paiements</span>
+            <span className={styles.menuText}>Paiements / Factures</span>
           </Link>
         </button>
-        {/* <button className={styles.btnNavigation}> */}
-        {/* Add page for planning */}
-        {/* <Link href="/dashboard_teacher">
-            <span className={styles.menuText}>Planning</span>
-          </Link>
-        </button> */}
         <button className={styles.btnNavigation}>
-          {/* Add page for messagerie */}
           <Link href="/dashboard_teacher">
             <span className={styles.menuText}>Messagerie</span>
           </Link>
@@ -123,14 +114,6 @@ function HeaderTeacher() {
                   <span>Mon profil</span>
                 </a>
               </Link>
-
-              {/*<Link href="/dashboard_teacher">
-                <a className={styles.popoverItem}>
-                  <span className={styles.popoverIcon}>⚙️</span>
-                  <span>Paramètres</span>
-                </a>
-              </Link>*/}
-
               <button
                 type="button"
                 className={styles.popoverLogout}
