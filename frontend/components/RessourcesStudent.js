@@ -1,6 +1,6 @@
 import Head from "next/head";
-import HeaderTeacher from "./HeaderTeacher";
-import FooterTeacher from "./FooterTeacher";
+import HeaderStudent from "./HeaderStudent";
+import FooterStudent from "./FooterStudent";
 import RessourceCard from "./RessourceCard";
 import ModalAddRessource from "./ModalAddRessource";
 import { useEffect, useState } from "react";
@@ -8,34 +8,12 @@ import { useSelector } from "react-redux";
 const { checkIsSignin } = require("../modules/checkRole");
 import { useRouter } from "next/router";
 
-import styles from "../styles/RessourcesTeacher.module.css";
-
-const dataRessources = [
-  {
-    id: 1,
-    title: "Fly me to the moon",
-    type: "Partition",
-  },
-  {
-    id: 2,
-    title: "Pouette",
-    type: "Partition",
-  },
-  {
-    id: 3,
-    title: "Sous le vent",
-    type: "Partition",
-  },
-];
+import styles from "../styles/RessourcesStudent.module.css";
 
 function RessourcesStudent() {
   const router = useRouter();
   const [ressourcesData, setRessourcesData] = useState([]);
-  const [sharingRessources, setSharingRessources] = useState([]);
   const studentsData = useSelector((state) => state.students.value);
-  const [students, setStudents] = useState([]);
-  const [modalAddRessource, setModalAddRessource] = useState(false);
-  const [addFlag, setAddFlag] = useState(false);
   console.log("studentsData", studentsData);
 
   useEffect(() => {
@@ -44,7 +22,7 @@ function RessourcesStudent() {
       // Fetch ressources
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/getRessources`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/getRessourcesStudent`,
           {
             method: "GET",
             credentials: "include",
@@ -60,123 +38,7 @@ function RessourcesStudent() {
         console.error("Error fetching data:", error);
       }
     })();
-  }, [addFlag]);
-
-  const addToSharingList = (comingProps) => {
-    if (!sharingRessources.some((ress) => ress._id === comingProps._id)) {
-      setSharingRessources((ress) => [
-        ...ress,
-        { ...comingProps, share: true },
-      ]);
-    }
-  };
-
-  const deleteRessource = async (comingProps) => {
-    console.log("Supprimer ressource", comingProps._id);
-    // Fetch delete ressource
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/deleteRessource/${comingProps._id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        },
-      );
-
-      const data = await response.json();
-      console.log("Data ressources fetched:", data);
-      // Version dès que backend ok
-      data.result
-        ? setRessourcesData((ress) =>
-            ress.filter((r) => r._id !== comingProps._id),
-          )
-        : console.log(data.error);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const removeFromSharingList = (comingProps) => {
-    setSharingRessources((ress) =>
-      ress.filter((r) => r._id !== comingProps._id),
-    );
-  };
-
-  const shareRessources = async () => {
-    // Fetch vers backend pour partager les ressources
-    if (students.length > 0 && sharingRessources.length > 0) {
-      console.log("students", students);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/share`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ressources: sharingRessources,
-              students,
-            }),
-          },
-        );
-        const data = await response.json();
-        console.log("Data ressources fetched:", data);
-        // Version dès que backend ok
-        data.result
-          ? (setSharingRessources([]),
-            setStudents([]),
-            alert("Ressources partagées !"))
-          : console.log(data.error);
-      } catch (error) {
-        console.error("Error adding event:", error);
-      }
-    }
-  };
-
-  const handleAddRessource = async (newRessource) => {
-    console.log("Ajouter ressource", newRessource);
-    if (
-      newRessource.title !== "" &&
-      newRessource.tag !== "" &&
-      newRessource.file !== ""
-    ) {
-      const formData = new FormData();
-      formData.append("file", newRessource.file);
-      formData.append("title", newRessource.title);
-      formData.append("tag", newRessource.tag);
-
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/ressources/add`,
-          {
-            method: "POST",
-            credentials: "include",
-            // headers: {
-            //   "Content-Type": "application/json",
-            //   // Authorization: `Bearer ${token}`,
-            // },
-            body: formData,
-          },
-        );
-
-        const data = await response.json();
-        console.log("Data ressources fetched:", data);
-
-        if (data.result) {
-          alert("Ressource ajoutée !");
-          setAddFlag(!addFlag);
-        } else {
-          alert(`Erreur : ${data.error}`);
-        }
-      } catch (error) {
-        console.error("Error adding ressource :", error);
-      }
-    } else {
-      console.log("Input data missing");
-    }
-  };
+  }, []);
 
   const ressources = ressourcesData?.map((data, i) => (
     <RessourceCard
@@ -184,41 +46,18 @@ function RessourcesStudent() {
       _id={data._id}
       title={data.title}
       tags={data.tags[0]}
-      addToSharingFct={addToSharingList}
-      deleteFct={deleteRessource}
-      removeFct={removeFromSharingList}
-      share={false}
       url={data.url}
+      share={false}
+      show={false}
     />
   ));
-
-  const ressourcesToShare = sharingRessources?.map((data, i) => (
-    <RessourceCard
-      key={i}
-      _id={data._id}
-      title={data.title}
-      tags={data.tags}
-      onClick={addToSharingList}
-      delete={deleteRessource}
-      removeFct={removeFromSharingList}
-      share={true}
-    />
-  ));
-
-  const studentsChoice = studentsData.map((data, i) => {
-    return (
-      <option key={i} value={data.id}>
-        {data.firstName} {data.lastName}
-      </option>
-    );
-  });
 
   return (
     <div className={styles.content}>
       <Head>
         <title>MyTeacher - Ressources </title>
       </Head>
-      <HeaderTeacher />
+      <HeaderStudent />
       <main className={styles.main}>
         <div className={styles.titlePage}>
           <p className={styles.title}>MES RESSOURCES</p>
@@ -228,55 +67,17 @@ function RessourcesStudent() {
             <div className={styles.ressourcesSection}>
               <div className={styles.ressourcesList}>
                 <p className={styles.subtitle}>Mes ressources</p>
-                <button
-                  className={styles.btn}
-                  onClick={() => setModalAddRessource(true)}
-                >
-                  <span className={styles.addText}>+ Ajouter</span>
-                </button>
                 {ressources}
               </div>
             </div>
           </div>
           <div className={styles.rightSection}>
-            <div className={styles.sharingSection}>
-              <div className={styles.sharingList}>
-                <p className={styles.subtitle}>Ressources à partager</p>
-                {ressourcesToShare}
-              </div>
-            </div>
-            <div className={styles.studentsSection}>
-              <div className={styles.studentsList}>
-                <select
-                  className={styles.selectList}
-                  type="text"
-                  value={students}
-                  onChange={(e) => setStudents([e.target.value])}
-                >
-                  <option value="">Choisir un élève</option>
-                  {studentsChoice}
-                </select>
-                <button
-                  className={styles.shareBtn}
-                  onClick={() => shareRessources()}
-                >
-                  <span className={styles.addText}>Partager</span>
-                </button>
-                <p className={styles.subtitle}>Partager à...</p>
-              </div>
-            </div>
+            <div></div>
           </div>
         </div>
       </main>
-      <FooterTeacher />
-      {modalAddRessource && (
-        <ModalAddRessource
-          onClose={() => setModalAddRessource(false)}
-          addRessourceFct={handleAddRessource}
-        />
-      )}
+      <FooterStudent />
     </div>
   );
 }
-
 export default RessourcesStudent;
