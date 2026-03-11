@@ -21,8 +21,6 @@ const dataStudent = [
     _id: "67c9f1f1a2b3c4d4e6f7a8b9",
     firstName: "Bob",
     lastName: "Smith",
-    firstName: "Bob",
-    lastName: "Smith",
     email: "bob@example.com",
     discipline: "Guitare",
     invite: true,
@@ -119,7 +117,7 @@ const events = [
 ];
 
 function DashboardTeacher() {
-  const router = useRouter()
+  const router = useRouter();
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const [modalCreateStudent, setModalCreateStudent] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
@@ -206,8 +204,7 @@ function DashboardTeacher() {
   // les mocks ne servent qu’en secours
   useEffect(() => {
     (async () => {
-
-      checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+      await checkIsSignin(router);
 
       let hasStudents = false;
       let hasPayments = false;
@@ -258,6 +255,7 @@ function DashboardTeacher() {
         );
 
         const data = await response.json();
+        console.log("check lessons", data);
         if (data.result) {
           dispatch(getEvents(data.lessons));
           hasEvents = true;
@@ -270,8 +268,9 @@ function DashboardTeacher() {
       if (!hasPayments) dispatch(getPayments(dataPayment));
       if (!hasEvents) dispatch(getEvents(events));
     })();
-  }, [dispatch]);
+  }, [dispatch, router]);
 
+  /*
   const students = studentsData.map((data, i) => (
     <StudentCard
       key={i}
@@ -290,17 +289,42 @@ function DashboardTeacher() {
       onInviteClick={() => openInviteModal(data)}
     />
   ));
+  */
 
-  const payments = paymentsData.map((data, i) => (
-    <PaymentCard
-      key={i}
-      // id={data.id}
-      firstname={data.firstName}
-      lastname={data.lastName}
-      paymentTerm={data.modalite}
-      status={data.status}
-    />
-  ));
+  const students = (Array.isArray(studentsData) ? studentsData : [])
+    .filter(Boolean)
+    .map((data, i) => (
+      <StudentCard
+        key={data.id || data._id || i}
+        id={data.id || data._id}
+        firstname={data.firstName || ""}
+        lastname={data.lastName || ""}
+        discipline={data.discipline || ""}
+        invite={(data.status || "Prospect") === "Prospect"}
+        status={data.status || "Prospect"}
+        subscription={
+          typeof data.subscription === "string"
+            ? data.subscription
+            : data.subscription?.type || ""
+        }
+        email={data.email || ""}
+        onInviteClick={() => openInviteModal(data)}
+      />
+    ));
+
+  const payments = (Array.isArray(paymentsData) ? paymentsData : [])
+    .filter(Boolean)
+    .map((data, i) => (
+      <PaymentCard
+        key={data._id || data.id || i}
+        firstname={data.firstName || ""}
+        lastname={data.lastName || ""}
+        discipline={data.discipline || ""}
+        date={data.dueAt || data.createdAt || null}
+        amount={data.amount || 0}
+        status={data.status || ""}
+      />
+    ));
 
   return (
     <div className={styles.content}>

@@ -74,7 +74,7 @@ export default function SignupStudent() {
     if (!ok) return setError(data?.error || "Signup failed");
 
     setSuccess("Compte élève créé ✅");
-    router.push("/dashboard_student");
+    router.replace("/dashboard_student");
   };
 
   const tokenMissing = !token;
@@ -206,7 +206,7 @@ export default function SignupStudent() {
 
             <button
               className={styles.secondaryBtn}
-              onClick={() => router.push("/signin")}
+              onClick={() => router.replace("/signin")}
               type="button"
             >
               Déjà un compte ? Se connecter

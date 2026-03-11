@@ -76,7 +76,7 @@ function HeaderTeacher() {
       <div className={styles.menu}>
         <button className={styles.btnNavigation}>
           {/* Add page for structures */}
-          <Link href="/dashboard_teacher">
+          <Link href="/structures_teacher">
             <span className={styles.menuText}>Mes structures</span>
           </Link>
         </button>
@@ -90,12 +90,12 @@ function HeaderTeacher() {
             <span className={styles.menuText}>Suivi paiements</span>
           </Link>
         </button>
-        <button className={styles.btnNavigation}>
-          {/* Add page for planning */}
-          <Link href="/dashboard_teacher">
+        {/* <button className={styles.btnNavigation}> */}
+        {/* Add page for planning */}
+        {/* <Link href="/dashboard_teacher">
             <span className={styles.menuText}>Planning</span>
           </Link>
-        </button>
+        </button> */}
         <button className={styles.btnNavigation}>
           {/* Add page for messagerie */}
           <Link href="/dashboard_teacher">

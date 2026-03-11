@@ -1,5 +1,5 @@
 import styles from "../styles/ModalAddEvent.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEventToStore } from "../reducers/planning";
 
@@ -13,6 +13,30 @@ export default function ModalAddEvent({ onClose, start, end }) {
   const [student, setStudent] = useState("");
   const dispatch = useDispatch();
   const studentsData = useSelector((state) => state.students.value);
+  const [structuresData, setStructuresData] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      // Fetch structures
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/teachers/getStructures`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+        const data = await response.json();
+        console.log("data structures", data);
+        // Version dès que backend ok
+        data.result
+          ? setStructuresData(data.structures)
+          : console.log(data.error);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    })();
+  }, []);
 
   const handleAdd = async () => {
     // POST vers backend
@@ -73,6 +97,16 @@ export default function ModalAddEvent({ onClose, start, end }) {
     );
   });
 
+  const structuresChoice = structuresData.map((data, i) => {
+    return (
+      <>
+        <option key={i} value={data.name}>
+          {data.name}
+        </option>
+      </>
+    );
+  });
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.card} onClick={(e) => e.stopPropagation()}>
@@ -106,14 +140,16 @@ export default function ModalAddEvent({ onClose, start, end }) {
             <option value="">Choisir un élève</option>
             {studentsChoice}
           </select>
-          <input
-            className={styles.input}
+          <select
+            className={styles.selectList}
             type="text"
-            placeholder="Structure"
-            maxLength="40"
             value={structure}
             onChange={(e) => setStructure(e.target.value)}
-          />
+          >
+            <option value="">Choisir une structure</option>
+            {structuresChoice}
+          </select>
+
           <input
             className={styles.input}
             type="text"

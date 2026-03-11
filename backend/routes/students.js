@@ -214,4 +214,84 @@ router.put(
   },
 );
 
+// GET /students/me
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const student = await Student.findOne({ user: userId }).populate("teacher");
+    if (!student) {
+      return res
+        .status(404)
+        .json({ result: false, error: "Student not found" });
+    }
+
+    return res.status(200).json({
+      result: true,
+      student: {
+        id: student._id,
+        avatarUrl: student.avatarUrl || "",
+        phone: student.phone || "",
+        discipline: student.discipline || "",
+        structure: student.structure || "",
+        subscription: student.subscription || "",
+        createdAt: student.createdAt,
+        updatedAt: student.updatedAt,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
+// PUT /students/me
+router.put("/me", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const { firstName, lastName, phone, avatarUrl } = req.body;
+
+    const user = await User.findById(userId);
+    const student = await Student.findOne({ user: userId });
+
+    if (!user) {
+      return res.status(404).json({ result: false, error: "User not found" });
+    }
+
+    if (!student) {
+      return res
+        .status(404)
+        .json({ result: false, error: "Student not found" });
+    }
+
+    // Partie User
+    if (typeof firstName === "string") user.firstName = firstName.trim();
+    if (typeof lastName === "string") user.lastName = lastName.trim();
+
+    // Partie Student
+    if (typeof phone === "string") student.phone = phone.trim();
+    if (typeof avatarUrl === "string") student.avatarUrl = avatarUrl.trim();
+
+    await user.save();
+    await student.save();
+
+    return res.status(200).json({
+      result: true,
+      profile: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        avatarUrl: student.avatarUrl || "",
+        phone: student.phone || "",
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ result: false, error: "Server error" });
+  }
+});
+
 module.exports = router;
