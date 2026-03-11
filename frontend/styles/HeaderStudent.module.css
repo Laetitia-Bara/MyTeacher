@@ -11,7 +11,7 @@
 
 .right_side {
   display: flex;
-  justify-content: space-around;
+  justify-content: end;
   align-items: center;
   gap: 10px;
   height: 100%;
