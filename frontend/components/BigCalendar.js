@@ -20,7 +20,6 @@ export default function BigCalendar() {
   const [eventSelected, setEventSelected] = useState(null);
 
   const eventsData = useSelector((state) => state.planning.value);
-  console.log("Events data in calendar:", eventsData);
 
   const handleSelectSlot = ({ start, end }) => {
     setStart(start);
