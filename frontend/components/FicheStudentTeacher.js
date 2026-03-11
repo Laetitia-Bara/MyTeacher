@@ -2,7 +2,7 @@ import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/FicheStudentTeacher.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { api } from "../lib/api";
 import { getStudents } from "../reducers/students";
 import { getPayments } from "../reducers/payments";
@@ -17,10 +17,19 @@ function FicheStudentTeacher({ studentId }) {
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
   const phoneRef = useRef(null);
+  const structureRef = useRef(null);
 
   const typeRef = useRef(null);
   const priceRef = useRef(null);
   const modaliteRef = useRef(null);
+
+  const [structures, setStructures] = useState([]);
+  const [selectedStructure, setSelectedStructure] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedModalite, setSelectedModalite] = useState("");
+  const [studentPayments, setStudentPayments] = useState([]);
+  const [studentLessons, setStudentLessons] = useState([]);
+  
 
   const students = useSelector((state) => state.students.value);
   const payments = useSelector((state) => state.payments.value);
@@ -32,7 +41,6 @@ function FicheStudentTeacher({ studentId }) {
   const nom = student?.lastName || "";
   const email = student?.email || "";
   const tel = student?.phone || "";
-  const structures = ["Maths", "Chant", "Vélo"];
 
   const type_abonnement = student?.subscription?.type || "";
   const price = student?.subscription?.price ?? "";
@@ -40,20 +48,54 @@ function FicheStudentTeacher({ studentId }) {
 
   useEffect(() => {
     checkIsSignin(router); //Check if user is still authenticated, if not send them back to signin
+
+    api("/teachers/getStructures").then(({ ok, data }) => {
+      if (!ok || !data.result) {
+        console.log(data.error || "Erreur récupération structures");
+        return;
+      }
+
+      setStructures(data.structures || []);
+    });
   }, []);
 
-  const studentPayments = useMemo(() => {
-    if (!student) return [];
+  useEffect(() => {
+    setSelectedStructure(student?.structure || "");
+  }, [student]);
 
-    return payments.filter(
-      (payment) =>
-        payment.firstName === student.firstName &&
-        payment.lastName === student.lastName,
-    );
-  }, [payments, student]);
+  useEffect(() => {
+    setSelectedType(student?.subscription?.type || "");
+    setSelectedModalite(student?.subscription?.modalite || "");
+  }, [student]);
+
+  useEffect(() => {
+    if (!studentId) return;
+
+    api(`/invoices/getInvoicesStudentById/${studentId}`).then(({ ok, data }) => {
+      if (!ok || !data.result) {
+        console.log(data.error || "Erreur récupération paiements élève");
+        return;
+      }
+
+      setStudentPayments(data.invoices || []);
+    });
+  }, [studentId]);
+
+  useEffect(() => {
+    if (!studentId) return;
+
+    api(`/lessons/getLessonsStudentById/${studentId}`).then(({ ok, data }) => {
+      if (!ok || !data.result) {
+        console.log(data.error || "Erreur récupération cours élève");
+        return;
+      }
+
+      setStudentLessons(data.lessons || []);
+    });
+  }, [studentId]);
 
   const cours = useMemo(() => {
-    return lessons.map((lesson) => {
+    return studentLessons.map((lesson) => {
       const date = new Date(lesson.start);
 
       const dateString = date.toLocaleDateString("fr-FR", {
@@ -72,7 +114,7 @@ function FicheStudentTeacher({ studentId }) {
         status: "Ok",
       };
     });
-  }, [lessons]);
+  }, [studentLessons]);
 
   function refreshStudents() {
     api("/students/getStudents").then(({ ok, data }) => {
@@ -92,6 +134,7 @@ function FicheStudentTeacher({ studentId }) {
       lastName: lastNameRef.current.value,
       email: emailRef.current.value,
       phone: phoneRef.current.value,
+      structure: selectedStructure,
     };
 
     api("/students/updateIdentity", {
@@ -105,13 +148,13 @@ function FicheStudentTeacher({ studentId }) {
 
       refreshStudents();
 
-      api("/invoices/getInvoices").then(({ ok, data }) => {
+      api(`/invoices/getInvoicesStudentById/${studentId}`).then(({ ok, data }) => {
         if (!ok || !data.result) {
           console.log(data.error || "Erreur refresh payments");
           return;
         }
 
-        dispatch(getPayments(data.invoices));
+        setStudentPayments(data.invoices || []);
       });
     });
   }
@@ -119,9 +162,9 @@ function FicheStudentTeacher({ studentId }) {
   function handleUpdateFormula() {
     const body = {
       studentId,
-      type: typeRef.current.value,
+      type: selectedType,
       price: Number(priceRef.current.value),
-      modalite: modaliteRef.current.value,
+      modalite: selectedModalite,
     };
 
     api("/students/updateSubscription", {
@@ -227,10 +270,16 @@ function FicheStudentTeacher({ studentId }) {
               <label className={styles.label} style={{ textAlign: "center" }}>
                 :
               </label>
-              <select className={styles.select} defaultValue={student.structure}>
+              <select
+                ref={structureRef}
+                className={styles.select}
+                value={selectedStructure}
+                onChange={(e) => setSelectedStructure(e.target.value)}
+              >
+                <option value="">Choisir une structure</option>
                 {structures.map((structure) => (
-                  <option key={structure} value={structure}>
-                    {structure}
+                  <option key={structure._id} value={structure.name}>
+                    {structure.name}
                   </option>
                 ))}
               </select>
@@ -257,12 +306,17 @@ function FicheStudentTeacher({ studentId }) {
               <label className={styles.label} style={{ textAlign: "center" }}>
                 :
               </label>
-              <input
+              <select
                 ref={typeRef}
-                className={styles.input}
-                type="text"
-                defaultValue={type_abonnement}
-              />
+                className={styles.select}
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Choisir un type</option>
+                <option value="A l'unité">A l'unité</option>
+                <option value="Trimestre">Trimestre</option>
+                <option value="Annuel">Annuel</option>
+              </select>
             </div>
 
             <div className={styles.field}>
@@ -287,12 +341,16 @@ function FicheStudentTeacher({ studentId }) {
               <label className={styles.label} style={{ textAlign: "center" }}>
                 :
               </label>
-              <input
+              <select
                 ref={modaliteRef}
-                className={styles.input}
-                type="text"
-                defaultValue={modalite}
-              />
+                className={styles.select}
+                value={selectedModalite}
+                onChange={(e) => setSelectedModalite(e.target.value)}
+              >
+                <option value="">Choisir une modalité</option>
+                <option value="Paiement 1 fois">Paiement 1 fois</option>
+                <option value="Paiement 3 fois">Paiement 3 fois</option>
+              </select>
             </div>
 
             <div className={styles.buttonContainer}>
@@ -320,13 +378,14 @@ function FicheStudentTeacher({ studentId }) {
                   {paiement.period ?? "Pas de date entrée en bdd"}
                 </p>
 
-                {paiement.status === "Annulé" ? (
-                  <p className={styles.rouge}>Annulé</p>
-                ) : paiement.status === "En attente" ||
-                  paiement.status === "pending" ? (
-                  <p className={styles.orange}>En attente</p>
-                ) : paiement.status === "Retard" ? (
+                {paiement.status === "late" ? (
                   <p className={styles.rouge}>Retard</p>
+                ) : paiement.status === "pending" ? (
+                  <p className={styles.orange}>En attente</p>
+                ) : paiement.status === "scheduled" ? (
+                  <p className={styles.orange}>À venir</p>
+                ) : paiement.status === "paid" ? (
+                  <p className={styles.vert}>Payé</p>
                 ) : (
                   <p className={styles.vert}>Ok</p>
                 )}

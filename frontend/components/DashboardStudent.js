@@ -19,6 +19,7 @@ function DashboardStudent() {
   const dispatch = useDispatch();
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
+  const [documentsCount, setDocumentsCount] = useState(0);
 
   /*useEffect(() => {
     api("/users/me").then(({ ok, data }) => {
@@ -101,6 +102,14 @@ function DashboardStudent() {
       } else {
         console.log(invoicesRes.data?.error || "Erreur chargement paiements");
       }
+
+      // Charger les ressources de l'étudiant connecté
+      const ressourcesRes = await api("/ressources/getRessourcesStudent");
+      if (ressourcesRes.ok && ressourcesRes.data?.result) {
+        setDocumentsCount((ressourcesRes.data.ressources || []).length);
+      } else {
+        console.log(ressourcesRes.data?.error || "Erreur chargement ressources");
+      }
     })();
   }, [dispatch]);
 
@@ -129,16 +138,6 @@ function DashboardStudent() {
             <p className={styles.status}>{paymentStatus}</p>
           </div>
 
-          <div className={styles.contenue}>
-            <p>
-              <span style={{ color: "#84DCCF" }}>
-                <FontAwesomeIcon icon={faEnvelope} />
-              </span>{" "}
-              Messages non lus :
-            </p>
-            <p className={styles.nb}>0</p>
-          </div>
-
           <div className={styles.contenuebot}>
             <p>
               <span style={{ color: "#bccbe0" }}>
@@ -146,7 +145,7 @@ function DashboardStudent() {
               </span>{" "}
               Document mis à disposition :
             </p>
-            <p className={styles.doc}>0</p>
+            <p className={styles.doc}>{documentsCount}</p>
           </div>
         </fieldset>
       </div>

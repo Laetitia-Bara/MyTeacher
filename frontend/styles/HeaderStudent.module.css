@@ -1,33 +1,37 @@
 .container {
-    background-color: #312f2f;
-    color: white;
-
     display: flex;
     justify-content: space-between;
-    padding: 2em;
     align-items: center;
+    padding: 5px 1%;
+    height: 8%;
+    font-family: "Roboto Regular";
+    background-color: #312f2f;
     width: 100vw;
 }
 
 .right_side {
   display: flex;
+  justify-content: space-around;
   align-items: center;
+  gap: 10px;
+  height: 100%;
 }
 
 .link {
     color: white;
-    border-right: 1px solid #575555;
-
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.5em;
-
-    padding-right: 1em;
-    padding-left: 1em;
-    padding-top: 0.7em;
-    padding-bottom: 0.7em;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border: none;
+    border-right: 1px solid white;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 70%;
+    background-color: transparent;
     cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .link:hover {
@@ -37,18 +41,19 @@
 
 .mlink {
     color: white;
-
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.5em;
-
-    padding-right: 1em;
-    padding-left: 1em;
-    padding-top: 0.7em;
-    padding-bottom: 0.7em;
-    margin-right: 1em;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border: none;
+    border-right: 1px solid white;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 70%;
+    background-color: transparent;
     cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .mlink:hover {
@@ -57,49 +62,39 @@
 }
 
 .profil {
-    background-color: #a5d9f7;
-    color: white;
-
-    border: none;
-    border-radius: 15px;
-
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.5em;
-
-    padding-right: 3em;
-    padding-left: 3em;
-    padding-top: 0.7em;
-    padding-bottom: 0.7em;
-
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 10px 14px;
     cursor: pointer;
+    font-weight: 600;
+    color: #2f2a28;
+    min-height: 42px;
 }
 
 .profil:hover {
-    background-color: #7bb7db;
+    background-color: #f7f7f7;
     transition: 0.5s;
 }
 
 .exit {
-    background-color: #a5d9f7;
-
-    margin-left: 1em;
-    margin-right: 1em;
-    
-    padding-top: 0.84em;
-    padding-bottom: 0.84em;
-    padding-right: 3em;
-    padding-left: 3em;
-
-    font-size: 1.5em;
-
-    border: none;
-    border-radius: 15px;
-
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 10px 14px;
     cursor: pointer;
+    font-weight: 600;
+    color: #2f2a28;
+    min-height: 42px;
 }
 
 .exit:hover {
-    background-color: #7bb7db;
+    background-color: #f7f7f7;
     transition: 0.5s;
 }
