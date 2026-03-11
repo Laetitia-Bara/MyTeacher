@@ -19,6 +19,8 @@ function DashboardStudent() {
   const dispatch = useDispatch();
 
   const [paymentStatus, setPaymentStatus] = useState("Aucun paiement");
+  const [documentsCount, setDocumentsCount] = useState(0);
+  const [nextLesson, setNextLesson] = useState("Aucun cours prévu");
 
   /*useEffect(() => {
     api("/users/me").then(({ ok, data }) => {
@@ -74,7 +76,30 @@ function DashboardStudent() {
       // Charger les cours de l'étudiant connecté
       const lessonsRes = await api("/lessons/getLessonsStudent");
       if (lessonsRes.ok && lessonsRes.data?.result) {
-        dispatch(getEvents(lessonsRes.data.lessons || []));
+        const lessons = lessonsRes.data.lessons || [];
+
+        dispatch(getEvents(lessons));
+
+        const now = new Date();
+        const upcomingLessons = lessons
+          .filter((lesson) => new Date(lesson.start) > now)
+          .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+        if (upcomingLessons.length > 0) {
+          const nextLessonDate = new Date(upcomingLessons[0].start);
+          const formattedDate = nextLessonDate.toLocaleDateString("fr-FR", {
+            day: "numeric",
+            month: "long",
+          });
+          const formattedTime = nextLessonDate.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          setNextLesson(`${formattedDate} ${formattedTime}`);
+        } else {
+          setNextLesson("Aucun cours prévu");
+        }
       } else {
         console.log(lessonsRes.data?.error || "Erreur chargement cours élève");
       }
@@ -100,6 +125,14 @@ function DashboardStudent() {
         }
       } else {
         console.log(invoicesRes.data?.error || "Erreur chargement paiements");
+      }
+
+      // Charger les ressources de l'étudiant connecté
+      const ressourcesRes = await api("/ressources/getRessourcesStudent");
+      if (ressourcesRes.ok && ressourcesRes.data?.result) {
+        setDocumentsCount((ressourcesRes.data.ressources || []).length);
+      } else {
+        console.log(ressourcesRes.data?.error || "Erreur chargement ressources");
       }
     })();
   }, [dispatch]);
@@ -134,9 +167,9 @@ function DashboardStudent() {
               <span style={{ color: "#84DCCF" }}>
                 <FontAwesomeIcon icon={faEnvelope} />
               </span>{" "}
-              Messages non lus :
+              Prochain cours :
             </p>
-            <p className={styles.nb}>0</p>
+            <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>{nextLesson}</p>
           </div>
 
           <div className={styles.contenuebot}>
@@ -146,12 +179,12 @@ function DashboardStudent() {
               </span>{" "}
               Document mis à disposition :
             </p>
-            <p className={styles.doc}>0</p>
+            <p className={styles.doc}>{documentsCount}</p>
           </div>
         </fieldset>
       </div>
 
-      <FooterStudent />
+      <FooterStudent className={styles.footer}/>
     </div>
   );
 }

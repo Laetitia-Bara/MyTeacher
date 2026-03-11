@@ -12,12 +12,17 @@
 
 .title {
     margin: 0;
-    padding-top: 1em;
-    font-size: 4em;
+    font-size: 30px;
+    font-family: "Roboto Bold";
+    letter-spacing: 2px;
 }
 
 .content {
     display: flex;
+    justify-content: space-between;
+    width: 95vw;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .leftside {
@@ -26,8 +31,8 @@
 
     background-color: white;
 
-    width: 45vw;
-    height: 60vh;
+    width: 55vw;
+    height: 50vh;
 
     margin: 2em;
 }
@@ -39,28 +44,29 @@
     background-color: white;
 
     width: 30vw;
-    height: 60vh;
+    height: 50vh;
 
     margin: 2em;
     padding-top: 3em;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .titre {
     color: white;
     background-color: #312f2f;
-
-    font-size: 2em;
-
+    font-size: 20px;
     padding-left: 0.7em;
     padding-right: 0.7em;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
-
     border-radius: 20px;
+    width: fit-content;
 }
 
 .contenue {
-    font-size: 1.5em;
+    font-size: 18px;
 
     padding-left: 2em;
     padding-right: 2em;
@@ -68,12 +74,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    height: 12vh;
 
     border-top: 1px solid black;
 }
 
 .contenuebot {
-    font-size: 1.5em;
+    font-size: 18px;
 
     padding-left: 2em;
     padding-right: 2em;
@@ -81,6 +89,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    height: 12vh;
 
     border-top: 1px solid black;
     border-bottom: 1px solid black;

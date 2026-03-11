@@ -148,69 +148,76 @@ router.post(
 );
 
 /* PUT updateIdentity */
+/* PUT updateIdentity */
 router.put(
   "/updateIdentity",
   authMiddleware,
   requireRole("teacher"),
   async function (req, res) {
-    if (
-      !checkBody(req.body, [
-        "studentId",
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-      ])
-    ) {
-      res.json({ result: false, error: "Missing data" });
-      return;
-    }
+    try {
+      if (!checkBody(req.body, ["studentId"])) {
+        return res.json({ result: false, error: "Missing studentId" });
+      }
 
-    const teacher = await Teacher.findOne({ user: req.user.userId });
-    Student.findOne({ _id: req.body.studentId, teacher: teacher._id })
-      .populate("user")
-      .then((student) => {
-        if (!student) {
-          res.json({ result: false, error: "Student not found" });
-          return;
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res.json({ result: false, error: "Teacher not found" });
+      }
+
+      const student = await Student.findOne({
+        _id: req.body.studentId,
+        teacher: teacher._id,
+      }).populate("user");
+
+      if (!student) {
+        return res.json({ result: false, error: "Student not found" });
+      }
+
+      if (typeof req.body.phone === "string") {
+        student.phone = req.body.phone.trim();
+      }
+
+      if (typeof req.body.firstName === "string") {
+        student.firstName = req.body.firstName.trim();
+      }
+
+      if (typeof req.body.lastName === "string") {
+        student.lastName = req.body.lastName.trim();
+      }
+
+      if (typeof req.body.email === "string") {
+        student.email = req.body.email.toLowerCase().trim();
+      }
+
+      if (typeof req.body.structure === "string") {
+        student.structure = req.body.structure.trim();
+      }
+
+      await student.save();
+
+      // sync avec le user si il existe
+      if (student.user) {
+        if (typeof req.body.firstName === "string") {
+          student.user.firstName = req.body.firstName.trim();
         }
 
-        student.phone = req.body.phone;
-        student.firstName = req.body.firstName;
-        student.lastName = req.body.lastName;
-        student.email = req.body.email.toLowerCase().trim();
+        if (typeof req.body.lastName === "string") {
+          student.user.lastName = req.body.lastName.trim();
+        }
 
-        student
-          .save()
-          .then(() => {
-            // si un user existe déjà, on sync aussi
-            if (student.user) {
-              student.user.firstName = req.body.firstName;
-              student.user.lastName = req.body.lastName;
-              student.user.email = req.body.email.toLowerCase().trim();
+        if (typeof req.body.email === "string") {
+          student.user.email = req.body.email.toLowerCase().trim();
+        }
 
-              student.user
-                .save()
-                .then(() => {
-                  res.json({ result: true });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  res.json({ result: false, error: "User update failed" });
-                });
-            } else {
-              res.json({ result: true });
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            res.json({ result: false, error: "Student update failed" });
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-        res.json({ result: false, error: "Server error" });
-      });
+        await student.user.save();
+      }
+
+      res.json({ result: true });
+    } catch (error) {
+      console.log(error);
+      res.json({ result: false, error: "Server error" });
+    }
   },
 );
 
@@ -322,5 +329,57 @@ router.put("/changeStatus",
       return res.status(500).json({ result: false, error: "Server error" });
     }
 });
+
+/* PUT updateSubscription */
+router.put(
+  "/updateSubscription",
+  authMiddleware,
+  requireRole("teacher"),
+  async function (req, res) {
+    try {
+      if (!checkBody(req.body, ["studentId"])) {
+        return res.json({ result: false, error: "Missing studentId" });
+      }
+
+      const teacher = await Teacher.findOne({ user: req.user.userId });
+
+      if (!teacher) {
+        return res.json({ result: false, error: "Teacher not found" });
+      }
+
+      const student = await Student.findOne({
+        _id: req.body.studentId,
+        teacher: teacher._id,
+      });
+
+      if (!student) {
+        return res.json({ result: false, error: "Student not found" });
+      }
+
+      if (!student.subscription) {
+        student.subscription = {};
+      }
+
+      if (typeof req.body.type === "string") {
+        student.subscription.type = req.body.type.trim();
+      }
+
+      if (typeof req.body.price === "number" && !Number.isNaN(req.body.price)) {
+        student.subscription.price = req.body.price;
+      }
+
+      if (typeof req.body.modalite === "string") {
+        student.subscription.modalite = req.body.modalite.trim();
+      }
+
+      await student.save();
+
+      return res.json({ result: true });
+    } catch (error) {
+      console.log(error);
+      return res.json({ result: false, error: "Server error" });
+    }
+  },
+);
 
 module.exports = router;
