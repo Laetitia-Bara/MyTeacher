@@ -226,24 +226,20 @@ function RessourcesTeacher() {
         <div className={styles.section}>
           <div className={styles.leftSection}>
             <div className={styles.ressourcesSection}>
-              <div className={styles.ressourcesList}>
-                <p className={styles.subtitle}>Mes ressources</p>
-                <button
-                  className={styles.btn}
-                  onClick={() => setModalAddRessource(true)}
-                >
-                  <span className={styles.addText}>+ Ajouter</span>
-                </button>
-                {ressources}
-              </div>
+              <p className={styles.subtitle}>Mes ressources</p>
+              <button
+                className={styles.btn}
+                onClick={() => setModalAddRessource(true)}
+              >
+                <span className={styles.addText}>+ Ajouter</span>
+              </button>
+              <div className={styles.ressourcesList}>{ressources}</div>
             </div>
           </div>
           <div className={styles.rightSection}>
             <div className={styles.sharingSection}>
-              <div className={styles.sharingList}>
-                <p className={styles.subtitle}>Ressources à partager</p>
-                {ressourcesToShare}
-              </div>
+              <p className={styles.subtitle}>Ressources à partager</p>
+              <div className={styles.sharingList}>{ressourcesToShare}</div>
             </div>
             <div className={styles.studentsSection}>
               <div className={styles.studentsList}>
