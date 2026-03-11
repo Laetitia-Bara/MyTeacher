@@ -146,51 +146,54 @@ function DashboardStudent() {
       </Head>
       <HeaderStudent />
 
-      <h1 className={styles.title}>MON DASHBOARD</h1>
+      <main className={styles.main}>
+        <div className={styles.titlePage}>
+          <p className={styles.title}>MON DASHBOARD</p>
+        </div>
 
-      <div className={styles.content}>
-        <fieldset className={styles.leftside}>
-          <legend className={styles.titre}>Planning</legend>
-          <BigCalendarStudent />
-        </fieldset>
+        <div className={styles.section}>
+          <fieldset className={styles.leftside}>
+            <legend className={styles.subtitle}>Planning</legend>
+            <BigCalendarStudent />
+          </fieldset>
 
-        <fieldset className={styles.rightside}>
-          <legend className={styles.titre}>Alertes</legend>
+          <fieldset className={styles.rightside}>
+            <legend className={styles.subtitle}>Alertes</legend>
 
-          <div className={styles.contenue}>
-            <p>
-              <span style={{ color: "#BF99A0" }}>
-                <FontAwesomeIcon icon={faEuroSign} />
-              </span>{" "}
-              Status paiement :
-            </p>
-            <p className={styles.status}>{paymentStatus}</p>
-          </div>
+            <div className={styles.contenue}>
+              <p>
+                <span style={{ color: "#BF99A0" }}>
+                  <FontAwesomeIcon icon={faEuroSign} />
+                </span>{" "}
+                Status paiement :
+              </p>
+              <p className={styles.status}>{paymentStatus}</p>
+            </div>
 
-          <div className={styles.contenue}>
-            <p>
-              <span style={{ color: "#84DCCF" }}>
-                <FontAwesomeIcon icon={faEnvelope} />
-              </span>{" "}
-              Prochain cours :
-            </p>
-            <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>
-              {nextLesson}
-            </p>
-          </div>
+            <div className={styles.contenue}>
+              <p>
+                <span style={{ color: "#84DCCF" }}>
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </span>{" "}
+                Prochain cours :
+              </p>
+              <p style={{ backgroundColor: "#84DCCF" }} className={styles.doc}>
+                {nextLesson}
+              </p>
+            </div>
 
-          <div className={styles.contenuebot}>
-            <p>
-              <span style={{ color: "#bccbe0" }}>
-                <FontAwesomeIcon icon={faInbox} />
-              </span>{" "}
-              Document mis à disposition :
-            </p>
-            <p className={styles.doc}>{documentsCount}</p>
-          </div>
-        </fieldset>
-      </div>
-
+            <div className={styles.contenuebot}>
+              <p>
+                <span style={{ color: "#bccbe0" }}>
+                  <FontAwesomeIcon icon={faInbox} />
+                </span>{" "}
+                Document mis à disposition :
+              </p>
+              <p className={styles.doc}>{documentsCount}</p>
+            </div>
+          </fieldset>
+        </div>
+      </main>
       <FooterStudent className={styles.footer} />
     </div>
   );
