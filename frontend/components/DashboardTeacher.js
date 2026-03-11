@@ -231,6 +231,7 @@ function DashboardTeacher() {
         <title>MyTeacher - Dashboard </title>
       </Head>
       <HeaderTeacher />
+
       <main className={styles.main}>
         <div className={styles.titlePage}>
           <p className={styles.title}>MON DASHBOARD</p>
