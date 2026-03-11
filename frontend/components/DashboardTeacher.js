@@ -169,6 +169,27 @@ function DashboardTeacher() {
     })();
   }, [dispatch, router]);
 
+  /*
+  const students = studentsData.map((data, i) => (
+    <StudentCard
+      key={i}
+      id={data.id}
+      firstname={data.firstName}
+      lastname={data.lastName}
+      discipline={data.discipline}
+      invite={(data.status || "Prospect") === "Prospect"}
+      status={data.status || "Prospect"}
+      subscription={
+        typeof data.subscription === "string"
+          ? data.subscription
+          : data.subscription?.type || ""
+      }
+      email={data.email}
+      onInviteClick={() => openInviteModal(data)}
+    />
+  ));
+  */
+
   const students = (Array.isArray(studentsData) ? studentsData : [])
     .filter(Boolean)
     .map((data, i) => (
