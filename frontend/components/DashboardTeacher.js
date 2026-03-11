@@ -6,6 +6,7 @@ import PaymentCard from "./PaymentCard";
 import BigCalendar from "./BigCalendar";
 import ModalAddStudent from "./ModalAddStudent";
 import ModalCreateStudent from "./ModalCreateStudent";
+import Loading from "./Loading";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getEvents, addEventToStore } from "../reducers/planning";
@@ -16,110 +17,11 @@ import { useRouter } from "next/router";
 
 import styles from "../styles/DashboardTeacher.module.css";
 
-const dataStudent = [
-  {
-    _id: "67c9f1f1a2b3c4d4e6f7a8b9",
-    firstName: "Bob",
-    lastName: "Smith",
-    email: "bob@example.com",
-    discipline: "Guitare",
-    invite: true,
-    status: "Actif",
-    subscription: "Trimestre",
-  },
-  {
-    _id: "67c9f2f1a2b3c4d4e6f7a8b9",
-    firstName: "Jo",
-    lastName: "Doe",
-    email: "bob@example.com",
-    discipline: "Trompette",
-    invite: true,
-    status: "Actif",
-    subscription: "Annuel",
-  },
-  {
-    _id: 3,
-    firstName: "Stephanie",
-    lastName: "Johnson",
-    email: "bob@example.com",
-    discipline: "Guitare",
-    invite: false,
-    status: "Prospect",
-    subscription: "Annuel",
-  },
-  {
-    _id: 4,
-    firstName: "Lily",
-    lastName: "Doe",
-    email: "bob@example.com",
-    discipline: "Guitare",
-    invite: true,
-    status: "Actif",
-    subscription: "A l'unité",
-  },
-  {
-    _id: 5,
-    firstName: "Lulu",
-    lastName: "Smith",
-    email: "bob@example.com",
-    discipline: "Trompette",
-    invite: true,
-    status: "Inactif",
-    subscription: "Trimestre",
-  },
-];
-
-const dataPayment = [
-  {
-    id: 1,
-    firstName: "Bob",
-    lastName: "Smith",
-    paymentTerm: "Paiement 3x",
-    status: "A suivre",
-  },
-  {
-    id: 2,
-    firstName: "Lily",
-    lastName: "Doe",
-    paymentTerm: "Paiement 1x",
-    status: "Retard",
-  },
-];
-
-const events = [
-  {
-    id: 1,
-    title: "SUPERTEST",
-    startAt: new Date("Wed Mar 04 2026 00:00:00 GMT+0100"),
-    endAt: new Date("Wed Mar 04 2026 02:00:00 GMT+0100"),
-  },
-
-  {
-    id: 2,
-    title: "TEST ENCORE",
-    start: new Date("Wed Mar 04 2026 12:00:00 GMT+0100"),
-    end: new Date("Wed Mar 04 2026 14:00:00 GMT+0100"),
-  },
-
-  {
-    id: 3,
-    title: "TEST OUI",
-    start: new Date("Wed Mar 06 2026 00:00:00 GMT+0100"),
-    end: new Date("Thu Mar 06 2026 00:00:00 GMT+0100"),
-  },
-  {
-    id: 4,
-    title: "ET OUI",
-    start: new Date("Wed Mar 05 2026 10:00:00 GMT+0100"),
-    end: new Date("Wed Mar 05 2026 12:00:00 GMT+0100"),
-    desc: "Cours Lily",
-  },
-];
-
 function DashboardTeacher() {
   const router = useRouter();
   const [modalAddStudent, setModalAddStudent] = useState(false);
   const [modalCreateStudent, setModalCreateStudent] = useState(false);
+  const [loading, setLoading] = useState(false);
   const studentsData = useSelector((state) => state.students.value);
   const paymentsData = useSelector((state) => state.payments.value);
   const dispatch = useDispatch();
@@ -203,6 +105,7 @@ function DashboardTeacher() {
 
   // les mocks ne servent qu’en secours
   useEffect(() => {
+    setLoading(true);
     (async () => {
       await checkIsSignin(router);
 
@@ -255,18 +158,14 @@ function DashboardTeacher() {
         );
 
         const data = await response.json();
-        console.log("check lessons", data);
         if (data.result) {
           dispatch(getEvents(data.lessons));
           hasEvents = true;
         }
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
-
-      if (!hasStudents) dispatch(getStudents(dataStudent));
-      if (!hasPayments) dispatch(getPayments(dataPayment));
-      if (!hasEvents) dispatch(getEvents(events));
     })();
   }, [dispatch, router]);
 

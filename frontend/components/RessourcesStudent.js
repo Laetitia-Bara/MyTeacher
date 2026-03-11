@@ -63,16 +63,11 @@ function RessourcesStudent() {
           <p className={styles.title}>MES RESSOURCES</p>
         </div>
         <div className={styles.section}>
-          <div className={styles.leftSection}>
-            <div className={styles.ressourcesSection}>
-              <div className={styles.ressourcesList}>
-                <p className={styles.subtitle}>Mes ressources</p>
-                {ressources}
-              </div>
+          <div className={styles.ressourcesSection}>
+            <div className={styles.ressourcesList}>
+              <p className={styles.subtitle}>Mes ressources</p>
+              {ressources}
             </div>
-          </div>
-          <div className={styles.rightSection}>
-            <div></div>
           </div>
         </div>
       </main>
