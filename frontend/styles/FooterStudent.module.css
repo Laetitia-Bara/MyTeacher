@@ -1,12 +1,17 @@
-.container {
-    text-align: center;
-    font-size: 1.3em;
-    font-style: italic;
-
+.footer {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: 8%;
     background-color: #312f2f;
-    color: white;
-
-    padding: 0.5em;
-
     width: 100vw;
+}
+
+.content {
+    color: white;
+    font-size: 15px;
+    font-family: "Roboto Regular";
+    font-style: italic;
 }
