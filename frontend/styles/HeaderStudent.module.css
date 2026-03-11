@@ -11,7 +11,7 @@
 
 .right_side {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
   height: 100%;
@@ -97,6 +97,14 @@
 .exit:hover {
     background-color: #f7f7f7;
     transition: 0.5s;
+}
+
+.rightGroup {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    height: 100%;
 }
 
 .logo {

@@ -73,49 +73,52 @@ function HeaderStudent() {
           <Image src="/LogoMT.ico" alt="Logo" width={65} height={50} />
         </Link>
       </div>
-      <div className={styles.right_side}>
-        <Link href="/ressources_student">
-          <span className={styles.link}>Ressources</span>
-        </Link>
-        <Link href="/student_payments">
-          <span className={styles.link}>Paiements / Factures</span>
-        </Link>
-        <Link href="">
-          <span className={styles.mlink}>Messagerie</span>
-        </Link>
-      </div>
-      <div className={styles.profileMenuWrapper} ref={menuRef}>
-        <button
-          type="button"
-          className={styles.btnParameters}
-          onClick={() => setShowPopover(!showPopover)}
-        >
-          <span>{user?.firstName || "Profil"}</span>
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            className={styles.chevronIcon}
-          />
-        </button>
 
-        {showPopover && (
-          <div className={styles.popover}>
-            <Link href="/student_profile">
-              <a className={styles.popoverItem}>
-                <span className={styles.popoverIcon}>👤</span>
-                <span>Mon profil</span>
-              </a>
-            </Link>
+      <div className={styles.rightGroup}>
+        <div className={styles.right_side}>
+          <Link href="/ressources_student">
+            <span className={styles.link}>Ressources</span>
+          </Link>
+          <Link href="/student_payments">
+            <span className={styles.link}>Paiements / Factures</span>
+          </Link>
+          <Link href="">
+            <span className={styles.mlink}>Messagerie</span>
+          </Link>
+        </div>
+        <div className={styles.profileMenuWrapper} ref={menuRef}>
+          <button
+            type="button"
+            className={styles.btnParameters}
+            onClick={() => setShowPopover(!showPopover)}
+          >
+            <span>{user?.firstName || "Profil"}</span>
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className={styles.chevronIcon}
+            />
+          </button>
 
-            <button
-              type="button"
-              className={styles.popoverLogout}
-              onClick={handleLogout}
-            >
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
-              <span>Déconnexion</span>
-            </button>
-          </div>
-        )}
+          {showPopover && (
+            <div className={styles.popover}>
+              <Link href="/student_profile">
+                <a className={styles.popoverItem}>
+                  <span className={styles.popoverIcon}>👤</span>
+                  <span>Mon profil</span>
+                </a>
+              </Link>
+
+              <button
+                type="button"
+                className={styles.popoverLogout}
+                onClick={handleLogout}
+              >
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
+                <span>Déconnexion</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
