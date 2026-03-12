@@ -142,6 +142,35 @@ function TeacherPayments() {
     }
   };
 
+  const handleUnmarkPaid = async (invoice) => {
+    setMessage("");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/${invoice._id}/unmark-paid`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        setMessage("Facture repassée en non payé");
+        fetchInvoices();
+      } else {
+        setMessage(data.error || "Erreur lors de la mise à jour");
+      }
+    } catch (error) {
+      console.error("Unmark paid error:", error);
+      setMessage("Erreur serveur");
+    }
+  };
+
   const handleExport = () => {
     const lines = [
       ["Élève", "Date", "Libellé", "Montant", "Statut"],
@@ -273,7 +302,14 @@ function TeacherPayments() {
 
                     <div className={styles.cellAction}>
                       {inv.status === "paid" ? (
-                        <span className={styles.doneIcon}>✓</span>
+                        <button
+                          className={styles.undoPaidButton}
+                          onClick={() => handleUnmarkPaid(inv)}
+                          title="Repasser en non payé"
+                          type="button"
+                        >
+                          ✓
+                        </button>
                       ) : (
                         <>
                           {inv.status === "pending" ? null : (

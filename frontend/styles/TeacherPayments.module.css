@@ -187,6 +187,24 @@
     transform: scale(0.97);
 }
 
+.undoPaidButton {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: #4b7f52;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.2s ease;
+}
+
+.undoPaidButton:hover {
+    transform: scale(1.12);
+    color: #2f6f45;
+}
+
 @media (max-width: 900px) {
     .topRow {
         grid-template-columns: 1fr;
