@@ -140,8 +140,59 @@
     background-color: rgba(192, 57, 43, 0.08);
 }
 
+.filtersRow {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+}
+
+.filterInput {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #fff;
+    color: #2f2a28;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.filterInput:focus {
+    border-color: #9fd3ef;
+    box-shadow: 0 0 0 3px rgba(159, 211, 239, 0.2);
+}
+
+.resetButton {
+    background-color: #f2f2f2;
+    border: 1px solid #d5d5d5;
+    color: #444;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.resetButton:hover {
+    background-color: #e6e6e6;
+    border-color: #c9c9c9;
+}
+
+.resetButton:active {
+    background-color: #dcdcdc;
+    transform: scale(0.97);
+}
+
 @media (max-width: 900px) {
     .topRow {
+        grid-template-columns: 1fr;
+    }
+
+    .filtersRow {
         grid-template-columns: 1fr;
     }
 
@@ -153,5 +204,81 @@
 
     .cellAction {
         justify-content: flex-start;
+    }
+}
+
+.unicornOverlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 90px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.unicornRun {
+    position: absolute;
+    left: -180px;
+    bottom: 0;
+    width: 160px;
+    height: 96px;
+    background-color: transparent;
+    background-image: url("/unicorn-run.png");
+    background-repeat: no-repeat;
+    background-size: 640px 96px;
+    animation:
+        unicornGallop 0.6s steps(4) infinite,
+        unicornDash 4s linear forwards;
+}
+
+.unicornRun::after {
+    content: "";
+    position: absolute;
+    left: -60px;
+    top: 40px;
+    width: 60px;
+    height: 6px;
+    background: linear-gradient(90deg,
+            red,
+            orange,
+            yellow,
+            green,
+            blue,
+            indigo,
+            violet);
+    filter: blur(3px);
+}
+
+@keyframes unicornGallop {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -640px 0;
+    }
+}
+
+@keyframes unicornDash {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+
+    25% {
+        transform: translateX(25vw) translateY(-6px);
+    }
+
+    50% {
+        transform: translateX(50vw) translateY(0);
+    }
+
+    75% {
+        transform: translateX(75vw) translateY(-6px);
+    }
+
+    100% {
+        transform: translateX(calc(100vw + 260px)) translateY(0);
     }
 }

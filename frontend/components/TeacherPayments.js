@@ -9,6 +9,10 @@ function TeacherPayments() {
   const router = useRouter();
   const [invoices, setInvoices] = useState([]);
   const [message, setMessage] = useState("");
+  const [studentFilter, setStudentFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [showUnicorn, setShowUnicorn] = useState(false);
 
   const fetchInvoices = async () => {
     try {
@@ -38,15 +42,37 @@ function TeacherPayments() {
     fetchInvoices();
   }, []);
 
+  const unpaidStatuses = ["pending", "scheduled", "late"];
+
+  const filteredInvoices = useMemo(() => {
+    return (invoices || []).filter((inv) => {
+      const fullName = `${inv.firstName || ""} ${inv.lastName || ""}`
+        .toLowerCase()
+        .trim();
+
+      const matchesStudent =
+        !studentFilter || fullName.includes(studentFilter.toLowerCase().trim());
+
+      const invoiceDate = inv.createdAt
+        ? new Date(inv.createdAt).toISOString().slice(0, 10)
+        : "";
+
+      const matchesDate = !dateFilter || invoiceDate === dateFilter;
+      const matchesStatus = !statusFilter || inv.status === statusFilter;
+
+      return matchesStudent && matchesDate && matchesStatus;
+    });
+  }, [invoices, studentFilter, dateFilter, statusFilter]);
+
   const upcomingTotal = useMemo(() => {
-    return invoices
-      .filter((inv) => ["pending", "scheduled", "late"].includes(inv.status))
+    return filteredInvoices
+      .filter((inv) => unpaidStatuses.includes(inv.status))
       .reduce((sum, inv) => sum + (inv.amount || 0), 0);
-  }, [invoices]);
+  }, [filteredInvoices]);
 
   const totalAmount = useMemo(() => {
-    return invoices.reduce((sum, inv) => sum + (inv.amount || 0), 0);
-  }, [invoices]);
+    return filteredInvoices.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+  }, [filteredInvoices]);
 
   const handleMarkPaid = async (invoiceId) => {
     setMessage("");
@@ -68,40 +94,18 @@ function TeacherPayments() {
 
       if (data.result) {
         setMessage("Facture marquée comme payée");
+        setShowUnicorn(true);
+
+        setTimeout(() => {
+          setShowUnicorn(false);
+        }, 2200);
+
         fetchInvoices();
       } else {
         setMessage(data.error || "Erreur lors de la mise à jour");
       }
     } catch (error) {
       console.error("Mark paid error:", error);
-      setMessage("Erreur serveur");
-    }
-  };
-
-  const handleSeedMock = async () => {
-    setMessage("");
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/seed-mock`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
-
-      const data = await response.json();
-
-      if (data.result) {
-        setMessage("Factures mock créées");
-        fetchInvoices();
-      } else {
-        setMessage(
-          data.error || "Erreur lors de la création des factures mock",
-        );
-      }
-    } catch (error) {
-      console.error("Seed mock error:", error);
       setMessage("Erreur serveur");
     }
   };
@@ -141,7 +145,7 @@ function TeacherPayments() {
   const handleExport = () => {
     const lines = [
       ["Élève", "Date", "Libellé", "Montant", "Statut"],
-      ...invoices.map((inv) => [
+      ...filteredInvoices.map((inv) => [
         `${inv.firstName} ${inv.lastName}`,
         inv.createdAt
           ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
@@ -193,11 +197,52 @@ function TeacherPayments() {
             </button>*/}
             </div>
 
+            <div className={styles.filtersRow}>
+              <input
+                type="text"
+                placeholder="Filtrer par élève"
+                value={studentFilter}
+                onChange={(e) => setStudentFilter(e.target.value)}
+                className={styles.filterInput}
+              />
+
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className={styles.filterInput}
+              />
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className={styles.filterInput}
+              >
+                <option value="">Tous les statuts</option>
+                <option value="paid">Payé</option>
+                <option value="pending">En attente</option>
+                <option value="scheduled">Programmé</option>
+                <option value="late">En retard</option>
+              </select>
+
+              <button
+                type="button"
+                className={styles.resetButton}
+                onClick={() => {
+                  setStudentFilter("");
+                  setDateFilter("");
+                  setStatusFilter("");
+                }}
+              >
+                Réinitialiser
+              </button>
+            </div>
+
             <div className={styles.tableWrapper}>
-              {invoices.length === 0 ? (
+              {filteredInvoices.length === 0 ? (
                 <p className={styles.empty}>Aucune facture trouvée</p>
               ) : (
-                invoices.map((inv) => (
+                filteredInvoices.map((inv) => (
                   <div
                     key={inv._id}
                     className={`${styles.invoiceRow} ${
@@ -261,6 +306,12 @@ function TeacherPayments() {
         </main>
 
         <FooterTeacher />
+
+        {showUnicorn && (
+          <div className={styles.unicornOverlay} aria-hidden="true">
+            <div className={styles.unicornRun}></div>
+          </div>
+        )}
       </div>
     </>
   );
