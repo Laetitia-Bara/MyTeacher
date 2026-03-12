@@ -121,7 +121,23 @@ router.post(
       });
 
       await newInvoice.save();
+      // SAUVEGARDE AU CAS OU - 12/03/2026 9:45
+      // return res.json({
+      //   result: true,
+      //   lesson: {
+      //     id: newLesson._id,
+      //     title: newLesson.title,
+      //     startAt: newLesson.startAt,
+      //     endAt: newLesson.endAt,
+      //     student: studentDoc._id,
+      //     structure: newLesson.structure,
+      //     lieu: newLesson.locationType,
+      //     desc: newLesson.teacherNotes,
+      //   },
+      //   invoice: newInvoice,
+      // });
 
+      // MODIF 9:50  12/03/26 pour corriger affichage front
       return res.json({
         result: true,
         lesson: {
@@ -129,9 +145,9 @@ router.post(
           title: newLesson.title,
           startAt: newLesson.startAt,
           endAt: newLesson.endAt,
-          student: studentDoc._id,
+          student: studentDoc,
           structure: newLesson.structure,
-          lieu: newLesson.locationType,
+          location: newLesson.locationType,
           desc: newLesson.teacherNotes,
         },
         invoice: newInvoice,
