@@ -193,9 +193,12 @@ router.put(
         student.structure = req.body.structure.trim();
       }
 
+      if (typeof req.body.discipline === "string") {
+        student.discipline = req.body.discipline.trim();
+      }
+
       await student.save();
 
-      // sync avec le user si il existe
       if (student.user) {
         if (typeof req.body.firstName === "string") {
           student.user.firstName = req.body.firstName.trim();

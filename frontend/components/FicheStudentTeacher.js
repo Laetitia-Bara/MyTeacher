@@ -32,6 +32,9 @@ function FicheStudentTeacher({ studentId }) {
   const [disciplines, setDisciplines] = useState([]);
   const [selectedDiscipline, setSelectedDiscipline] = useState("");
 
+  const [identityMessage, setIdentityMessage] = useState("");
+  const [formulaMessage, setFormulaMessage] = useState("");
+
   const payments = useSelector((state) => state.payments.value);
   const lessons = useSelector((state) => state.planning.value);
 
@@ -137,6 +140,8 @@ function FicheStudentTeacher({ studentId }) {
   }
 
   function handleUpdateIdentity() {
+    setIdentityMessage("");
+
     const body = {
       studentId,
       firstName: firstNameRef.current.value,
@@ -152,10 +157,11 @@ function FicheStudentTeacher({ studentId }) {
       body,
     }).then(({ ok, data }) => {
       if (!ok || !data.result) {
-        console.log(data.error || "Erreur update identité");
+        setIdentityMessage(data?.error || "Erreur lors de la mise à jour");
         return;
       }
 
+      setIdentityMessage("Informations enregistrées avec succès");
       refreshStudents();
 
       api(`/invoices/getInvoicesStudentById/${studentId}`).then(
@@ -172,6 +178,8 @@ function FicheStudentTeacher({ studentId }) {
   }
 
   function handleUpdateFormula() {
+    setFormulaMessage("");
+
     const body = {
       studentId,
       type: selectedType,
@@ -184,10 +192,11 @@ function FicheStudentTeacher({ studentId }) {
       body,
     }).then(({ ok, data }) => {
       if (!ok || !data.result) {
-        console.log(data.error || "Erreur update formule");
+        setFormulaMessage(data?.error || "Erreur lors de la mise à jour");
         return;
       }
 
+      setFormulaMessage("Formule enregistrée avec succès");
       refreshStudents();
     });
   }
@@ -309,6 +318,10 @@ function FicheStudentTeacher({ studentId }) {
                     Modifier
                   </button>
                 </div>
+
+                {identityMessage && (
+                  <p className={styles.message}>{identityMessage}</p>
+                )}
               </div>
             </div>
 
@@ -367,6 +380,10 @@ function FicheStudentTeacher({ studentId }) {
                     Modifier
                   </button>
                 </div>
+
+                {formulaMessage && (
+                  <p className={styles.message}>{formulaMessage}</p>
+                )}
               </div>
             </div>
           </div>
