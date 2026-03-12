@@ -59,7 +59,7 @@ router.get(
           path: "student",
           populate: "user",
         })
-        .sort({ createdAt: -1 });
+        .sort({ dueAt: -1 });
       await refreshInvoiceStatuses(data);
 
       if (!data.length) {
@@ -111,7 +111,7 @@ router.get("/my", authMiddleware, requireRole("student"), async (req, res) => {
     }
 
     const invoices = await Invoice.find({ student: student._id }).sort({
-      createdAt: -1,
+      dueAt: -1,
     });
 
     await refreshInvoiceStatuses(invoices);
@@ -364,7 +364,7 @@ router.get(
       const data = await Invoice.find({
         teacher: teacher._id,
         student: student._id,
-      }).sort({ createdAt: -1 });
+      }).sort({ dueAt: -1 });
 
       await refreshInvoiceStatuses(data);
 
