@@ -224,12 +224,13 @@
     bottom: 0;
     width: 160px;
     height: 96px;
+    background-color: transparent;
     background-image: url("/unicorn-run.png");
     background-repeat: no-repeat;
     background-size: 640px 96px;
     animation:
-        unicornGallop 0.55s steps(4) infinite,
-        unicornDash 2.2s linear forwards;
+        unicornGallop 0.6s steps(4) infinite,
+        unicornDash 4s linear forwards;
 }
 
 .unicornRun::after {
@@ -261,11 +262,23 @@
 }
 
 @keyframes unicornDash {
-    from {
-        transform: translateX(0);
+    0% {
+        transform: translateX(0) translateY(0);
     }
 
-    to {
-        transform: translateX(calc(100vw + 260px));
+    25% {
+        transform: translateX(25vw) translateY(-6px);
+    }
+
+    50% {
+        transform: translateX(50vw) translateY(0);
+    }
+
+    75% {
+        transform: translateX(75vw) translateY(-6px);
+    }
+
+    100% {
+        transform: translateX(calc(100vw + 260px)) translateY(0);
     }
 }
