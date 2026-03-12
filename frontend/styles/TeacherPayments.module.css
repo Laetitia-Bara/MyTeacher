@@ -140,8 +140,38 @@
     background-color: rgba(192, 57, 43, 0.08);
 }
 
+.filtersRow {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 1fr;
+    gap: 16px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+}
+
+.filterInput {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: #fff;
+    color: #2f2a28;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.filterInput:focus {
+    border-color: #9fd3ef;
+    box-shadow: 0 0 0 3px rgba(159, 211, 239, 0.2);
+}
+
 @media (max-width: 900px) {
     .topRow {
+        grid-template-columns: 1fr;
+    }
+
+    .filtersRow {
         grid-template-columns: 1fr;
     }
 
