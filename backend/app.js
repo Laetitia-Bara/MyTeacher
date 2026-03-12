@@ -14,6 +14,7 @@ var studentsRouter = require("./routes/students");
 var lessonsRouter = require("./routes/lessons");
 var invoicesRouter = require("./routes/invoices");
 var ressourcesRouter = require("./routes/ressources");
+var messagesRouter = require("./routes/messages");
 
 var app = express();
 
@@ -62,5 +63,6 @@ app.use("/lessons", lessonsRouter);
 app.use("/invitations", invitationsRouter);
 app.use("/invoices", invoicesRouter);
 app.use("/ressources", ressourcesRouter);
+app.use("/messages", messagesRouter);
 
 module.exports = app;
