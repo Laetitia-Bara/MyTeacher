@@ -43,6 +43,26 @@ function TeacherPayments() {
 
   const unpaidStatuses = ["pending", "scheduled", "late"];
 
+  const filteredInvoices = useMemo(() => {
+    return (invoices || []).filter((inv) => {
+      const fullName = `${inv.firstName || ""} ${inv.lastName || ""}`
+        .toLowerCase()
+        .trim();
+
+      const matchesStudent =
+        !studentFilter || fullName.includes(studentFilter.toLowerCase().trim());
+
+      const invoiceDate = inv.createdAt
+        ? new Date(inv.createdAt).toISOString().slice(0, 10)
+        : "";
+
+      const matchesDate = !dateFilter || invoiceDate === dateFilter;
+      const matchesStatus = !statusFilter || inv.status === statusFilter;
+
+      return matchesStudent && matchesDate && matchesStatus;
+    });
+  }, [invoices, studentFilter, dateFilter, statusFilter]);
+
   const upcomingTotal = useMemo(() => {
     return filteredInvoices
       .filter((inv) => unpaidStatuses.includes(inv.status))
@@ -82,27 +102,6 @@ function TeacherPayments() {
       setMessage("Erreur serveur");
     }
   };
-
-  const filteredInvoices = useMemo(() => {
-    return invoices.filter((inv) => {
-      const fullName = `${inv.firstName || ""} ${inv.lastName || ""}`
-        .toLowerCase()
-        .trim();
-
-      const matchesStudent =
-        !studentFilter || fullName.includes(studentFilter.toLowerCase().trim());
-
-      const invoiceDate = inv.createdAt
-        ? new Date(inv.createdAt).toISOString().slice(0, 10)
-        : "";
-
-      const matchesDate = !dateFilter || invoiceDate === dateFilter;
-
-      const matchesStatus = !statusFilter || inv.status === statusFilter;
-
-      return matchesStudent && matchesDate && matchesStatus;
-    });
-  }, [invoices, studentFilter, dateFilter, statusFilter]);
 
   const handleDeleteInvoice = async (invoiceId) => {
     setMessage("");
