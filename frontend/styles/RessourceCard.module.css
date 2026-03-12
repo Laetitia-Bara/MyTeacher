@@ -27,6 +27,7 @@
 .icon {
   color: #312f2f;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .icon:hover {
