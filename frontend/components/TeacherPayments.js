@@ -12,6 +12,7 @@ function TeacherPayments() {
   const [studentFilter, setStudentFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [showUnicorn, setShowUnicorn] = useState(false);
 
   const fetchInvoices = async () => {
     try {
@@ -93,6 +94,12 @@ function TeacherPayments() {
 
       if (data.result) {
         setMessage("Facture marquée comme payée");
+        setShowUnicorn(true);
+
+        setTimeout(() => {
+          setShowUnicorn(false);
+        }, 2200);
+
         fetchInvoices();
       } else {
         setMessage(data.error || "Erreur lors de la mise à jour");
@@ -299,6 +306,12 @@ function TeacherPayments() {
         </main>
 
         <FooterTeacher />
+
+        {showUnicorn && (
+          <div className={styles.unicornOverlay} aria-hidden="true">
+            <div className={styles.unicornRun}></div>
+          </div>
+        )}
       </div>
     </>
   );
