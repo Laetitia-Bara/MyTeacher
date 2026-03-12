@@ -149,11 +149,9 @@ export default function StudentPaymentsPage() {
                         className={styles.downloadButton}
                         title="Télécharger la facture"
                       >
-                        <FontAwesomeIcon icon={faFileInvoice} />
+                        <span className={styles.disabledDownload}>—</span>;
                       </a>
-                    ) : (
-                      <span className={styles.disabledDownload}>—</span>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               ))

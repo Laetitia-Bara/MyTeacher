@@ -7,6 +7,9 @@ const Lesson = require("../models/lessons");
 const Teacher = require("../models/teachers");
 const Student = require("../models/students");
 const Invoice = require("../models/invoices");
+const User = require("../models/users");
+const generateInvoicePdfBuffer = require("../services/generateInvoicePdf");
+const uploadPdfToCloudinary = require("../services/uploadPdfToCloudinary");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
 
@@ -76,7 +79,7 @@ router.post(
       const studentDoc = await Student.findOne({
         _id: student,
         teacher: teacher._id,
-      });
+      }).populate("user");
 
       if (!studentDoc) {
         return res
@@ -103,11 +106,13 @@ router.post(
       await newLesson.save();
 
       const lessonPrice = studentDoc.subscription?.price || 30;
+      const invoiceNumber = `MT-${new Date().getFullYear()}-${Date.now()}`;
 
       const newInvoice = new Invoice({
         teacher: teacher._id,
         student: studentDoc._id,
         lesson: newLesson._id,
+        invoiceNumber,
         period: startDate.toLocaleDateString("fr-FR", {
           month: "long",
           year: "numeric",
@@ -121,6 +126,37 @@ router.post(
       });
 
       await newInvoice.save();
+
+      try {
+        const teacherUser = await User.findById(req.user.userId);
+
+        const pdfBuffer = await generateInvoicePdfBuffer({
+          invoiceNumber: newInvoice.invoiceNumber,
+          teacherName: teacherUser
+            ? `${teacherUser.firstName || ""} ${teacherUser.lastName || ""}`.trim()
+            : "Professeur",
+          studentName: `${
+            studentDoc.user?.firstName || studentDoc.firstName || ""
+          } ${studentDoc.user?.lastName || studentDoc.lastName || ""}`.trim(),
+          discipline: studentDoc.discipline || "",
+          label: newInvoice.label,
+          amount: newInvoice.amount,
+          dueAt: newInvoice.dueAt,
+          period: newInvoice.period,
+          status: newInvoice.status,
+        });
+
+        const uploadResult = await uploadPdfToCloudinary(
+          pdfBuffer,
+          newInvoice.invoiceNumber,
+        );
+
+        newInvoice.pdfURL = uploadResult.secure_url;
+        await newInvoice.save();
+      } catch (pdfError) {
+        console.error("PDF generation/upload error:", pdfError);
+      }
+
       // SAUVEGARDE AU CAS OU - 12/03/2026 9:45
       // return res.json({
       //   result: true,

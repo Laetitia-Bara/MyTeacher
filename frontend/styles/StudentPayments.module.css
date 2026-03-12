@@ -66,7 +66,7 @@
 
 .invoiceRow {
     display: grid;
-    grid-template-columns: 1.4fr 0.9fr 0.7fr 1.1fr;
+    grid-template-columns: 1.4fr 0.9fr 0.7fr 1.1fr 70px;
     gap: 16px;
     align-items: center;
     padding: 14px 8px;
@@ -146,6 +146,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    color: #2f2a28;
 }
 
 .downloadButton:hover {

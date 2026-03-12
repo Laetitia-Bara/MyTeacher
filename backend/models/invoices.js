@@ -16,6 +16,10 @@ const invoiceSchema = mongoose.Schema({
     ref: "lessons",
     required: false,
   },
+  invoiceNumber: {
+    type: String,
+    unique: true,
+  },
   period: String,
   label: String,
   amount: Number,
