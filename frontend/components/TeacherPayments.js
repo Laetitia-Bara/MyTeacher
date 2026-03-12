@@ -45,29 +45,49 @@ function TeacherPayments() {
 
   const unpaidStatuses = ["pending", "scheduled", "late"];
 
+  const getInvoiceDate = (inv) => {
+    // ordre de priorité
+    return (
+      inv.dueAt ||
+      inv.eventDate ||
+      inv.lessonDate ||
+      inv.date ||
+      inv.createdAt ||
+      null
+    );
+  };
+
   const filteredInvoices = useMemo(() => {
-    return (invoices || []).filter((inv) => {
-      const fullName = `${inv.firstName || ""} ${inv.lastName || ""}`
-        .toLowerCase()
-        .trim();
+    return (invoices || [])
+      .filter((inv) => {
+        const fullName = `${inv.firstName || ""} ${inv.lastName || ""}`
+          .toLowerCase()
+          .trim();
 
-      const matchesStudent =
-        !studentFilter || fullName.includes(studentFilter.toLowerCase().trim());
+        const matchesStudent =
+          !studentFilter ||
+          fullName.includes(studentFilter.toLowerCase().trim());
 
-      const invoiceDate = inv.createdAt ? new Date(inv.createdAt) : null;
+        const rawDate = getInvoiceDate(inv);
+        const invoiceDate = rawDate ? new Date(rawDate) : null;
 
-      const matchesStart =
-        !startDateFilter ||
-        (invoiceDate && invoiceDate >= new Date(startDateFilter));
+        const matchesStart =
+          !startDateFilter ||
+          (invoiceDate && invoiceDate >= new Date(startDateFilter));
 
-      const matchesEnd =
-        !endDateFilter ||
-        (invoiceDate && invoiceDate <= new Date(`${endDateFilter}T23:59:59`));
+        const matchesEnd =
+          !endDateFilter ||
+          (invoiceDate && invoiceDate <= new Date(`${endDateFilter}T23:59:59`));
 
-      const matchesStatus = !statusFilter || inv.status === statusFilter;
+        const matchesStatus = !statusFilter || inv.status === statusFilter;
 
-      return matchesStudent && matchesStart && matchesEnd && matchesStatus;
-    });
+        return matchesStudent && matchesStart && matchesEnd && matchesStatus;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(getInvoiceDate(a) || 0);
+        const dateB = new Date(getInvoiceDate(b) || 0);
+        return dateB - dateA; // plus récent en haut
+      });
   }, [invoices, studentFilter, startDateFilter, endDateFilter, statusFilter]);
 
   const upcomingTotal = useMemo(() => {
@@ -182,8 +202,8 @@ function TeacherPayments() {
       ["Élève", "Date", "Libellé", "Montant", "Statut"],
       ...filteredInvoices.map((inv) => [
         `${inv.firstName} ${inv.lastName}`,
-        inv.createdAt
-          ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
+        getInvoiceDate(inv)
+          ? new Date(getInvoiceDate(inv)).toLocaleDateString("fr-FR")
           : "",
         inv.label || inv.period || "",
         `${inv.amount || 0} €`,
@@ -305,8 +325,10 @@ function TeacherPayments() {
                     </div>
 
                     <div className={styles.cellDate}>
-                      {inv.createdAt
-                        ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
+                      {getInvoiceDate(inv)
+                        ? new Date(getInvoiceDate(inv)).toLocaleDateString(
+                            "fr-FR",
+                          )
                         : "-"}
                     </div>
 
