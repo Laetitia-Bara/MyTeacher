@@ -104,20 +104,35 @@ router.get(
 router.get("/my", authMiddleware, requireRole("student"), async (req, res) => {
   try {
     const student = await Student.findOne({ user: req.user.userId });
+
     if (!student) {
       return res
         .status(404)
         .json({ result: false, error: "Student not found" });
     }
 
-    const invoices = await Invoice.find({ student: student._id }).sort({
+    const data = await Invoice.find({ student: student._id }).sort({
       dueAt: -1,
     });
 
-    await refreshInvoiceStatuses(invoices);
+    await refreshInvoiceStatuses(data);
+
+    const invoices = data.map((obj) => ({
+      _id: obj._id,
+      period: obj.period || "",
+      label: obj.label || "",
+      amount: obj.amount || 0,
+      status: obj.status || "pending",
+      createdAt: obj.createdAt || null,
+      dueAt: obj.dueAt || null,
+      pdfURL: obj.pdfURL || "",
+      provider: obj.provider || "manual",
+      paymentMethod: obj.paymentMethod || "cash",
+    }));
 
     return res.json({ result: true, invoices });
   } catch (e) {
+    console.error(e);
     return res.status(500).json({ result: false, error: "Server error" });
   }
 });
