@@ -109,6 +109,14 @@
     align-items: center;
 }
 
+.contenuebot {
+    font-size: 18px;
+    padding: 28px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .contenue+.contenue,
 .contenue+.contenuebot,
 .contenuebot {
