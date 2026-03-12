@@ -1,7 +1,11 @@
-.container {
-    width: 100vw;
-    height: 100vh;
+.page {
+    min-height: 100vh;
     display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
     background-color: #f3f3f3;
     padding: 30px 20px 40px;
 }

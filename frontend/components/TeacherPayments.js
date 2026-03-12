@@ -166,95 +166,97 @@ function TeacherPayments() {
 
   return (
     <>
-      <HeaderTeacher />
+      <div className={styles.page}>
+        <HeaderTeacher />
 
-      <main className={styles.container}>
-        <h1 className={styles.title}>PAIEMENTS</h1>
+        <main className={styles.container}>
+          <h1 className={styles.title}>PAIEMENTS</h1>
 
-        <section className={styles.card}>
-          <div className={styles.badgeTitle}>Mes factures</div>
+          <section className={styles.card}>
+            <div className={styles.badgeTitle}>Mes factures</div>
 
-          <div className={styles.topRow}>
-            <div className={styles.infoBox}>
-              Paiements à venir : <strong>{upcomingTotal}€</strong>
-            </div>
+            <div className={styles.topRow}>
+              <div className={styles.infoBox}>
+                Paiements à venir : <strong>{upcomingTotal}€</strong>
+              </div>
 
-            <div className={styles.infoBox}>
-              Total des paiements : <strong>{totalAmount}€</strong>
-            </div>
+              <div className={styles.infoBox}>
+                Total des paiements : <strong>{totalAmount}€</strong>
+              </div>
 
-            <button className={styles.exportButton} onClick={handleExport}>
-              Exporter les factures
-            </button>
+              <button className={styles.exportButton} onClick={handleExport}>
+                Exporter les factures
+              </button>
 
-            {/*<button className={styles.exportButton} onClick={handleSeedMock}>
+              {/*<button className={styles.exportButton} onClick={handleSeedMock}>
               Générer des factures test
             </button>*/}
-          </div>
+            </div>
 
-          <div className={styles.tableWrapper}>
-            {invoices.length === 0 ? (
-              <p className={styles.empty}>Aucune facture trouvée</p>
-            ) : (
-              invoices.map((inv) => (
-                <div key={inv._id} className={styles.invoiceRow}>
-                  <div className={styles.cellName}>
-                    {inv.firstName} {inv.lastName}
-                  </div>
+            <div className={styles.tableWrapper}>
+              {invoices.length === 0 ? (
+                <p className={styles.empty}>Aucune facture trouvée</p>
+              ) : (
+                invoices.map((inv) => (
+                  <div key={inv._id} className={styles.invoiceRow}>
+                    <div className={styles.cellName}>
+                      {inv.firstName} {inv.lastName}
+                    </div>
 
-                  <div className={styles.cellDate}>
-                    {inv.createdAt
-                      ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
-                      : "-"}
-                  </div>
+                    <div className={styles.cellDate}>
+                      {inv.createdAt
+                        ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
+                        : "-"}
+                    </div>
 
-                  <div className={styles.cellStatus}>
-                    {inv.status === "paid"
-                      ? "Paiement : effectué"
-                      : inv.status === "pending"
-                        ? "Paiement : en attente"
-                        : inv.status === "scheduled"
-                          ? "Paiement : programmé"
-                          : "Paiement : en retard"}
-                  </div>
+                    <div className={styles.cellStatus}>
+                      {inv.status === "paid"
+                        ? "Paiement : effectué"
+                        : inv.status === "pending"
+                          ? "Paiement : en attente"
+                          : inv.status === "scheduled"
+                            ? "Paiement : programmé"
+                            : "Paiement : en retard"}
+                    </div>
 
-                  <div className={styles.cellAmount}>{inv.amount}€</div>
+                    <div className={styles.cellAmount}>{inv.amount}€</div>
 
-                  <div className={styles.cellAction}>
-                    {inv.status === "paid" ? (
-                      <span className={styles.doneIcon}>✓</span>
-                    ) : (
-                      <>
-                        {inv.status === "pending" ? null : (
+                    <div className={styles.cellAction}>
+                      {inv.status === "paid" ? (
+                        <span className={styles.doneIcon}>✓</span>
+                      ) : (
+                        <>
+                          {inv.status === "pending" ? null : (
+                            <button
+                              className={styles.deleteButton}
+                              onClick={() => handleDeleteInvoice(inv._id)}
+                              title="Supprimer la facture"
+                            >
+                              🗑
+                            </button>
+                          )}
+
                           <button
-                            className={styles.deleteButton}
-                            onClick={() => handleDeleteInvoice(inv._id)}
-                            title="Supprimer la facture"
+                            className={styles.payButton}
+                            onClick={() => handleMarkPaid(inv._id)}
+                            title="Marquer comme payé"
                           >
-                            🗑
+                            ⬇
                           </button>
-                        )}
-
-                        <button
-                          className={styles.payButton}
-                          onClick={() => handleMarkPaid(inv._id)}
-                          title="Marquer comme payé"
-                        >
-                          ⬇
-                        </button>
-                      </>
-                    )}
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
+                ))
+              )}
+            </div>
 
-          {message && <p className={styles.message}>{message}</p>}
-        </section>
-      </main>
+            {message && <p className={styles.message}>{message}</p>}
+          </section>
+        </main>
 
-      <FooterTeacher />
+        <FooterTeacher />
+      </div>
     </>
   );
 }
