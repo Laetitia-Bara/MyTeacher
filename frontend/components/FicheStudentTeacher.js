@@ -226,7 +226,7 @@ function FicheStudentTeacher({ studentId }) {
 
         <div className={styles.section}>
           <div className={styles.leftColumn}>
-            <div className={styles.cardSection}>
+            <div className={styles.identitySection}>
               <p className={styles.subtitle}>Identité</p>
 
               <div className={styles.cardContent}>
@@ -325,7 +325,7 @@ function FicheStudentTeacher({ studentId }) {
               </div>
             </div>
 
-            <div className={styles.cardSection}>
+            <div className={styles.formuleSection}>
               <p className={styles.subtitle}>Formule</p>
 
               <div className={styles.cardContent}>
