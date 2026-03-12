@@ -220,26 +220,27 @@
 
 .unicornRun {
     position: absolute;
-    left: -180px;
+    left: -160px;
     bottom: 0;
-    width: 200px;
-    height: 120px;
-    background-color: transparent;
+    width: 160px;
+    height: 96px;
     background-image: url("/unicorn-run.png");
     background-repeat: no-repeat;
-    background-size: 800px 120px;
+    background-size: 640px 96px;
+    image-rendering: pixelated;
     animation:
-        unicornGallop 0.6s steps(4) infinite,
-        unicornDash 4s linear forwards;
+        unicornGallop 0.7s steps(4) infinite,
+        unicornDash 3.5s linear forwards;
 }
 
 .unicornRun::after {
     content: "";
     position: absolute;
-    left: -60px;
-    top: 40px;
-    width: 60px;
-    height: 6px;
+    left: -40px;
+    top: 45px;
+    width: 40px;
+    height: 4px;
+
     background: linear-gradient(90deg,
             red,
             orange,
@@ -248,7 +249,9 @@
             blue,
             indigo,
             violet);
-    filter: blur(3px);
+
+    filter: blur(2px);
+    opacity: 0.8;
 }
 
 @keyframes unicornGallop {
@@ -263,22 +266,10 @@
 
 @keyframes unicornDash {
     0% {
-        transform: translateX(0) translateY(0);
-    }
-
-    25% {
-        transform: translateX(25vw) translateY(-6px);
-    }
-
-    50% {
-        transform: translateX(50vw) translateY(0);
-    }
-
-    75% {
-        transform: translateX(75vw) translateY(-6px);
+        transform: translateX(-160px);
     }
 
     100% {
-        transform: translateX(calc(100vw + 260px)) translateY(0);
+        transform: translateX(calc(100vw + 160px));
     }
 }
