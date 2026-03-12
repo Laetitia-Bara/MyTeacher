@@ -167,7 +167,10 @@ function DashboardStudent() {
               <div className={styles.contenue}>
                 <p>
                   <span style={{ color: "#BF99A0" }}>
-                    <FontAwesomeIcon icon={faEuroSign} />
+                    <FontAwesomeIcon
+                      icon={faEuroSign}
+                      className={styles.icon}
+                    />
                   </span>{" "}
                   Status paiement :
                 </p>
@@ -177,7 +180,10 @@ function DashboardStudent() {
               <div className={styles.contenue}>
                 <p>
                   <span style={{ color: "#84DCCF" }}>
-                    <FontAwesomeIcon icon={faEnvelope} />
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      className={styles.icon}
+                    />
                   </span>{" "}
                   Prochain cours :
                 </p>
@@ -192,7 +198,7 @@ function DashboardStudent() {
               <div className={styles.contenuebot}>
                 <p>
                   <span style={{ color: "#bccbe0" }}>
-                    <FontAwesomeIcon icon={faInbox} />
+                    <FontAwesomeIcon icon={faInbox} className={styles.icon} />
                   </span>{" "}
                   Document mis à disposition :
                 </p>
