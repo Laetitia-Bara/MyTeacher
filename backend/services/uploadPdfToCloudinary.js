@@ -7,8 +7,9 @@ function uploadPdfToCloudinary(buffer, publicId) {
       {
         resource_type: "raw",
         folder: "myteacher/invoices",
-        public_id: publicId,
-        format: "pdf",
+        public_id: invoiceNumber,
+        type: "upload",
+        access_mode: "public",
       },
       (error, result) => {
         if (error) return reject(error);
