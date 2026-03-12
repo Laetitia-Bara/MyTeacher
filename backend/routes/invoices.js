@@ -166,6 +166,45 @@ router.post(
   },
 );
 
+// POST invoices/unmark-paid
+router.post(
+  "/:id/unmark-paid",
+  authMiddleware,
+  requireRole("teacher"),
+  async (req, res) => {
+    try {
+      const invoice = await Invoice.findById(req.params.id);
+
+      if (!invoice) {
+        return res.json({ result: false, error: "Invoice not found" });
+      }
+
+      const now = new Date();
+
+      const referenceDate = invoice.dueAt
+        ? new Date(invoice.dueAt)
+        : invoice.createdAt
+          ? new Date(invoice.createdAt)
+          : null;
+
+      if (!referenceDate) {
+        invoice.status = "pending";
+      } else if (referenceDate < now) {
+        invoice.status = "late";
+      } else {
+        invoice.status = "scheduled";
+      }
+
+      await invoice.save();
+
+      return res.json({ result: true, invoice });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
 // DELETE /invoices/:id  (teacher only)
 router.delete(
   "/:id",
