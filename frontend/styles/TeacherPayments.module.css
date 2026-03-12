@@ -148,6 +148,18 @@
     margin-top: 8px;
 }
 
+.filterField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filterLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2f2a28;
+}
+
 .filterInput {
     width: 100%;
     min-height: 44px;
