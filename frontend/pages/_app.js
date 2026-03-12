@@ -28,6 +28,7 @@ function App({ Component, pageProps }) {
       <PersistGate persistor={persistor}>
         <Head>
           <title>MyTeacher App</title>
+          <link rel="icon" href="/LogoMT.ico" />
         </Head>
         <Component {...pageProps} />
       </PersistGate>

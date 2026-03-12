@@ -101,16 +101,28 @@ router.put("/me", authMiddleware, async (req, res) => {
   }
 });
 
-// Get all structures of a teacher
+// Get all structures and disciplines of a teacher
 router.get(
   "/getStructures",
   authMiddleware,
   requireRole("teacher"),
   async (req, res) => {
     const teacherId = req.user.userId;
+
     try {
-      const struct = await Teacher.findOne({ user: teacherId });
-      res.json({ result: true, structures: struct.structures });
+      const teacher = await Teacher.findOne({ user: teacherId });
+
+      if (!teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not found" });
+      }
+
+      res.json({
+        result: true,
+        structures: teacher.structures || [],
+        disciplines: teacher.discipline || [],
+      });
     } catch (error) {
       console.log("Error", error);
       res
