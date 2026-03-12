@@ -64,7 +64,7 @@
     color: white;
     position: absolute;
     z-index: 2;
-    top: -10px;
+    top: -12px;
     left: 12px;
     padding: 5px 10px;
     font-family: "Roboto Bold";
@@ -72,6 +72,7 @@
 }
 
 .planningBox {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -87,6 +88,7 @@
 }
 
 .alertBox {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -105,17 +107,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid black;
 }
 
+.contenue+.contenue,
+.contenue+.contenuebot,
 .contenuebot {
-    font-size: 18px;
-    padding: 28px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    border-top: 1px solid rgba(0, 0, 0, 0.35);
 }
 
 .status {
