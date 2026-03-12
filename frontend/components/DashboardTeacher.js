@@ -213,6 +213,32 @@ function DashboardTeacher() {
 
   const payments = (Array.isArray(paymentsData) ? paymentsData : [])
     .filter(Boolean)
+    .filter((data) => {
+      const paymentDate = data.dueAt || data.createdAt;
+      if (!paymentDate) return data.status === "late";
+
+      const date = new Date(paymentDate);
+      const now = new Date();
+
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(now.getDate() - 30);
+
+      // toujours garder les retards
+      if (data.status === "late") return true;
+
+      // pour les autres statuts, seulement les 30 derniers jours
+      return date >= thirtyDaysAgo;
+    })
+    .sort((a, b) => {
+      // les retards d'abord
+      if (a.status === "late" && b.status !== "late") return -1;
+      if (a.status !== "late" && b.status === "late") return 1;
+
+      // puis les plus récents
+      const dateA = new Date(a.dueAt || a.createdAt || 0);
+      const dateB = new Date(b.dueAt || b.createdAt || 0);
+      return dateB - dateA;
+    })
     .map((data, i) => (
       <PaymentCard
         key={data._id || data.id || i}
