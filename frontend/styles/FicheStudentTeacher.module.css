@@ -1,9 +1,20 @@
+html,
+body,
+#__next {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
 .page {
     width: 100vw;
     min-height: 100vh;
     background-color: whitesmoke;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .main {
@@ -16,6 +27,7 @@
     gap: 8px;
     background-color: whitesmoke;
     overflow: hidden;
+    min-width: 0;
 }
 
 .titlePage {
@@ -42,6 +54,7 @@
     padding: 1%;
     gap: 18px;
     min-height: 0;
+    min-width: 0;
 }
 
 .leftColumn {
@@ -50,12 +63,14 @@
     flex-direction: column;
     gap: 16px;
     min-height: 0;
+    min-width: 0;
 }
 
 .middleColumn,
 .rightColumn {
     width: 34.5%;
     min-height: 0;
+    min-width: 0;
 }
 
 .cardSection,
