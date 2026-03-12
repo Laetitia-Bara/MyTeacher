@@ -2,6 +2,7 @@ import styles from "../styles/ModalAddEvent.module.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEventToStore } from "../reducers/planning";
+import { getPayments } from "../reducers/payments";
 
 import moment from "moment";
 
@@ -39,7 +40,6 @@ export default function ModalAddEvent({ onClose, start, end }) {
   }, []);
 
   const handleAdd = async () => {
-    // POST vers backend
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/lessons/addEvent`,
@@ -60,17 +60,35 @@ export default function ModalAddEvent({ onClose, start, end }) {
           }),
         },
       );
+
       const data = await response.json();
       console.log("Data events fetched:", data);
-      // Version dès que backend ok
-      data.result
-        ? dispatch(addEventToStore(data.lesson))
-        : console.log(data.error);
+
+      if (data.result) {
+        dispatch(addEventToStore(data.lesson));
+
+        // refresh immédiat des factures
+        const invoicesResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const invoicesData = await invoicesResponse.json();
+
+        if (invoicesData.result) {
+          dispatch(getPayments(invoicesData.invoices || []));
+        }
+
+        onClose();
+      } else {
+        console.log(data.error);
+      }
     } catch (error) {
       console.error("Error adding event:", error);
     }
-
-    onClose();
   };
 
   const studentsChoice = studentsData.map((data, i) => {
