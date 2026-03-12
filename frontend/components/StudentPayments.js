@@ -95,8 +95,8 @@ export default function StudentPaymentsPage() {
                     </div>
 
                     <div className={styles.cellDate}>
-                      {inv.createdAt
-                        ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
+                      {inv.dueAt
+                        ? new Date(inv.dueAt).toLocaleDateString("fr-FR")
                         : "-"}
                     </div>
 
