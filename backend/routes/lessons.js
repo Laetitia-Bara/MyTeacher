@@ -229,21 +229,29 @@ router.delete(
         });
       }
 
-      // vérifier si une facture existe
-      const invoice = await Invoice.findOne({ lesson: lesson._id });
+      // vérifier s'il existe des factures liées à ce cours
+      const invoices = await Invoice.find({
+        lesson: lesson._id,
+        teacher: teacher._id,
+      });
 
-      if (invoice) {
-        // si facture déjà payée → interdit
-        if (invoice.status === "paid") {
-          return res.status(400).json({
-            result: false,
-            error:
-              "Impossible de supprimer ce cours car la facture est déjà payée",
-          });
-        }
+      // si au moins une facture est payée -> on bloque
+      const hasPaidInvoice = invoices.some((inv) => inv.status === "paid");
 
-        // supprimer la facture
-        await Invoice.deleteOne({ _id: invoice._id });
+      if (hasPaidInvoice) {
+        return res.status(400).json({
+          result: false,
+          error:
+            "Impossible de supprimer ce cours car une facture est déjà payée",
+        });
+      }
+
+      // supprimer toutes les factures liées au cours
+      if (invoices.length > 0) {
+        await Invoice.deleteMany({
+          lesson: lesson._id,
+          teacher: teacher._id,
+        });
       }
 
       // supprimer le cours

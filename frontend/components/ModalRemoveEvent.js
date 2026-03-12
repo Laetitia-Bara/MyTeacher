@@ -2,6 +2,7 @@ import styles from "../styles/ModalRemoveEvent.module.css";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { removeEventFromStore } from "../reducers/planning";
+import { getPayments } from "../reducers/payments";
 
 import moment from "moment";
 
@@ -20,13 +21,34 @@ export default function ModalRemoveEvent({ onClose, event }) {
       const data = await response.json();
 
       console.log("Response from backend:", data);
-      // Version dès que backend ok
-      data.result ? dispatch(removeEventFromStore(event)) : alert(data.error);
+
+      if (data.result) {
+        dispatch(removeEventFromStore(event));
+
+        // refresh des factures
+        const invoicesResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/getInvoices`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
+        );
+
+        const invoicesData = await invoicesResponse.json();
+
+        if (invoicesData.result) {
+          dispatch(getPayments(invoicesData.invoices || []));
+        }
+
+        onClose();
+      } else {
+        alert(data.error);
+        onClose();
+      }
     } catch (error) {
       console.error("Error removing event:", error);
+      onClose();
     }
-
-    onClose();
   };
 
   return (
