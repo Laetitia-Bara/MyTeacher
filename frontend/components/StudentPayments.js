@@ -61,63 +61,65 @@ export default function StudentPaymentsPage() {
 
   return (
     <>
-      <HeaderStudent />
+      <div className={styles.page}>
+        <HeaderStudent />
 
-      <main className={styles.container}>
-        <h1 className={styles.title}>PAIEMENTS / FACTURES</h1>
+        <main className={styles.container}>
+          <h1 className={styles.title}>PAIEMENTS / FACTURES</h1>
 
-        <section className={styles.card}>
-          <div className={styles.badgeTitle}>Mes paiements</div>
+          <section className={styles.card}>
+            <div className={styles.badgeTitle}>Mes paiements</div>
 
-          <div className={styles.topRow}>
-            <div className={styles.infoBox}>
-              Paiements à venir : <strong>{upcomingTotal}€</strong>
+            <div className={styles.topRow}>
+              <div className={styles.infoBox}>
+                Paiements à venir : <strong>{upcomingTotal}€</strong>
+              </div>
+
+              <div className={styles.infoBox}>
+                Déjà payés : <strong>{paidTotal}€</strong>
+              </div>
+
+              <div className={styles.infoBox}>
+                Total : <strong>{totalAmount}€</strong>
+              </div>
             </div>
 
-            <div className={styles.infoBox}>
-              Déjà payés : <strong>{paidTotal}€</strong>
+            <div className={styles.tableWrapper}>
+              {invoices.length === 0 ? (
+                <p className={styles.empty}>Aucune facture trouvée</p>
+              ) : (
+                invoices.map((inv) => (
+                  <div key={inv._id} className={styles.invoiceRow}>
+                    <div className={styles.cellLabel}>
+                      {inv.label || inv.period || "Facture"}
+                    </div>
+
+                    <div className={styles.cellDate}>
+                      {inv.createdAt
+                        ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
+                        : "-"}
+                    </div>
+
+                    <div className={styles.cellAmount}>{inv.amount || 0}€</div>
+
+                    <div className={styles.cellStatus}>
+                      <span
+                        className={`${styles.statusBadge} ${getStatusClass(inv.status)}`}
+                      >
+                        {getStatusLabel(inv.status)}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
-            <div className={styles.infoBox}>
-              Total : <strong>{totalAmount}€</strong>
-            </div>
-          </div>
+            {message && <p className={styles.message}>{message}</p>}
+          </section>
+        </main>
 
-          <div className={styles.tableWrapper}>
-            {invoices.length === 0 ? (
-              <p className={styles.empty}>Aucune facture trouvée</p>
-            ) : (
-              invoices.map((inv) => (
-                <div key={inv._id} className={styles.invoiceRow}>
-                  <div className={styles.cellLabel}>
-                    {inv.label || inv.period || "Facture"}
-                  </div>
-
-                  <div className={styles.cellDate}>
-                    {inv.createdAt
-                      ? new Date(inv.createdAt).toLocaleDateString("fr-FR")
-                      : "-"}
-                  </div>
-
-                  <div className={styles.cellAmount}>{inv.amount || 0}€</div>
-
-                  <div className={styles.cellStatus}>
-                    <span
-                      className={`${styles.statusBadge} ${getStatusClass(inv.status)}`}
-                    >
-                      {getStatusLabel(inv.status)}
-                    </span>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {message && <p className={styles.message}>{message}</p>}
-        </section>
-      </main>
-
-      <FooterStudent />
+        <FooterStudent />
+      </div>
     </>
   );
 }

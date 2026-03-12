@@ -122,104 +122,106 @@ function TeacherProfile() {
 
   return (
     <>
-      <HeaderTeacher />
+      <div className={styles.page}>
+        <HeaderTeacher />
 
-      <main className={styles.container}>
-        <h1 className={styles.title}>Mon profil</h1>
+        <main className={styles.container}>
+          <h1 className={styles.title}>Mon profil</h1>
 
-        <form className={styles.card} onSubmit={handleSubmit}>
-          <div className={styles.leftColumn}>
-            <div className={styles.avatarWrapper}>
-              <img
-                src={
-                  formData.avatarUrl ||
-                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                }
-                alt="Avatar"
-                className={styles.avatarPreview}
-              />
-              <button
-                type="button"
-                className={styles.avatarEditButton}
-                onClick={handleAvatarEdit}
-                title="Modifier l’avatar"
-              >
-                <FontAwesomeIcon icon={faPen} />
-              </button>
+          <form className={styles.card} onSubmit={handleSubmit}>
+            <div className={styles.leftColumn}>
+              <div className={styles.avatarWrapper}>
+                <img
+                  src={
+                    formData.avatarUrl ||
+                    "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                  }
+                  alt="Avatar"
+                  className={styles.avatarPreview}
+                />
+                <button
+                  type="button"
+                  className={styles.avatarEditButton}
+                  onClick={handleAvatarEdit}
+                  title="Modifier l’avatar"
+                >
+                  <FontAwesomeIcon icon={faPen} />
+                </button>
+              </div>
+
+              <div className={styles.identityBlock}>
+                <div className={styles.row}>
+                  <label>Prénom</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className={styles.row}>
+                  <label>Nom</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className={styles.row}>
+                  <label>Email</label>
+                  <input type="text" value={formData.email} disabled />
+                </div>
+              </div>
             </div>
 
-            <div className={styles.identityBlock}>
+            <div className={styles.rightColumn}>
               <div className={styles.row}>
-                <label>Prénom</label>
+                <label>Téléphone</label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleChange}
                 />
               </div>
 
               <div className={styles.row}>
-                <label>Nom</label>
+                <label>Adresse</label>
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="address"
+                  value={formData.address}
                   onChange={handleChange}
                 />
               </div>
 
               <div className={styles.row}>
-                <label>Email</label>
-                <input type="text" value={formData.email} disabled />
+                <label>Disciplines</label>
+                <input
+                  type="text"
+                  name="discipline"
+                  value={formData.discipline}
+                  onChange={handleChange}
+                  placeholder="Maths, Piano, Guitare..."
+                />
               </div>
+
+              <div className={styles.actions}>
+                <button type="submit" className={styles.saveButton}>
+                  Enregistrer
+                </button>
+              </div>
+
+              {message && <p className={styles.message}>{message}</p>}
             </div>
-          </div>
+          </form>
+        </main>
 
-          <div className={styles.rightColumn}>
-            <div className={styles.row}>
-              <label>Téléphone</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className={styles.row}>
-              <label>Adresse</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className={styles.row}>
-              <label>Disciplines</label>
-              <input
-                type="text"
-                name="discipline"
-                value={formData.discipline}
-                onChange={handleChange}
-                placeholder="Maths, Piano, Guitare..."
-              />
-            </div>
-
-            <div className={styles.actions}>
-              <button type="submit" className={styles.saveButton}>
-                Enregistrer
-              </button>
-            </div>
-
-            {message && <p className={styles.message}>{message}</p>}
-          </div>
-        </form>
-      </main>
-
-      <FooterTeacher />
+        <FooterTeacher />
+      </div>
     </>
   );
 }
