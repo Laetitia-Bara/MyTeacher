@@ -7,6 +7,8 @@ import FooterStudent from "./FooterStudent";
 import styles from "../styles/StudentPayments.module.css";
 const { checkIsSignin } = require("../modules/checkRole");
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileInvoice } from "@fortawesome/free-solid-svg-icons";
 
 export default function StudentPaymentsPage() {
   const router = useRouter();
@@ -17,6 +19,7 @@ export default function StudentPaymentsPage() {
   useEffect(() => {
     (async () => {
       checkIsSignin(router);
+
       const { ok, data } = await api("/invoices/my");
 
       if (ok && data.result) {
@@ -27,21 +30,42 @@ export default function StudentPaymentsPage() {
     })();
   }, [dispatch, router]);
 
-  const upcomingTotal = useMemo(() => {
-    return invoices
-      .filter((inv) => inv.status === "pending" || inv.status === "scheduled")
-      .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+  const unpaidStatuses = ["pending", "scheduled", "late"];
+
+  const getInvoiceDate = (inv) => {
+    return (
+      inv.dueAt ||
+      inv.eventDate ||
+      inv.lessonDate ||
+      inv.date ||
+      inv.createdAt ||
+      null
+    );
+  };
+
+  const sortedInvoices = useMemo(() => {
+    return [...invoices].sort((a, b) => {
+      const dateA = new Date(getInvoiceDate(a) || 0);
+      const dateB = new Date(getInvoiceDate(b) || 0);
+      return dateB - dateA;
+    });
   }, [invoices]);
+
+  const unpaidTotal = useMemo(() => {
+    return sortedInvoices
+      .filter((inv) => unpaidStatuses.includes(inv.status))
+      .reduce((sum, inv) => sum + (inv.amount || 0), 0);
+  }, [sortedInvoices]);
 
   const totalAmount = useMemo(() => {
-    return invoices.reduce((sum, inv) => sum + (inv.amount || 0), 0);
-  }, [invoices]);
+    return sortedInvoices.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+  }, [sortedInvoices]);
 
   const paidTotal = useMemo(() => {
-    return invoices
+    return sortedInvoices
       .filter((inv) => inv.status === "paid")
       .reduce((sum, inv) => sum + (inv.amount || 0), 0);
-  }, [invoices]);
+  }, [sortedInvoices]);
 
   const getStatusLabel = (status) => {
     if (status === "paid") return "Paiement effectué";
@@ -60,66 +84,87 @@ export default function StudentPaymentsPage() {
   };
 
   return (
-    <>
-      <div className={styles.page}>
-        <HeaderStudent />
+    <div className={styles.page}>
+      <HeaderStudent />
 
-        <main className={styles.container}>
-          <h1 className={styles.title}>PAIEMENTS / FACTURES</h1>
+      <main className={styles.container}>
+        <h1 className={styles.title}>PAIEMENTS / FACTURES</h1>
 
-          <section className={styles.card}>
-            <div className={styles.badgeTitle}>Mes paiements</div>
+        <section className={styles.card}>
+          <div className={styles.badgeTitle}>Mes paiements</div>
 
-            <div className={styles.topRow}>
-              <div className={styles.infoBox}>
-                Paiements à venir : <strong>{upcomingTotal}€</strong>
-              </div>
-
-              <div className={styles.infoBox}>
-                Déjà payés : <strong>{paidTotal}€</strong>
-              </div>
-
-              <div className={styles.infoBox}>
-                Total : <strong>{totalAmount}€</strong>
-              </div>
+          <div className={styles.topRow}>
+            <div className={styles.infoBox}>
+              À régler : <strong>{unpaidTotal}€</strong>
             </div>
 
-            <div className={styles.tableWrapper}>
-              {invoices.length === 0 ? (
-                <p className={styles.empty}>Aucune facture trouvée</p>
-              ) : (
-                invoices.map((inv) => (
-                  <div key={inv._id} className={styles.invoiceRow}>
-                    <div className={styles.cellLabel}>
-                      {inv.label || inv.period || "Facture"}
-                    </div>
+            <div className={styles.infoBox}>
+              Déjà payés : <strong>{paidTotal}€</strong>
+            </div>
 
-                    <div className={styles.cellDate}>
-                      {inv.dueAt
-                        ? new Date(inv.dueAt).toLocaleDateString("fr-FR")
-                        : "-"}
-                    </div>
+            <div className={styles.infoBox}>
+              Total : <strong>{totalAmount}€</strong>
+            </div>
+          </div>
 
-                    <div className={styles.cellAmount}>{inv.amount || 0}€</div>
-
-                    <div className={styles.cellStatus}>
-                      <span
-                        className={`${styles.statusBadge} ${getStatusClass(inv.status)}`}
-                      >
-                        {getStatusLabel(inv.status)}
-                      </span>
-                    </div>
+          <div className={styles.tableWrapper}>
+            {sortedInvoices.length === 0 ? (
+              <p className={styles.empty}>Aucune facture trouvée</p>
+            ) : (
+              sortedInvoices.map((inv) => (
+                <div
+                  key={inv._id}
+                  className={`${styles.invoiceRow} ${
+                    inv.status === "late" ? styles.lateRow : ""
+                  }`}
+                >
+                  <div className={styles.cellLabel}>
+                    {inv.label || inv.period || "Facture"}
                   </div>
-                ))
-              )}
-            </div>
 
-            {message && <p className={styles.message}>{message}</p>}
-          </section>
-        </main>
+                  <div className={styles.cellDate}>
+                    {getInvoiceDate(inv)
+                      ? new Date(getInvoiceDate(inv)).toLocaleDateString(
+                          "fr-FR",
+                        )
+                      : "-"}
+                  </div>
 
-        <FooterStudent />
-      </div>
-    </>
+                  <div className={styles.cellAmount}>{inv.amount || 0}€</div>
+
+                  <div className={styles.cellStatus}>
+                    <span
+                      className={`${styles.statusBadge} ${getStatusClass(inv.status)}`}
+                    >
+                      {getStatusLabel(inv.status)}
+                    </span>
+                  </div>
+
+                  <div className={styles.cellAction}>
+                    {inv.status === "paid" && inv.pdfURL ? (
+                      <a
+                        href={inv.pdfURL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.downloadButton}
+                        title="Télécharger la facture"
+                      >
+                        <FontAwesomeIcon icon={faFileInvoice} />
+                      </a>
+                    ) : (
+                      <span className={styles.disabledDownload}>—</span>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {message && <p className={styles.message}>{message}</p>}
+        </section>
+      </main>
+
+      <FooterStudent />
+    </div>
   );
 }
