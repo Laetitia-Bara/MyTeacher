@@ -8,7 +8,7 @@ import styles from "../styles/StudentPayments.module.css";
 const { checkIsSignin } = require("../modules/checkRole");
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileInvoice } from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 export default function StudentPaymentsPage() {
   const router = useRouter();
@@ -149,7 +149,7 @@ export default function StudentPaymentsPage() {
                         className={styles.downloadButton}
                         title="Télécharger la facture"
                       >
-                        <span className={styles.disabledDownload}>—</span>;
+                        <FontAwesomeIcon icon={faDownload} />
                       </a>
                     ) : null}
                   </div>
