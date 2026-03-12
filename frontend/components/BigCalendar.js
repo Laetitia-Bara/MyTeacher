@@ -75,6 +75,9 @@ export default function BigCalendar() {
         tooltipAccessor={(event) => event.desc}
         onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
+        scrollToTime={new Date(1970, 1, 1, 7, 0, 0)}
+        min={new Date(1970, 1, 1, 7, 0, 0)}
+        max={new Date(1970, 1, 1, 21, 0, 0)}
       />
       {modalAdd && (
         <ModalAddEvent
