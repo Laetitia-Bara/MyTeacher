@@ -148,7 +148,6 @@ router.post(
 );
 
 /* PUT updateIdentity */
-/* PUT updateIdentity */
 router.put(
   "/updateIdentity",
   authMiddleware,
@@ -301,34 +300,39 @@ router.put("/me", authMiddleware, async (req, res) => {
   }
 });
 
-router.put("/changeStatus",
+router.put(
+  "/changeStatus",
   authMiddleware,
   requireRole("teacher"),
   function (req, res) {
     try {
-      if(!checkBody(req.body, ['id', 'status']))
-      {
+      if (!checkBody(req.body, ["id", "status"])) {
         res.json({ result: false, error: "Missing or empty fields" });
         return;
       }
 
-      Student.findOneAndUpdate({_id: req.body.id},{ status: req.body.status}, { //(filter, target, option)
-        returnDocument: 'after'
-      }).then((data) => {
-          if(data)
-          {
-            res.status(200).json({ result: true, student: data});
-          }else{
-            return res
-                  .status(404)
-                  .json({ result: false, error: "Student not found" });
-          }
-        })
-    }catch (e) {
+      Student.findOneAndUpdate(
+        { _id: req.body.id },
+        { status: req.body.status },
+        {
+          //(filter, target, option)
+          returnDocument: "after",
+        },
+      ).then((data) => {
+        if (data) {
+          res.status(200).json({ result: true, student: data });
+        } else {
+          return res
+            .status(404)
+            .json({ result: false, error: "Student not found" });
+        }
+      });
+    } catch (e) {
       console.error(e);
       return res.status(500).json({ result: false, error: "Server error" });
     }
-});
+  },
+);
 
 /* PUT updateSubscription */
 router.put(

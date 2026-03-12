@@ -29,12 +29,13 @@ function FicheStudentTeacher({ studentId }) {
   const [selectedModalite, setSelectedModalite] = useState("");
   const [studentPayments, setStudentPayments] = useState([]);
   const [studentLessons, setStudentLessons] = useState([]);
-  
+  const [disciplines, setDisciplines] = useState([]);
+  const [selectedDiscipline, setSelectedDiscipline] = useState("");
 
-  const students = useSelector((state) => state.students.value);
   const payments = useSelector((state) => state.payments.value);
   const lessons = useSelector((state) => state.planning.value);
 
+  const students = useSelector((state) => state.students.value);
   const student = students.find((student) => student.id == studentId);
 
   const prenom = student?.firstName || "";
@@ -56,11 +57,17 @@ function FicheStudentTeacher({ studentId }) {
       }
 
       setStructures(data.structures || []);
+      setDisciplines(data.disciplines || []);
     });
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     setSelectedStructure(student?.structure || "");
+    setSelectedDiscipline(
+      Array.isArray(student?.discipline)
+        ? student.discipline[0] || ""
+        : student?.discipline || "",
+    );
   }, [student]);
 
   useEffect(() => {
@@ -71,14 +78,16 @@ function FicheStudentTeacher({ studentId }) {
   useEffect(() => {
     if (!studentId) return;
 
-    api(`/invoices/getInvoicesStudentById/${studentId}`).then(({ ok, data }) => {
-      if (!ok || !data.result) {
-        console.log(data.error || "Erreur récupération paiements élève");
-        return;
-      }
+    api(`/invoices/getInvoicesStudentById/${studentId}`).then(
+      ({ ok, data }) => {
+        if (!ok || !data.result) {
+          console.log(data.error || "Erreur récupération paiements élève");
+          return;
+        }
 
-      setStudentPayments(data.invoices || []);
-    });
+        setStudentPayments(data.invoices || []);
+      },
+    );
   }, [studentId]);
 
   useEffect(() => {
@@ -135,6 +144,7 @@ function FicheStudentTeacher({ studentId }) {
       email: emailRef.current.value,
       phone: phoneRef.current.value,
       structure: selectedStructure,
+      discipline: selectedDiscipline,
     };
 
     api("/students/updateIdentity", {
@@ -148,14 +158,16 @@ function FicheStudentTeacher({ studentId }) {
 
       refreshStudents();
 
-      api(`/invoices/getInvoicesStudentById/${studentId}`).then(({ ok, data }) => {
-        if (!ok || !data.result) {
-          console.log(data.error || "Erreur refresh payments");
-          return;
-        }
+      api(`/invoices/getInvoicesStudentById/${studentId}`).then(
+        ({ ok, data }) => {
+          if (!ok || !data.result) {
+            console.log(data.error || "Erreur refresh payments");
+            return;
+          }
 
-        setStudentPayments(data.invoices || []);
-      });
+          setStudentPayments(data.invoices || []);
+        },
+      );
     });
   }
 
@@ -182,239 +194,242 @@ function FicheStudentTeacher({ studentId }) {
 
   if (!student) {
     return (
-      <div className={styles.body}>
+      <div className={styles.page}>
         <HeaderTeacher />
-        <p style={{ padding: "20px" }}>Élève introuvable</p>
+        <main className={styles.main}>
+          <p>Élève introuvable</p>
+        </main>
         <FooterTeacher />
       </div>
     );
   }
 
   return (
-    <div className={styles.body}>
+    <div className={styles.page}>
       <HeaderTeacher />
 
-      <h1 className={styles.titre}>
-        {prenom} {nom}
-      </h1>
-
-      <div className={styles.container}>
-        <div className={styles.left}>
-          <fieldset className={styles.content}>
-            <legend className={styles.title}>Identité</legend>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Prénom
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <input
-                ref={firstNameRef}
-                className={styles.input}
-                type="text"
-                defaultValue={prenom}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Nom
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <input
-                ref={lastNameRef}
-                className={styles.input}
-                type="text"
-                defaultValue={nom}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Email
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <input
-                ref={emailRef}
-                className={styles.input}
-                type="email"
-                defaultValue={email}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Contact
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <input
-                ref={phoneRef}
-                className={styles.input}
-                type="tel"
-                defaultValue={tel}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Structure
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <select
-                ref={structureRef}
-                className={styles.select}
-                value={selectedStructure}
-                onChange={(e) => setSelectedStructure(e.target.value)}
-              >
-                <option value="">Choisir une structure</option>
-                {structures.map((structure) => (
-                  <option key={structure._id} value={structure.name}>
-                    {structure.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.buttonContainer}>
-              <button
-                className={styles.bouton}
-                type="button"
-                onClick={handleUpdateIdentity}
-              >
-                Modifier
-              </button>
-            </div>
-          </fieldset>
-
-          <fieldset className={styles.content}>
-            <legend className={styles.title}>Formule</legend>
-
-            <div className={styles.fieldSpecial}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Type
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <select
-                ref={typeRef}
-                className={styles.select}
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-              >
-                <option value="">Choisir un type</option>
-                <option value="A l'unité">A l'unité</option>
-                <option value="Trimestre">Trimestre</option>
-                <option value="Annuel">Annuel</option>
-              </select>
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Prix
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <input
-                ref={priceRef}
-                className={styles.input}
-                type="number"
-                defaultValue={price}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label className={styles.label} style={{ textAlign: "left" }}>
-                Modalité
-              </label>
-              <label className={styles.label} style={{ textAlign: "center" }}>
-                :
-              </label>
-              <select
-                ref={modaliteRef}
-                className={styles.select}
-                value={selectedModalite}
-                onChange={(e) => setSelectedModalite(e.target.value)}
-              >
-                <option value="">Choisir une modalité</option>
-                <option value="Paiement 1 fois">Paiement 1 fois</option>
-                <option value="Paiement 3 fois">Paiement 3 fois</option>
-              </select>
-            </div>
-
-            <div className={styles.buttonContainer}>
-              <button
-                className={styles.bouton}
-                type="button"
-                onClick={handleUpdateFormula}
-              >
-                Modifier
-              </button>
-            </div>
-          </fieldset>
+      <main className={styles.main}>
+        <div className={styles.titlePage}>
+          <h1 className={styles.titre}>
+            {prenom} {nom}
+          </h1>
         </div>
 
-        <fieldset className={styles.center}>
-          <legend className={styles.title}>Historique de paiement</legend>
+        <div className={styles.section}>
+          <div className={styles.leftColumn}>
+            <div className={styles.cardSection}>
+              <p className={styles.subtitle}>Identité</p>
 
-          {studentPayments.length === 0 ? (
-            <p style={{ padding: "10px" }}>Aucun paiement enregistré</p>
-          ) : (
-            studentPayments.map((paiement, index) => (
-              <div key={paiement.id ?? index} className={styles.field_paiement}>
-                <p style={{ width: "6em" }}>Paiement {index + 1}</p>
-                <p style={{ width: "12em" }}>
-                  {paiement.period ?? "Pas de date entrée en bdd"}
-                </p>
+              <div className={styles.cardContent}>
+                <div className={styles.field}>
+                  <label className={styles.label}>Prénom</label>
+                  <span className={styles.separator}>:</span>
+                  <input
+                    ref={firstNameRef}
+                    className={styles.input}
+                    type="text"
+                    defaultValue={prenom}
+                  />
+                </div>
 
-                {paiement.status === "late" ? (
-                  <p className={styles.rouge}>Retard</p>
-                ) : paiement.status === "pending" ? (
-                  <p className={styles.orange}>En attente</p>
-                ) : paiement.status === "scheduled" ? (
-                  <p className={styles.orange}>À venir</p>
-                ) : paiement.status === "paid" ? (
-                  <p className={styles.vert}>Payé</p>
+                <div className={styles.field}>
+                  <label className={styles.label}>Nom</label>
+                  <span className={styles.separator}>:</span>
+                  <input
+                    ref={lastNameRef}
+                    className={styles.input}
+                    type="text"
+                    defaultValue={nom}
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Email</label>
+                  <span className={styles.separator}>:</span>
+                  <input
+                    ref={emailRef}
+                    className={styles.input}
+                    type="email"
+                    defaultValue={email}
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Contact</label>
+                  <span className={styles.separator}>:</span>
+                  <input
+                    ref={phoneRef}
+                    className={styles.input}
+                    type="tel"
+                    defaultValue={tel}
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Discipline</label>
+                  <span className={styles.separator}>:</span>
+                  <select
+                    className={styles.select}
+                    value={selectedDiscipline}
+                    onChange={(e) => setSelectedDiscipline(e.target.value)}
+                  >
+                    <option value="">Choisir une discipline</option>
+                    {disciplines.map((discipline, index) => (
+                      <option key={index} value={discipline}>
+                        {discipline}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Structure</label>
+                  <span className={styles.separator}>:</span>
+                  <select
+                    ref={structureRef}
+                    className={styles.select}
+                    value={selectedStructure}
+                    onChange={(e) => setSelectedStructure(e.target.value)}
+                  >
+                    <option value="">Choisir une structure</option>
+                    {structures.map((structure) => (
+                      <option key={structure._id} value={structure.name}>
+                        {structure.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.bouton}
+                    type="button"
+                    onClick={handleUpdateIdentity}
+                  >
+                    Modifier
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.cardSection}>
+              <p className={styles.subtitle}>Formule</p>
+
+              <div className={styles.cardContent}>
+                <div className={styles.field}>
+                  <label className={styles.label}>Type</label>
+                  <span className={styles.separator}>:</span>
+                  <select
+                    ref={typeRef}
+                    className={styles.select}
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                  >
+                    <option value="">Choisir un type</option>
+                    <option value="A l'unité">A l'unité</option>
+                    <option value="Trimestre">Trimestre</option>
+                    <option value="Annuel">Annuel</option>
+                  </select>
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Prix</label>
+                  <span className={styles.separator}>:</span>
+                  <input
+                    ref={priceRef}
+                    className={styles.input}
+                    type="number"
+                    defaultValue={price}
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label}>Modalité</label>
+                  <span className={styles.separator}>:</span>
+                  <select
+                    ref={modaliteRef}
+                    className={styles.select}
+                    value={selectedModalite}
+                    onChange={(e) => setSelectedModalite(e.target.value)}
+                  >
+                    <option value="">Choisir une modalité</option>
+                    <option value="Paiement 1 fois">Paiement 1 fois</option>
+                    <option value="Paiement 3 fois">Paiement 3 fois</option>
+                  </select>
+                </div>
+
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={styles.bouton}
+                    type="button"
+                    onClick={handleUpdateFormula}
+                  >
+                    Modifier
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.middleColumn}>
+            <div className={styles.cardSectionTall}>
+              <p className={styles.subtitle}>Historique de paiement</p>
+
+              <div className={styles.scrollContent}>
+                {studentPayments.length === 0 ? (
+                  <p className={styles.emptyState}>Aucun paiement enregistré</p>
                 ) : (
-                  <p className={styles.vert}>Ok</p>
+                  studentPayments.map((paiement, index) => (
+                    <div key={paiement.id ?? index} className={styles.rowItem}>
+                      <p className={styles.rowLabel}>Paiement {index + 1}</p>
+                      <p className={styles.rowDate}>
+                        {paiement.period ?? "Pas de date entrée en bdd"}
+                      </p>
+
+                      {paiement.status === "late" ? (
+                        <p className={styles.rouge}>Retard</p>
+                      ) : paiement.status === "pending" ? (
+                        <p className={styles.orange}>En attente</p>
+                      ) : paiement.status === "scheduled" ? (
+                        <p className={styles.orange}>À venir</p>
+                      ) : paiement.status === "paid" ? (
+                        <p className={styles.vert}>Payé</p>
+                      ) : (
+                        <p className={styles.vert}>Ok</p>
+                      )}
+                    </div>
+                  ))
                 )}
               </div>
-            ))
-          )}
-        </fieldset>
+            </div>
+          </div>
 
-        <fieldset className={styles.right}>
-          <legend className={styles.title}>Suivi des cours</legend>
+          <div className={styles.rightColumn}>
+            <div className={styles.cardSectionTall}>
+              <p className={styles.subtitle}>Suivi des cours</p>
 
-          {cours.length === 0 ? (
-            <p style={{ padding: "10px" }}>Aucun cours enregistré</p>
-          ) : (
-            cours.map((cour, index) => (
-              <div key={index} className={styles.field_cours}>
-                <p style={{ width: "4em" }}>Cours {index + 1}</p>
-                <p style={{ width: "12em" }}>{cour.date}</p>
-
-                {cour.status === "Annulé" ? (
-                  <p className={styles.rouge}>Annulé</p>
+              <div className={styles.scrollContent}>
+                {cours.length === 0 ? (
+                  <p className={styles.emptyState}>Aucun cours enregistré</p>
                 ) : (
-                  <p className={styles.vert}>Ok</p>
+                  cours.map((cour, index) => (
+                    <div key={index} className={styles.rowItem}>
+                      <p className={styles.rowLabel}>Cours {index + 1}</p>
+                      <p className={styles.rowDate}>{cour.date}</p>
+
+                      {cour.status === "Annulé" ? (
+                        <p className={styles.rouge}>Annulé</p>
+                      ) : (
+                        <p className={styles.vert}>Ok</p>
+                      )}
+                    </div>
+                  ))
                 )}
               </div>
-            ))
-          )}
-        </fieldset>
-      </div>
+            </div>
+          </div>
+        </div>
+      </main>
 
       <FooterTeacher />
     </div>

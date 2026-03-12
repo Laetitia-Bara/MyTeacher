@@ -36,7 +36,10 @@ const studentSchema = mongoose.Schema(
 
     avatarUrl: { type: String },
     phone: { type: String },
-    discipline: { type: String },
+    discipline: {
+      type: String,
+      default: "",
+    },
     structure: { type: String },
     status: {
       type: String,
