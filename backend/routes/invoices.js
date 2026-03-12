@@ -8,6 +8,9 @@ const Teacher = require("../models/teachers");
 const { checkBody } = require("../modules/checkBody");
 const authMiddleware = require("../middlewares/auth");
 const requireRole = require("../middlewares/requireRole");
+const User = require("../models/users");
+const generateInvoicePdfBuffer = require("../services/generateInvoicePdf");
+const uploadPdfToCloudinary = require("../services/uploadPdfToCloudinary");
 
 //---------------------Helpers------------------
 
@@ -170,6 +173,49 @@ router.post(
       invoice.paidAt = new Date();
       invoice.provider = "manual";
       invoice.paymentMethod = method;
+
+      // Générer le PDF s'il manque
+      if (!invoice.pdfURL) {
+        try {
+          const studentDoc = await Student.findById(invoice.student).populate(
+            "user",
+          );
+          const teacherUser = await User.findById(req.user.userId);
+
+          const invoiceNumber =
+            invoice.invoiceNumber ||
+            `MT-${new Date().getFullYear()}-${Date.now()}`;
+
+          invoice.invoiceNumber = invoiceNumber;
+
+          const pdfBuffer = await generateInvoicePdfBuffer({
+            invoiceNumber,
+            teacherName: teacherUser
+              ? `${teacherUser.firstName || ""} ${teacherUser.lastName || ""}`.trim()
+              : "Professeur",
+            studentName: studentDoc
+              ? `${studentDoc.user?.firstName || studentDoc.firstName || ""} ${
+                  studentDoc.user?.lastName || studentDoc.lastName || ""
+                }`.trim()
+              : "Élève",
+            discipline: studentDoc?.discipline || "",
+            label: invoice.label || "Cours",
+            amount: invoice.amount || 0,
+            dueAt: invoice.dueAt,
+            period: invoice.period || "",
+            status: "paid",
+          });
+
+          const uploadResult = await uploadPdfToCloudinary(
+            pdfBuffer,
+            invoiceNumber,
+          );
+
+          invoice.pdfURL = uploadResult.secure_url;
+        } catch (pdfError) {
+          console.error("PDF generation/upload on mark-paid error:", pdfError);
+        }
+      }
 
       await invoice.save();
 
