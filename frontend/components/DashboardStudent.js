@@ -153,8 +153,9 @@ function DashboardStudent() {
 
         <div className={styles.section}>
           <div className={styles.leftside}>
-            <p className={styles.subtitle}>Planning</p>
             <div className={styles.planningBox}>
+              <p className={styles.subtitle}>Planning</p>
+
               <BigCalendarStudent />
             </div>
           </div>
