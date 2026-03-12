@@ -10,7 +10,8 @@ function TeacherPayments() {
   const [invoices, setInvoices] = useState([]);
   const [message, setMessage] = useState("");
   const [studentFilter, setStudentFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [endDateFilter, setEndDateFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [showUnicorn, setShowUnicorn] = useState(false);
 
@@ -53,16 +54,21 @@ function TeacherPayments() {
       const matchesStudent =
         !studentFilter || fullName.includes(studentFilter.toLowerCase().trim());
 
-      const invoiceDate = inv.createdAt
-        ? new Date(inv.createdAt).toISOString().slice(0, 10)
-        : "";
+      const invoiceDate = inv.createdAt ? new Date(inv.createdAt) : null;
 
-      const matchesDate = !dateFilter || invoiceDate === dateFilter;
+      const matchesStart =
+        !startDateFilter ||
+        (invoiceDate && invoiceDate >= new Date(startDateFilter));
+
+      const matchesEnd =
+        !endDateFilter ||
+        (invoiceDate && invoiceDate <= new Date(`${endDateFilter}T23:59:59`));
+
       const matchesStatus = !statusFilter || inv.status === statusFilter;
 
-      return matchesStudent && matchesDate && matchesStatus;
+      return matchesStudent && matchesStart && matchesEnd && matchesStatus;
     });
-  }, [invoices, studentFilter, dateFilter, statusFilter]);
+  }, [invoices, studentFilter, startDateFilter, endDateFilter, statusFilter]);
 
   const upcomingTotal = useMemo(() => {
     return filteredInvoices
@@ -237,9 +243,18 @@ function TeacherPayments() {
 
               <input
                 type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
+                value={startDateFilter}
+                onChange={(e) => setStartDateFilter(e.target.value)}
                 className={styles.filterInput}
+                aria-label="Date de début"
+              />
+
+              <input
+                type="date"
+                value={endDateFilter}
+                onChange={(e) => setEndDateFilter(e.target.value)}
+                className={styles.filterInput}
+                aria-label="Date de fin"
               />
 
               <select
@@ -259,7 +274,8 @@ function TeacherPayments() {
                 className={styles.resetButton}
                 onClick={() => {
                   setStudentFilter("");
-                  setDateFilter("");
+                  setStartDateFilter("");
+                  setEndDateFilter("");
                   setStatusFilter("");
                 }}
               >
