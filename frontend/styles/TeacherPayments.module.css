@@ -222,12 +222,12 @@
     position: absolute;
     left: -180px;
     bottom: 0;
-    width: 160px;
-    height: 96px;
+    width: 200px;
+    height: 120px;
     background-color: transparent;
     background-image: url("/unicorn-run.png");
     background-repeat: no-repeat;
-    background-size: 640px 96px;
+    background-size: 800px 120px;
     animation:
         unicornGallop 0.6s steps(4) infinite,
         unicornDash 4s linear forwards;
