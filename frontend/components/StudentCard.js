@@ -86,7 +86,7 @@ function StudentCard(props) {
         <option value="Inactif">Inactif</option>
         <option value="Prospect">Prospect</option>
       </select>
-      <p className={styles.subscription}>{props.subscription || "A déterminer"}</p>
+      <p className={styles.subscription}>{props.subscription || "A définir"}</p>
     </div>
   );
 }

@@ -10,7 +10,7 @@ body,
 
 .page {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background-color: whitesmoke;
     display: flex;
     flex-direction: column;
@@ -154,27 +154,37 @@ body,
 .buttonContainer {
     display: flex;
     justify-content: flex-end;
-    margin-top: 4px;
+    margin-top: 8px;
 }
 
 .bouton {
-    color: white;
-    font-style: italic;
+    min-width: 220px;
+    height: 46px;
     border: none;
-    background-color: #a5d9f7;
-    padding: 0.9em 3em;
-    border-radius: 12px;
-    font-size: 18px;
+    border-radius: 8px;
+    background-color: #a9d8f3;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .bouton:hover {
-    transition: 0.3s;
-    background-color: #84aec6;
+    background-color: #92caea;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .bouton:active {
-    background-color: #618091;
+    background-color: #7fb8d8;
+    transform: translateY(1px);
+}
+
+.message {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4b7f52;
 }
 
 .rowItem {
