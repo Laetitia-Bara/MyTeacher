@@ -153,16 +153,17 @@ function DashboardStudent() {
 
         <div className={styles.section}>
           <div className={styles.leftside}>
-            <p className={styles.subtitle}>Planning</p>
             <div className={styles.planningBox}>
+              <p className={styles.subtitle}>Planning</p>
+
               <BigCalendarStudent />
             </div>
           </div>
 
           <div className={styles.rightside}>
-            <p className={styles.subtitle}>Alertes</p>
-
             <div className={styles.alertBox}>
+              <p className={styles.subtitle}>Alertes</p>
+
               <div className={styles.contenue}>
                 <p>
                   <span style={{ color: "#BF99A0" }}>
