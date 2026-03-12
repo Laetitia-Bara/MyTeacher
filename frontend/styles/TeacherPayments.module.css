@@ -135,6 +135,11 @@
     transform: scale(1.08);
 }
 
+.lateRow {
+    color: #c0392b;
+    background-color: rgba(192, 57, 43, 0.08);
+}
+
 @media (max-width: 900px) {
     .topRow {
         grid-template-columns: 1fr;

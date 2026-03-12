@@ -40,7 +40,7 @@ function TeacherPayments() {
 
   const upcomingTotal = useMemo(() => {
     return invoices
-      .filter((inv) => inv.status === "pending")
+      .filter((inv) => ["pending", "scheduled", "late"].includes(inv.status))
       .reduce((sum, inv) => sum + (inv.amount || 0), 0);
   }, [invoices]);
 
@@ -177,7 +177,7 @@ function TeacherPayments() {
 
             <div className={styles.topRow}>
               <div className={styles.infoBox}>
-                Paiements à venir : <strong>{upcomingTotal}€</strong>
+                Paiements non réglés : <strong>{upcomingTotal}€</strong>
               </div>
 
               <div className={styles.infoBox}>
@@ -198,7 +198,12 @@ function TeacherPayments() {
                 <p className={styles.empty}>Aucune facture trouvée</p>
               ) : (
                 invoices.map((inv) => (
-                  <div key={inv._id} className={styles.invoiceRow}>
+                  <div
+                    key={inv._id}
+                    className={`${styles.invoiceRow} ${
+                      inv.status === "late" ? styles.lateRow : ""
+                    }`}
+                  >
                     <div className={styles.cellName}>
                       {inv.firstName} {inv.lastName}
                     </div>
