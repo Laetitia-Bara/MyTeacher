@@ -241,21 +241,27 @@ function TeacherPayments() {
                 className={styles.filterInput}
               />
 
-              <input
-                type="date"
-                value={startDateFilter}
-                onChange={(e) => setStartDateFilter(e.target.value)}
-                className={styles.filterInput}
-                aria-label="Date de début"
-              />
+              <div className={styles.filterField}>
+                <label className={styles.filterLabel}>Du</label>
+                <input
+                  type="date"
+                  value={startDateFilter}
+                  onChange={(e) => setStartDateFilter(e.target.value)}
+                  className={styles.filterInput}
+                  aria-label="Date de début"
+                />
+              </div>
 
-              <input
-                type="date"
-                value={endDateFilter}
-                onChange={(e) => setEndDateFilter(e.target.value)}
-                className={styles.filterInput}
-                aria-label="Date de fin"
-              />
+              <div className={styles.filterField}>
+                <label className={styles.filterLabel}>Au</label>
+                <input
+                  type="date"
+                  value={endDateFilter}
+                  onChange={(e) => setEndDateFilter(e.target.value)}
+                  className={styles.filterInput}
+                  aria-label="Date de fin"
+                />
+              </div>
 
               <select
                 value={statusFilter}
