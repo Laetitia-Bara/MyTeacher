@@ -20,6 +20,7 @@ export default function BigCalendar() {
   const [eventSelected, setEventSelected] = useState(null);
 
   const eventsData = useSelector((state) => state.planning.value);
+  console.log("events stored", eventsData);
 
   const handleSelectSlot = ({ start, end }) => {
     setStart(start);
@@ -52,7 +53,7 @@ export default function BigCalendar() {
         views={["day", "week", "month"]}
         selectable
         defaultDate={new Date()}
-        defaultView="month"
+        defaultView="week"
         events={eventsCalendar}
         startAccessor="start"
         endAccessor="end"
