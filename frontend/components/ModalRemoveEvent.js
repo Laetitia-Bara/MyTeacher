@@ -18,21 +18,14 @@ export default function ModalRemoveEvent({ onClose, event }) {
         },
       );
       const data = await response.json();
-      if (!response.ok) {
-        console.error("backend error", await response.text());
-        return;
-      }
+
       console.log("Response from backend:", data);
       // Version dès que backend ok
-      data.result
-        ? dispatch(removeEventFromStore(event))
-        : console.log(data.error);
+      data.result ? dispatch(removeEventFromStore(event)) : alert(data.error);
     } catch (error) {
       console.error("Error removing event:", error);
     }
 
-    // En attendant que le backend soit ok, on supprime l'évènement directement dans le store
-    dispatch(removeEventFromStore(event));
     onClose();
   };
 
