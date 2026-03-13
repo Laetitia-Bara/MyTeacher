@@ -90,6 +90,7 @@ router.post("/signup/teacher", async (req, res) => {
     // response
     return res.status(201).json({
       result: true,
+      token,
       user: {
         id: newUser._id,
         role: newUser.role,
@@ -197,6 +198,7 @@ router.post("/signup/student", async (req, res) => {
     setAuthCookie(res, jwtToken);
     return res.status(201).json({
       result: true,
+      token: jwtToken,
       user: {
         id: newUser._id,
         role: newUser.role,
@@ -257,6 +259,7 @@ router.post("/login", async (req, res) => {
     setAuthCookie(res, token);
     return res.status(200).json({
       result: true,
+      token,
       user: {
         id: user._id,
         role: user.role,

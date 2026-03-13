@@ -61,6 +61,7 @@ function HeaderTeacher() {
       console.error("Logout failed:", e);
     } finally {
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
       router.push("/signin");
     }
   };
