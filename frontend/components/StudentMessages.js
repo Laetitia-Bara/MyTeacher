@@ -54,6 +54,34 @@ export default function StudentMessages() {
     };
   }, [token]);
 
+  async function handleStartConversation() {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations/my-teacher`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (!data.result || !data.conversation?._id) {
+        console.error("Impossible de créer ou récupérer la conversation");
+        return;
+      }
+
+      await fetchConversations();
+      setSelectedConversationId(data.conversation._id);
+    } catch (error) {
+      console.error("handleStartConversation error:", error);
+    }
+  }
+
   async function fetchConversations() {
     try {
       const response = await fetch(
@@ -290,7 +318,14 @@ export default function StudentMessages() {
 
           {!conversations.length ? (
             <div className={styles.emptySidebar}>
-              Aucune conversation pour le moment.
+              <p>Aucune conversation pour le moment.</p>
+              <button
+                type="button"
+                className={styles.startConversationBtn}
+                onClick={handleStartConversation}
+              >
+                Contacter mon professeur
+              </button>
             </div>
           ) : (
             conversations.map((conv) => (

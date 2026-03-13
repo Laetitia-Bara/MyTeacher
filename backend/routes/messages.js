@@ -248,4 +248,48 @@ router.post(
   },
 );
 
+// POST conversations/my-teacher
+router.post(
+  "/conversations/my-teacher",
+  authMiddleware,
+  requireRole("student"),
+  async function (req, res) {
+    try {
+      const student = await Student.findOne({ user: req.user.userId });
+
+      if (!student) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Student not found" });
+      }
+
+      if (!student.teacher) {
+        return res
+          .status(404)
+          .json({ result: false, error: "Teacher not linked" });
+      }
+
+      let conversation = await Conversation.findOne({
+        teacher: student.teacher,
+        student: student._id,
+      });
+
+      if (!conversation) {
+        conversation = await Conversation.create({
+          teacher: student.teacher,
+          student: student._id,
+          lastMessage: "",
+          lastMessageAt: null,
+          lastSenderRole: "student",
+        });
+      }
+
+      return res.json({ result: true, conversation });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ result: false, error: "Server error" });
+    }
+  },
+);
+
 module.exports = router;

@@ -3,8 +3,10 @@ import { getSocket, disconnectSocket } from "../lib/socket";
 import HeaderTeacher from "./HeaderTeacher";
 import FooterTeacher from "./FooterTeacher";
 import styles from "../styles/TeacherMessages.module.css";
+import { useRouter } from "next/router";
 
 export default function TeacherMessages() {
+  const router = useRouter();
   const [token, setToken] = useState("");
   const [socket, setSocket] = useState(null);
 
@@ -20,6 +22,16 @@ export default function TeacherMessages() {
       (conv) => String(conv._id) === String(selectedConversationId),
     );
   }, [conversations, selectedConversationId]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { conversationId } = router.query;
+
+    if (conversationId) {
+      setSelectedConversationId(conversationId);
+    }
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -74,7 +86,19 @@ export default function TeacherMessages() {
       setConversations(data.conversations || []);
 
       if (!selectedConversationId && data.conversations?.length) {
-        setSelectedConversationId(data.conversations[0]._id);
+        const queryConversationId = router.query?.conversationId;
+
+        if (queryConversationId) {
+          const exists = data.conversations.some(
+            (conv) => String(conv._id) === String(queryConversationId),
+          );
+
+          setSelectedConversationId(
+            exists ? queryConversationId : data.conversations[0]._id,
+          );
+        } else {
+          setSelectedConversationId(data.conversations[0]._id);
+        }
       }
     } catch (error) {
       console.error("fetchConversations error:", error);

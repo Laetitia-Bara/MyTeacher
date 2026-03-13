@@ -12,9 +12,12 @@
 }
 
 .studentLink {
-  background-color: transparent;
-  border: none;
-  width: 30%;
+  background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    text-align: left;
 }
 
 .studentLink:hover {
@@ -62,4 +65,34 @@
   background-color: #84dccf;
   text-align: center;
   width: 17.5%;
+}
+
+.nameBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 20%;
+}
+
+.messageBtn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: #efe7ff;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.messageBtn:hover {
+  background: #7c3aed;
+  color: white;
+  transform: translateY(-1px);
 }
