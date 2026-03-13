@@ -70,12 +70,17 @@ const requireRole = require("../middlewares/requireRole");
 // GET /messages/conversations
 router.get("/conversations", authMiddleware, async function (req, res) {
   try {
+    console.log("req.user =", req.user);
+
     if (req.user.role === "teacher") {
       const teacher = await Teacher.findOne({ user: req.user.userId });
+      console.log("teacher found =", teacher);
+
       if (!teacher) {
-        return res
-          .status(404)
-          .json({ result: false, error: "Teacher not found" });
+        return res.status(404).json({
+          result: false,
+          error: "Teacher not found",
+        });
       }
 
       const conversations = await Conversation.find({ teacher: teacher._id })
@@ -84,6 +89,8 @@ router.get("/conversations", authMiddleware, async function (req, res) {
           populate: { path: "user", model: "users" },
         })
         .sort({ lastMessageAt: -1 });
+
+      console.log("teacher conversations =", conversations);
 
       const formatted = await Promise.all(
         conversations.map(async (conv) => {
@@ -107,52 +114,14 @@ router.get("/conversations", authMiddleware, async function (req, res) {
         }),
       );
 
-      return res.json({ result: true, conversations: formatted });
-    }
-
-    if (req.user.role === "student") {
-      const student = await Student.findOne({ user: req.user.userId });
-      if (!student) {
-        return res
-          .status(404)
-          .json({ result: false, error: "Student not found" });
-      }
-
-      const conversations = await Conversation.find({ student: student._id })
-        .populate({
-          path: "teacher",
-          populate: { path: "user", model: "users" },
-        })
-        .sort({ lastMessageAt: -1 });
-
-      const formatted = await Promise.all(
-        conversations.map(async (conv) => {
-          const unreadCount = await Message.countDocuments({
-            conversation: conv._id,
-            senderRole: "teacher",
-            readBy: { $ne: "student" },
-          });
-
-          return {
-            _id: conv._id,
-            teacherId: conv.teacher?._id || null,
-            teacherName: conv.teacher
-              ? `${conv.teacher.user?.firstName || ""} ${conv.teacher.user?.lastName || ""}`.trim()
-              : "Professeur",
-            lastMessage: conv.lastMessage || "",
-            lastMessageAt: conv.lastMessageAt || null,
-            lastSenderRole: conv.lastSenderRole || "",
-            unreadCount,
-          };
-        }),
-      );
+      console.log("formatted teacher conversations =", formatted);
 
       return res.json({ result: true, conversations: formatted });
     }
 
     return res.status(403).json({ result: false, error: "Forbidden" });
   } catch (error) {
-    console.error(error);
+    console.error("GET /messages/conversations error =", error);
     return res.status(500).json({ result: false, error: "Server error" });
   }
 });
