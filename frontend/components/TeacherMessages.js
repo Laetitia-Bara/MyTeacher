@@ -134,6 +134,7 @@ export default function TeacherMessages() {
       );
 
       const data = await response.json();
+      console.log("GET /messages/conversations ->", data);
       if (!data.result) return;
 
       setMessages(data.messages || []);
