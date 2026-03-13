@@ -81,25 +81,37 @@ export default function TeacherMessages() {
       );
 
       const data = await response.json();
+      console.log("GET conversations =", data);
+
       if (!data.result) return;
 
-      setConversations(data.conversations || []);
+      const list = data.conversations || [];
+      setConversations(list);
 
-      if (!selectedConversationId && data.conversations?.length) {
-        const queryConversationId = router.query?.conversationId;
+      if (!list.length) {
+        setMessages([]);
+        return;
+      }
 
-        if (queryConversationId) {
-          const exists = data.conversations.some(
-            (conv) => String(conv._id) === String(queryConversationId),
-          );
+      const queryConversationId = router.query?.conversationId;
 
-          setSelectedConversationId(
-            exists ? queryConversationId : data.conversations[0]._id,
-          );
-        } else {
-          setSelectedConversationId(data.conversations[0]._id);
+      if (queryConversationId) {
+        const exists = list.some(
+          (conv) => String(conv._id) === String(queryConversationId),
+        );
+
+        if (exists) {
+          setSelectedConversationId(queryConversationId);
+          return;
         }
       }
+
+      setSelectedConversationId((prev) => {
+        if (prev && list.some((conv) => String(conv._id) === String(prev))) {
+          return prev;
+        }
+        return list[0]._id;
+      });
     } catch (error) {
       console.error("fetchConversations error:", error);
     }
@@ -131,9 +143,9 @@ export default function TeacherMessages() {
   }
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !router.isReady) return;
     fetchConversations();
-  }, [token]);
+  }, [token, router.isReady, router.query.conversationId]);
 
   useEffect(() => {
     if (!token || !selectedConversationId) return;
@@ -401,8 +413,13 @@ export default function TeacherMessages() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Écrire un message..."
+              placeholder={
+                selectedConversationId
+                  ? "Écrire un message..."
+                  : "Choisis d'abord un élève pour démarrer une conversation"
+              }
               className={styles.input}
+              disabled={!selectedConversationId}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSendMessage();
@@ -412,7 +429,7 @@ export default function TeacherMessages() {
             <button
               onClick={handleSendMessage}
               className={styles.sendButton}
-              disabled={!input.trim()}
+              disabled={!input.trim() || !selectedConversationId}
             >
               Envoyer
             </button>
