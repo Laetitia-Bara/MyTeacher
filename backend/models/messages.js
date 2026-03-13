@@ -1,16 +1,35 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const messageSchema = mongoose.Schema({
-    teacherId: mongoose.Types.ObjectId, 
-    studentId: mongoose.Types.ObjectId,
-    senderId: mongoose.Types.ObjectId,
-    text: String,
-    messageId: mongoose.Types.ObjectId,
-    indexation: Number,
-    createdAt: Date,
-    readAt: Date,
-});
+const messageSchema = mongoose.Schema(
+  {
+    conversation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "conversations",
+      required: true,
+    },
+    senderUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
+    senderRole: {
+      type: String,
+      enum: ["teacher", "student"],
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    readBy: [
+      {
+        type: String,
+        enum: ["teacher", "student"],
+      },
+    ],
+  },
+  { timestamps: true },
+);
 
-const Message = mongoose.model('messages', messageSchema);
-
-module.exports = Message;
+module.exports = mongoose.model("messages", messageSchema);
