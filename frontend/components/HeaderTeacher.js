@@ -89,7 +89,7 @@ function HeaderTeacher() {
           </Link>
         </button>
         <button className={styles.btnNavigation}>
-          <Link href="/dashboard_teacher">
+          <Link href="/teacher_messages">
             <span className={styles.menuText}>Messagerie</span>
           </Link>
         </button>

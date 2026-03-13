@@ -82,7 +82,7 @@ function HeaderStudent() {
           <Link href="/student_payments">
             <span className={styles.link}>Paiements / Factures</span>
           </Link>
-          <Link href="">
+          <Link href="/student_messages">
             <span className={styles.link}>Messagerie</span>
           </Link>
         </div>
