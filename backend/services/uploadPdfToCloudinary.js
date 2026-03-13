@@ -7,7 +7,7 @@ function uploadPdfToCloudinary(buffer, publicId) {
       {
         resource_type: "raw",
         folder: "myteacher/invoices",
-        public_id: invoiceNumber,
+        public_id: publicId,
         type: "upload",
         access_mode: "public",
       },

@@ -151,11 +151,15 @@ router.post(
           newInvoice.invoiceNumber,
         );
 
-        newInvoice.pdfURL = uploadResult.secure_url;
+        console.log("Cloudinary PDF upload result:", uploadResult);
+
+        newInvoice.pdfURL = uploadResult.secure_url || uploadResult.url || "";
         await newInvoice.save();
       } catch (pdfError) {
         console.error("PDF generation/upload error:", pdfError);
       }
+
+      const savedInvoice = await Invoice.findById(newInvoice._id);
 
       // SAUVEGARDE AU CAS OU - 12/03/2026 9:45
       // return res.json({
@@ -186,7 +190,7 @@ router.post(
           location: newLesson.locationType,
           desc: newLesson.teacherNotes,
         },
-        invoice: newInvoice,
+        invoice: savedInvoice,
       });
     } catch (error) {
       console.error(error);
