@@ -56,22 +56,27 @@ export default function StudentMessages() {
 
   async function handleStartConversation() {
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations/my-teacher`,
         {
           method: "POST",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         },
       );
 
       const data = await response.json();
 
       if (!data.result || !data.conversation?._id) {
-        console.error("Impossible de créer ou récupérer la conversation");
+        console.error("Impossible de créer ou récupérer la conversation", data);
         return;
       }
 
@@ -84,26 +89,42 @@ export default function StudentMessages() {
 
   async function fetchConversations() {
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations`,
         {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         },
       );
 
       const data = await response.json();
+      console.log("STUDENT GET /messages/conversations ->", data);
+
       if (!data.result) return;
 
-      setConversations(data.conversations || []);
+      const list = data.conversations || [];
+      setConversations(list);
 
-      if (data.conversations?.length) {
-        setSelectedConversationId(data.conversations[0]._id);
+      if (!list.length) {
+        setMessages([]);
+        return;
       }
+
+      setSelectedConversationId((prev) => {
+        if (prev && list.some((conv) => String(conv._id) === String(prev))) {
+          return prev;
+        }
+        return list[0]._id;
+      });
     } catch (error) {
       console.error("fetchConversations error:", error);
     }
@@ -113,19 +134,26 @@ export default function StudentMessages() {
     if (!conversationId) return;
 
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations/${conversationId}/messages`,
         {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         },
       );
 
       const data = await response.json();
+      console.log("STUDENT GET messages ->", data);
+
       if (!data.result) return;
 
       setMessages(data.messages || []);
@@ -135,14 +163,13 @@ export default function StudentMessages() {
   }
 
   useEffect(() => {
-    if (!token) return;
     fetchConversations();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
-    if (!token || !selectedConversationId) return;
+    if (!selectedConversationId) return;
     fetchMessages(selectedConversationId);
-  }, [token, selectedConversationId]);
+  }, [selectedConversationId]);
 
   useEffect(() => {
     if (!socket || !selectedConversationId) return;
@@ -412,8 +439,13 @@ export default function StudentMessages() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Écrire un message..."
+              placeholder={
+                selectedConversationId
+                  ? "Écrire un message..."
+                  : "Commence par ouvrir une conversation"
+              }
               className={styles.input}
+              disabled={!selectedConversationId}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSendMessage();
@@ -423,7 +455,7 @@ export default function StudentMessages() {
             <button
               onClick={handleSendMessage}
               className={styles.sendButton}
-              disabled={!input.trim()}
+              disabled={!input.trim() || !selectedConversationId}
             >
               Envoyer
             </button>
