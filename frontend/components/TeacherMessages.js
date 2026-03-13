@@ -68,20 +68,25 @@ export default function TeacherMessages() {
 
   async function fetchConversations() {
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations`,
         {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         },
       );
 
       const data = await response.json();
-      console.log("GET conversations =", data);
+      console.log("GET /messages/conversations ->", data);
 
       if (!data.result) return;
 
@@ -121,20 +126,26 @@ export default function TeacherMessages() {
     if (!conversationId) return;
 
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/conversations/${conversationId}/messages`,
         {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         },
       );
 
       const data = await response.json();
-      console.log("GET /messages/conversations ->", data);
+      console.log("GET messages ->", data);
+
       if (!data.result) return;
 
       setMessages(data.messages || []);
@@ -144,14 +155,14 @@ export default function TeacherMessages() {
   }
 
   useEffect(() => {
-    if (!token || !router.isReady) return;
+    if (!router.isReady) return;
     fetchConversations();
-  }, [token, router.isReady, router.query.conversationId]);
+  }, [router.isReady, router.query.conversationId]);
 
   useEffect(() => {
-    if (!token || !selectedConversationId) return;
+    if (!selectedConversationId) return;
     fetchMessages(selectedConversationId);
-  }, [token, selectedConversationId]);
+  }, [selectedConversationId]);
 
   useEffect(() => {
     if (!socket || !selectedConversationId) return;
