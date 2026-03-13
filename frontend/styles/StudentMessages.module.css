@@ -238,6 +238,30 @@
     transform: none;
 }
 
+.startConversationBtn {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    color: white;
+    font-family: "Roboto Bold";
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        opacity 0.2s ease;
+}
+
+.startConversationBtn:hover {
+    transform: translateY(-1px);
+}
+
+.startConversationBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 @media (max-width: 900px) {
     .wrapper {
         margin: 10px;
